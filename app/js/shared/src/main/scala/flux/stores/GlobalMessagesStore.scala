@@ -55,7 +55,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
   }
 
   private def getCompletionMessage: PartialFunction[Action, String] = {
-    // **************** Document-related actions **************** //
+    // **************** Media-related actions **************** //
     // TODO: Add
     // **************** User-related actions **************** //
     case UpsertUser(userPrototype)
