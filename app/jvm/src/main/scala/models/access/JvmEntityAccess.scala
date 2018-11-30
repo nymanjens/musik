@@ -8,11 +8,8 @@ import com.google.inject._
 import common.publisher.TriggerablePublisher
 import common.time.Clock
 import models.Entity
-import models.media.{Song, Album, Artist}
-import models.modification.EntityType.{DocumentEntityType, TaskEntityType, UserType}
+import models.media.{Album, Artist, Song}
 import models.modification.{EntityModification, EntityModificationEntity, EntityType}
-import models.slick.SlickUtils.dbApi._
-import models.slick.SlickUtils.{dbRun, instantToSqlTimestampMapper}
 import models.slick.SlickUtils.dbApi._
 import models.slick.SlickUtils.dbRun
 import models.slick.{SlickEntityManager, SlickEntityTableDef}
@@ -151,9 +148,10 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   private def getEntityTableDef(entityType: EntityType.any): SlickEntityTableDef[entityType.get] = {
     val tableDef = entityType match {
-      case UserType           => implicitly[SlickEntityTableDef[User]]
-      case DocumentEntityType => implicitly[SlickEntityTableDef[DocumentEntity]]
-      case TaskEntityType     => implicitly[SlickEntityTableDef[TaskEntity]]
+      case EntityType.UserType   => implicitly[SlickEntityTableDef[User]]
+      case EntityType.SongType   => implicitly[SlickEntityTableDef[Song]]
+      case EntityType.AlbumType  => implicitly[SlickEntityTableDef[Album]]
+      case EntityType.ArtistType => implicitly[SlickEntityTableDef[Artist]]
     }
     tableDef.asInstanceOf[SlickEntityTableDef[entityType.get]]
   }

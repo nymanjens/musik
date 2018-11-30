@@ -56,13 +56,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
 
   private def getCompletionMessage: PartialFunction[Action, String] = {
     // **************** Document-related actions **************** //
-    case _: AddEmptyDocument =>
-      i18n("app.successfully-added-document")
-    case UpdateDocuments(documents) =>
-      if (documents.size == 1) i18n("app.successfully-updated-document")
-      else i18n("app.successfully-updated-documents")
-    case RemoveDocument(document) =>
-      i18n("app.successfully-removed-document")
+    // TODO: Add
     // **************** User-related actions **************** //
     case UpsertUser(userPrototype)
         if userPrototype.id.isDefined && userPrototype.plainTextPassword.isDefined =>

@@ -13,6 +13,7 @@ import models.modification.{EntityModification, EntityModificationEntity}
 import models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import models.slick.SlickUtils.localDateTimeToSqlDateMapper
 import models.slick.SlickUtils.instantToSqlTimestampMapper
+import models.slick.SlickUtils.finiteDurationToMillisMapper
 import models.slick.SlickUtils.orderTokenToBytesMapper
 import models.user.User
 

@@ -17,7 +17,7 @@ import models.access.JvmEntityAccess
 import models.document.DocumentEntity
 import models.modification.{EntityModification, EntityModificationEntity, EntityType}
 import models.slick.SlickUtils.dbApi._
-import models.slick.SlickUtils.{dbRun, instantToSqlTimestampMapper}
+import models.slick.SlickUtils.{dbRun, instantToSqlTimestampMapper, finiteDurationToMillisMapper}
 import models.user.User
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._

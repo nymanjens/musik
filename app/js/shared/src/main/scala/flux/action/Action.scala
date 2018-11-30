@@ -1,10 +1,6 @@
 package flux.action
 
 import api.ScalaJsApi.UserPrototype
-import common.OrderToken
-import models.document.DocumentEntity
-
-import scala.collection.immutable.Seq
 
 sealed trait Action
 
