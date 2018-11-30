@@ -20,6 +20,14 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
     Ok("OK")
   }
 
+  def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
+    validateApplicationSecret(applicationSecret)
+
+    // TODO
+
+    Ok("OK")
+  }
+
   // ********** private helper methods ********** //
   private def validateApplicationSecret(applicationSecret: String): Unit = {
     val realApplicationSecret: String = playConfiguration.get[String]("play.http.secret.key")

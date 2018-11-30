@@ -20,6 +20,7 @@ GET  /websocket/entitymodificationpush/:updateToken/  controllers.InternalApi.en
 
 # External API
 GET  /externalapi/healthcheck/         controllers.ExternalApi.healthCheck
+GET  /externalapi/media/rescan/:appSecret/  controllers.ExternalApi.rescanMediaLibrary(appSecret)
 
 # Auth
 GET  /login/                           controllers.Auth.login(returnTo ?= "/")
