@@ -57,42 +57,48 @@ object SlickEntityTableDef {
     }
   }
 
-  implicit object DocumentEntityDef extends SlickEntityTableDef[DocumentEntity] {
+  implicit object SongDef extends SlickEntityTableDef[Song] {
 
-    override val tableName: String = "DOCUMENT_ENTITIES"
+    override val tableName: String = "SONGS"
     override def table(tag: SlickTag): Table = new Table(tag)
 
     /* override */
-    final class Table(tag: SlickTag) extends EntityTable[DocumentEntity](tag, tableName) {
+    final class Table(tag: SlickTag) extends EntityTable[Song](tag, tableName) {
       def name = column[String]("name")
       def orderToken = column[OrderToken]("orderToken")
 
       override def * =
-        (name, orderToken, id.?) <> (DocumentEntity.tupled, DocumentEntity.unapply)
+        (name, orderToken, id.?) <> (Song.tupled, Song.unapply)
     }
   }
 
-  implicit object TaskEntityDef extends SlickEntityTableDef[TaskEntity] {
+  implicit object AlbumDef extends SlickEntityTableDef[Album] {
 
-    override val tableName: String = "TASK_ENTITIES"
+    override val tableName: String = "ALBUMS"
     override def table(tag: SlickTag): Table = new Table(tag)
 
-    private implicit val tagsSeqToStringMapper: ColumnType[Seq[String]] = {
-      MappedColumnType.base[Seq[String], String](Tags.serializeToString, Tags.parseTagsString)
-    }
-
     /* override */
-    final class Table(tag: SlickTag) extends EntityTable[TaskEntity](tag, tableName) {
-      def documentId = column[Long]("documentId")
-      def contentHtml = column[String]("contentHtml")
+    final class Table(tag: SlickTag) extends EntityTable[Album](tag, tableName) {
+      def name = column[String]("name")
       def orderToken = column[OrderToken]("orderToken")
-      def indentation = column[Int]("indentation")
-      def collapsed = column[Boolean]("collapsed")
-      def delayedUntil = column[Option[LocalDateTime]]("delayedUntil")
-      def tags = column[Seq[String]]("tagsString")(tagsSeqToStringMapper)
 
       override def * =
-        (documentId, contentHtml, orderToken, indentation, collapsed, delayedUntil, tags, id.?) <> (TaskEntity.tupled, TaskEntity.unapply)
+        (name, orderToken, id.?) <> (Album.tupled, Album.unapply)
+    }
+  }
+
+  implicit object ArtistDef extends SlickEntityTableDef[Artist] {
+
+    override val tableName: String = "ARTISTS"
+    override def table(tag: SlickTag): Table = new Table(tag)
+
+    /* override */
+    final class Table(tag: SlickTag) extends EntityTable[Artist](tag, tableName) {
+      def name = column[String]("name")
+      def orderToken = column[OrderToken]("orderToken")
+
+      override def * =
+        (name, orderToken, id.?) <> (Artist.tupled, Artist.unapply)
     }
   }
 

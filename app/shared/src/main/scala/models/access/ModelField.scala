@@ -5,12 +5,13 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
 import models.access.ModelField.FieldType
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song}
 import models.modification.EntityType
 import models.modification.EntityType._
 import models.user.User
 
 import scala.collection.immutable.Seq
+import scala.concurrent.duration.FiniteDuration
 
 /**
   * Represents a field in an model entity.
@@ -29,9 +30,10 @@ object ModelField {
 
   // **************** Methods **************** //
   def id[E <: Entity](implicit entityType: EntityType[E]): ModelField[Long, E] = entityType match {
-    case UserType           => User.id.asInstanceOf[ModelField[Long, E]]
-    case DocumentEntityType => DocumentEntity.id.asInstanceOf[ModelField[Long, E]]
-    case TaskEntityType     => TaskEntity.id.asInstanceOf[ModelField[Long, E]]
+    case UserType   => User.id.asInstanceOf[ModelField[Long, E]]
+    case SongType   => Song.id.asInstanceOf[ModelField[Long, E]]
+    case AlbumType  => Album.id.asInstanceOf[ModelField[Long, E]]
+    case ArtistType => Artist.id.asInstanceOf[ModelField[Long, E]]
   }
 
   // **************** Related types **************** //
@@ -44,6 +46,7 @@ object ModelField {
     implicit case object StringType extends FieldType[String]
     implicit case object LocalDateTimeType extends FieldType[LocalDateTime]
     implicit case object MaybeLocalDateTimeType extends FieldType[Option[LocalDateTime]]
+    implicit case object FiniteDurationType extends FieldType[FiniteDuration]
     implicit case object StringSeqType extends FieldType[Seq[String]]
     implicit case object OrderTokenType extends FieldType[OrderToken]
   }
@@ -61,25 +64,31 @@ object ModelField {
     case object isAdmin extends ModelField[Boolean, E]("isAdmin", _.isAdmin)
   }
 
-  object DocumentEntity {
-    private type E = DocumentEntity
+  object Song {
+    private type E = Song
+
+    case object id extends IdModelField[E]
+    case object albumId extends ModelField[Long, E]("albumId", _.albumId)
+    case object title extends ModelField[String, E]("title", _.title)
+    case object trackNumber extends ModelField[Int, E]("trackNumber", _.trackNumber)
+    case object duration extends ModelField[FiniteDuration, E]("duration", _.duration)
+    case object year extends ModelField[Int, E]("year", _.year)
+    case object disc extends ModelField[Int, E]("disc", _.disc)
+  }
+
+  object Album {
+    private type E = Album
+
+    case object id extends IdModelField[E]
+    case object artistId extends ModelField[Long, E]("artistId", _.artistId)
+    case object title extends ModelField[String, E]("title", _.title)
+  }
+
+  object Artist {
+    private type E = Artist
 
     case object id extends IdModelField[E]
     case object name extends ModelField[String, E]("name", _.name)
-    case object orderToken extends ModelField[OrderToken, E]("orderToken", _.orderToken)
-  }
-
-  object TaskEntity {
-    private type E = TaskEntity
-
-    case object id extends IdModelField[E]
-    case object documentId extends ModelField[Long, E]("documentId", _.documentId)
-    case object contentHtml extends ModelField[String, E]("contentHtml", _.contentHtml)
-    case object orderToken extends ModelField[OrderToken, E]("orderToken", _.orderToken)
-    case object indentation extends ModelField[Int, E]("indentation", _.indentation)
-    case object collapsed extends ModelField[Boolean, E]("collapsed", _.collapsed)
-    case object delayedUntil extends ModelField[Option[LocalDateTime], E]("delayedUntil", _.delayedUntil)
-    case object tags extends ModelField[Seq[String], E]("tags", _.tags)
   }
 
   // **************** Field numbers **************** //
@@ -91,17 +100,18 @@ object ModelField {
       .put(User.passwordHash, 4)
       .put(User.name, 5)
       .put(User.isAdmin, 6)
-      .put(DocumentEntity.id, 7)
-      .put(DocumentEntity.name, 8)
-      .put(DocumentEntity.orderToken, 14)
-      .put(TaskEntity.id, 9)
-      .put(TaskEntity.documentId, 10)
-      .put(TaskEntity.contentHtml, 11)
-      .put(TaskEntity.orderToken, 12)
-      .put(TaskEntity.indentation, 13)
-      .put(TaskEntity.collapsed, 15)
-      .put(TaskEntity.delayedUntil, 16)
-      .put(TaskEntity.tags, 17)
+      .put(Song.id, 7)
+      .put(Song.albumId, 8)
+      .put(Song.title, 9)
+      .put(Song.trackNumber, 10)
+      .put(Song.duration, 11)
+      .put(Song.year, 12)
+      .put(Song.disc, 13)
+      .put(Album.id, 14)
+      .put(Album.artistId, 15)
+      .put(Album.title, 16)
+      .put(Artist.id, 17)
+      .put(Artist.name, 18)
       .build()
   def toNumber(field: ModelField[_, _]): Int = fieldToNumberMap.get(field)
   def fromNumber(number: Int): ModelField[_, _] = fieldToNumberMap.inverse().get(number)

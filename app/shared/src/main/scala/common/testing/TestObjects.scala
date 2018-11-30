@@ -52,18 +52,6 @@ object TestObjects {
     name = testUser.name,
     isAdmin = testUser.isAdmin)
 
-  val testDocumentEntity: DocumentEntity =
-    DocumentEntity(name = "Some test document", orderToken = orderTokenA, idOption = Some(129830))
-  val testTaskEntity: TaskEntity = TaskEntity(
-    documentId = testDocumentEntity.id,
-    contentHtml = "abc<b>def</b>",
-    orderToken = orderTokenA,
-    indentation = 12,
-    collapsed = true,
-    delayedUntil = Some(testDate),
-    tags = Seq("tag"),
-    idOption = Some(821379)
-  )
 
   val testModificationA: EntityModification = EntityModification.Add(testUserRedacted)
   val testModificationB: EntityModification =
@@ -72,7 +60,6 @@ object TestObjects {
 
   val testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
     user = testUserA,
-    allAccessibleDocuments = Seq(testDocumentEntity),
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken
   )
