@@ -7,7 +7,7 @@ import models.Entity
 import models.access.LocalDatabaseImpl.{ModificationWithId, Singleton}
 import models.access.webworker.LocalDatabaseWebWorkerApi
 import models.access.webworker.LocalDatabaseWebWorkerApi.{LokiQuery, WriteOperation}
-import models.modification.EntityType.UserType
+import models.modification.EntityType._
 import models.modification.{EntityModification, EntityType}
 import org.scalajs.dom.console
 import scala2js.Converters._

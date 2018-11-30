@@ -154,7 +154,7 @@ object Converters {
       Scala2Js.toJs(duration.toMillis)
     }
     override def toScala(value: js.Any) = {
-      Scala2Js.toScala[Long](value) millis
+      Scala2Js.toScala[Long](value).millis
     }
   }
 

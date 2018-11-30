@@ -69,7 +69,7 @@ object ConvertersTest extends TestSuite {
 
 
     "LocalDateTimeConverter: testToJsAndBack" - {
-      testToJsAndBack[FiniteDuration](28 minutes)
+      testToJsAndBack[FiniteDuration](28.minutes)
     }
 
     "EntityTypeConverter" - {

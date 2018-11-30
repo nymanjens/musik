@@ -13,10 +13,8 @@ object Action {
   // **************** User-related actions **************** //
   case class UpsertUser(userPrototype: UserPrototype) extends Action
 
-  // **************** Document-related actions **************** //
-  case class AddEmptyDocument(name: String, orderToken: OrderToken) extends Action
-  case class UpdateDocuments(documents: Seq[DocumentEntity]) extends Action
-  case class RemoveDocument(existingDocument: DocumentEntity) extends Action
+  // **************** Media-related actions **************** //
+  // TODO: Add
 
   // **************** Other actions **************** //
   case class SetPageLoadingState(isLoading: Boolean) extends Action
