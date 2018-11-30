@@ -3,30 +3,14 @@ Playlist Keeper
 
 [![Build Status](https://travis-ci.org/nymanjens/musik.svg?branch=master)](https://travis-ci.org/nymanjens/musik)
 
-This project aims to be a list editor for power users.
-
-Example use cases:
-
-* A TODO list
-* A list of meals and ingredients
-* Notes from a meeting
+This project aims to an excellent music player for mobile and desktop.
 
 ## Features
 
 *(Note: Some are not ready yet)*
 
-* Document editing:
-    * Productivity **shortcuts** for actions such as 'remove task', 'swap task down',
-      'open link', 'convert selection to lower case', ...
-    * Ability to **collapse** all indented tasks beneath selected task
-    * Tasks can have **tags**
-    * Ability to **search** in all documents
-    * Taks can be **postponed** until a later date
-* Many documents:
-    * Easy **switching** between documents
-    * Ability to **archive** documents and easily **search for documents**
-* Works offline (via PWA)
-* Dedicated mobile version
+* Synchronizes current play queue over all devices
+* Remote control (e.g. pause mobile player via desktop)
 
 ## Screenshot
 
