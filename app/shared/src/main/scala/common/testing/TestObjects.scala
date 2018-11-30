@@ -1,5 +1,7 @@
 package common.testing
+import models.media.{Album, Artist, Song}
 
+import scala.concurrent.duration._
 import java.time.Instant
 import java.time.Month._
 
@@ -52,7 +54,6 @@ object TestObjects {
     name = testUser.name,
     isAdmin = testUser.isAdmin)
 
-
   val testModificationA: EntityModification = EntityModification.Add(testUserRedacted)
   val testModificationB: EntityModification =
     EntityModification.Add(testUserB.copy(passwordHash = "<redacted>"))
@@ -62,5 +63,17 @@ object TestObjects {
     user = testUserA,
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken
+  )
+
+  val testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
+  val testAlbum = Album(artistId = testArtist.id, title = "Test Album", idOption = Some(91723969))
+  val testSong = Song(
+    albumId = testAlbum.id,
+    title = "Test Song",
+    trackNumber = 8,
+    duration = 2.minutes,
+    year = 1999,
+    disc = 1,
+    idOption = Some(7646464),
   )
 }
