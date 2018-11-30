@@ -8,7 +8,7 @@ import boopickle.Default.{Pickle, Unpickle}
 import common.{OrderToken, Tags}
 import common.time.LocalDateTime
 import models.Entity
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song}
 import models.modification.{EntityModification, EntityModificationEntity}
 import models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import models.slick.SlickUtils.localDateTimeToSqlDateMapper
@@ -17,6 +17,7 @@ import models.slick.SlickUtils.orderTokenToBytesMapper
 import models.user.User
 
 import scala.collection.immutable.Seq
+import scala.concurrent.duration.FiniteDuration
 
 sealed trait SlickEntityTableDef[E <: Entity] {
   type Table <: SlickEntityTableDef.EntityTable[E]
@@ -64,11 +65,15 @@ object SlickEntityTableDef {
 
     /* override */
     final class Table(tag: SlickTag) extends EntityTable[Song](tag, tableName) {
-      def name = column[String]("name")
-      def orderToken = column[OrderToken]("orderToken")
+      def albumId = column[Long]("albumId")
+      def title = column[String]("title")
+      def trackNumber = column[Int]("trackNumber")
+      def duration = column[FiniteDuration]("duration")
+      def year = column[Int]("year")
+      def disc = column[Int]("disc")
 
       override def * =
-        (name, orderToken, id.?) <> (Song.tupled, Song.unapply)
+        (albumId, title, trackNumber, duration, year, disc, id.?) <> (Song.tupled, Song.unapply)
     }
   }
 
@@ -79,11 +84,11 @@ object SlickEntityTableDef {
 
     /* override */
     final class Table(tag: SlickTag) extends EntityTable[Album](tag, tableName) {
-      def name = column[String]("name")
-      def orderToken = column[OrderToken]("orderToken")
+      def artistId = column[Long]("artistId")
+      def title = column[String]("title")
 
       override def * =
-        (name, orderToken, id.?) <> (Album.tupled, Album.unapply)
+        (artistId, title, id.?) <> (Album.tupled, Album.unapply)
     }
   }
 
@@ -95,10 +100,9 @@ object SlickEntityTableDef {
     /* override */
     final class Table(tag: SlickTag) extends EntityTable[Artist](tag, tableName) {
       def name = column[String]("name")
-      def orderToken = column[OrderToken]("orderToken")
 
       override def * =
-        (name, orderToken, id.?) <> (Artist.tupled, Artist.unapply)
+        (name, id.?) <> (Artist.tupled, Artist.unapply)
     }
   }
 
@@ -129,8 +133,8 @@ object SlickEntityTableDef {
                 idOption = idOption
               )
           }
-        def unapply(
-            e: EntityModificationEntity): Option[(Long, Long, EntityModification, Instant, Long, Option[Long])] =
+        def unapply(e: EntityModificationEntity)
+          : Option[(Long, Long, EntityModification, Instant, Long, Option[Long])] =
           Some((e.userId, e.modification.entityId, e.modification, e.instant, e.instant.getNano, e.idOption))
 
         (userId, entityId, change, instant, instantNanos, id.?) <> (tupled _, unapply _)
