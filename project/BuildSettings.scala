@@ -8,7 +8,7 @@ import sbt._
 object BuildSettings {
 
   /** The name of your application */
-  val name = "piga"
+  val name = "musik"
 
   /** The version of your application */
   val version = "1.0"

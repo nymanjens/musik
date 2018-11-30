@@ -1,11 +1,11 @@
 {
-  "name": "Task Keeper",
-  "short_name": "Task Keeper",
+  "name": "Playlist Keeper",
+  "short_name": "Playlist Keeper",
   "start_url": "/app/",
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#f8f8f8",
-  "description": "Task Keeper",
+  "description": "Playlist Keeper",
   "icons": [{
     "src": "images/favicon48x48.png",
     "sizes": "48x48",

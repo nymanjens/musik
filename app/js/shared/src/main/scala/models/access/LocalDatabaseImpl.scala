@@ -204,7 +204,7 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
 object LocalDatabaseImpl {
 
   def create()(implicit webWorker: LocalDatabaseWebWorkerApi): Future[LocalDatabase] = async {
-    await(webWorker.create(dbName = "piga-db", inMemory = false))
+    await(webWorker.create(dbName = "musik-db", inMemory = false))
     new LocalDatabaseImpl()
   }
 
@@ -214,7 +214,7 @@ object LocalDatabaseImpl {
   }
 
   def createInMemoryForTests()(implicit webWorker: LocalDatabaseWebWorkerApi): Future[LocalDatabase] = async {
-    await(webWorker.create(dbName = "piga-db", inMemory = true))
+    await(webWorker.create(dbName = "musik-db", inMemory = true))
     new LocalDatabaseImpl()
   }
 

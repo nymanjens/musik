@@ -1,19 +1,19 @@
 #!/bin/sh
-# To install piga as a service:
-# - move this file to /etc/init.d/piga
+# To install musik as a service:
+# - move this file to /etc/init.d/musik
 # - update SERVICE_ROOT
 # - run:
-#     sudo chmod +x /etc/init.d/piga
-#     sudo update-rc.d piga defaults # start at startup
+#     sudo chmod +x /etc/init.d/musik
+#     sudo update-rc.d musik defaults # start at startup
 
 ### BEGIN INIT INFO
-# Provides:          piga
+# Provides:          musik
 # Required-Start:    $local_fs $remote_fs $network $syslog $named
 # Required-Stop:     $local_fs $remote_fs $network $syslog $named
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Starts piga
-# Description:       Starts piga using start-stop-daemon
+# Short-Description: Starts musik
+# Description:       Starts musik using start-stop-daemon
 ### END INIT INFO
 
 USER=root
@@ -21,7 +21,7 @@ HOME=/root
 export USER HOME
 
 ### settings ##
-SERVICE_ROOT=/path/to/piga
+SERVICE_ROOT=/path/to/musik
 RUNNING_PID=$SERVICE_ROOT/RUNNING_PID
 
 ### helper functions ###
@@ -60,9 +60,9 @@ case "$1" in
   start|restart)
     kill_running
 
-    echo "Starting piga..." && echo
+    echo "Starting musik..." && echo
 
-    su pi -c "cd $SERVICE_ROOT && bin/server -Dhttp.port=8782" > /tmp/piga-logs 2>&1 &
+    su pi -c "cd $SERVICE_ROOT && bin/server -Dhttp.port=8782" > /tmp/musik-logs 2>&1 &
 
     echo "Waiting for $RUNNING_PID to appear"
     for i in `seq 1 20`; do
@@ -82,12 +82,12 @@ case "$1" in
     ;;
 
   stop)
-    echo "Stopping piga..." && echo
+    echo "Stopping musik..." && echo
     kill_running
     ;;
 
   *)
-    echo "Usage: service piga {start|stop|restart}"
+    echo "Usage: service musik {start|stop|restart}"
     exit 1
     ;;
 esac

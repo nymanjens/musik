@@ -1,7 +1,7 @@
-Task Keeper
-===========
+Playlist Keeper
+===============
 
-[![Build Status](https://travis-ci.org/nymanjens/piga.svg?branch=master)](https://travis-ci.org/nymanjens/piga)
+[![Build Status](https://travis-ci.org/nymanjens/musik.svg?branch=master)](https://travis-ci.org/nymanjens/musik)
 
 This project aims to be a list editor for power users.
 
@@ -46,9 +46,9 @@ Example use cases:
 
     # Deploy files
     cd /somewhere/you/want/the/files
-    unzip .../target/universal/piga-1.0-SNAPSHOT.zip
-    mv piga-1.0-SNAPSHOT/* .
-    rm -d piga-1.0-SNAPSHOT/
+    unzip .../target/universal/musik-1.0-SNAPSHOT.zip
+    mv musik-1.0-SNAPSHOT/* .
+    rm -d musik-1.0-SNAPSHOT/
 
     # Create database tables
     bin/server -DdropAndCreateNewDb
