@@ -1,0 +1,136 @@
+/****** general ******/
+.table {
+  &.table-overflow-elipsis {
+    td, th {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 350px;
+    }
+  }
+  .no-entries {
+    font-style: italic;
+  }
+  .deemphasized td {
+    color: #BBB;
+  }
+  .expand-on-click {
+    cursor: pointer;
+  }
+  .primary-title {
+    min-width: 246px;
+    float: left;
+  }
+  .secondary-title {
+    font-weight: normal;
+    padding-left: 20px;
+  }
+}
+
+.btn-huge {
+    padding: 38px 48px;
+    font-size: 50px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+select:-moz-focusring { // Remove outline from select box in FF: http://stackoverflow.com/a/18853002/1218058
+    color: transparent;
+    text-shadow: 0 0 0 #000;
+}
+
+/****** copied from Bootstrap dataTables ******/
+table.table-bordered {
+  thead th, thead td {
+    border-left-width: 0;
+    border-top-width: 0;
+  }
+  tbody th, tbody td {
+    border-left-width: 0;
+    border-bottom-width: 0;
+  }
+  tfoot th, tfoot td {
+    border-left-width: 0;
+    border-bottom-width: 0;
+  }
+  th:last-child, td:last-child {
+    border-right-width: 0;
+  }
+}
+
+/****** loading page ******/
+.loading {
+  text-align: center;
+
+  .loading-icon {
+    font-size: 100px;
+  }
+  .loading-message {
+    font-size: 30px;
+  }
+}
+
+/****** DocumentAdministration ******/
+.table-documents {
+  form {
+    display: flex;
+    input {
+      flex: 2;
+      border: none;
+    }
+    input.value-has-changed {
+      color: blue;
+    }
+    button {
+      margin-left: 10px;
+    }
+  }
+}
+
+/****** TaskEditor ******/
+.task-editor {
+  ul {
+    padding-left: 3px;
+    list-style-type: none;
+    font-size: 18px;
+
+    li {
+      white-space: pre-wrap;
+
+      &:after { // For collapsed tasks
+        color: #CCC;
+        font-style: italic;
+      }
+      &:empty {
+        &:before { // Avoid <li> becoming size 0
+          content: " ";
+        }
+      }
+      &:not(:empty):not(.root) {
+        &:before {
+          font-family: 'Glyphicons Halflings';
+          display: inline-block;
+          margin-left: -1.7em;
+          width: 1.7em;
+          font-size: 13px;
+        }
+        &.collapsed:before {
+          content: "\e158"; // glyphicon-expand
+        }
+        &:not(.collapsed):before {
+          content: "\e159"; // glyphicon-collapse-down
+        }
+        &:not(.collapsed).leaf:before {
+          content: "\e157"; // glyphicon-unchecked
+        }
+      }
+
+      .tag {
+        display: inline !important;
+        margin-right: 6px;
+      }
+    }
+  }
+}
