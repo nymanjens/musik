@@ -1,7 +1,6 @@
 package common.testing
 
 import flux.action.Dispatcher
-import flux.stores.document.DocumentSelectionStore
 import models.access.EntityModificationPushClientFactory
 
 class TestModule {
@@ -18,5 +17,4 @@ class TestModule {
   // ******************* Non-fake implementations ******************* //
   implicit lazy val entityModificationPushClientFactory: EntityModificationPushClientFactory =
     new EntityModificationPushClientFactory
-  implicit lazy val documentSelectionStore: DocumentSelectionStore = new DocumentSelectionStore
 }

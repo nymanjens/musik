@@ -6,30 +6,22 @@ import common.time.Clock
 import flux.react.ReactVdomUtils.^^
 import flux.react.router.{Page, RouterContext}
 import flux.react.uielements
-import flux.stores.StateStore
-import flux.stores.document.AllDocumentsStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import jsfacades.Mousetrap
 import models.access.EntityAccess
-import models.document.DocumentEntity
 import models.user.User
-
-import scala.collection.immutable.Seq
 
 private[app] final class Menu(implicit entityAccess: EntityAccess,
                               user: User,
                               clock: Clock,
-                              i18n: I18n,
-                              allDocumentsStore: AllDocumentsStore) {
+                              i18n: I18n) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
-    .initialState(State(allDocuments = allDocumentsStore.state.allDocuments))
     .renderBackend[Backend]
-    .componentWillMount(scope => scope.backend.willMount(scope.props, scope.state))
+    .componentWillMount(scope => scope.backend.willMount(scope.props))
     .componentDidMount(scope => scope.backend.didMount(scope.props))
-    .componentWillUnmount(scope => scope.backend.willUnmount())
     .componentWillReceiveProps(scope => scope.backend.configureKeyboardShortcuts(scope.nextProps.router))
     .build
 
@@ -40,16 +32,12 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
 
   // **************** Private inner types ****************//
   private case class Props(router: RouterContext)
-  private case class State(allDocuments: Seq[DocumentEntity])
+  private type State = Unit
 
-  private class Backend(val $ : BackendScope[Props, State]) extends StateStore.Listener {
+  private class Backend(val $ : BackendScope[Props, State]) {
     val queryInputRef = uielements.input.TextInput.ref()
 
-    def willMount(props: Props, state: State): Callback = LogExceptionsCallback {
-      allDocumentsStore.register(this)
-      $.modState(state => logExceptions(state.copy(allDocuments = allDocumentsStore.state.allDocuments)))
-        .runNow()
-
+    def willMount(props: Props): Callback = LogExceptionsCallback {
       configureKeyboardShortcuts(props.router).runNow()
     }
     def didMount(props: Props): Callback = LogExceptionsCallback {
@@ -62,14 +50,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
       }
     }
 
-    def willUnmount(): Callback = LogExceptionsCallback {
-      allDocumentsStore.deregister(this)
-    }
 
-    override def onStateUpdate() = {
-      $.modState(state => logExceptions(state.copy(allDocuments = allDocumentsStore.state.allDocuments)))
-        .runNow()
-    }
 
     def render(props: Props, state: State) = logExceptions {
       implicit val router = props.router
@@ -122,13 +103,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
         //    ))
         //),
         <.li(
-          {
-            for (document <- state.allDocuments)
-              yield menuItem(document.name, Page.DesktopTaskList(document.id))
-          }.toVdomArray
-        ),
-        <.li(
-          menuItem(i18n("app.document-administration.html"), Page.DocumentAdministration)
+          menuItem("<u>H</u>ome", Page.Home)
         )
       )
     }
@@ -144,22 +119,9 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
         bind(shortcut, () => {
           router.setPage(page)
         })
-      def goToAdjacentMenuItem(step: Int): Unit = {
-        val allLeftMenuPages =
-          allDocumentsStore.state.allDocuments.map(document => Page.DesktopTaskList(document.id)) :+
-            Page.DocumentAdministration
-        allLeftMenuPages.indexOf(router.currentPage) match {
-          case -1 =>
-          case i if 0 <= i + step && i + step < allLeftMenuPages.size =>
-            router.setPage(allLeftMenuPages(i + step))
-          case _ =>
-        }
-      }
 
       bind("shift+alt+f", () => queryInputRef().focus())
-      bindToPage("shift+alt+d", Page.DocumentAdministration)
-      bind("shift+alt+up", () => goToAdjacentMenuItem(step = -1))
-      bind("shift+alt+down", () => goToAdjacentMenuItem(step = +1))
+      bindToPage("shift+alt+h", Page.Home)
     }
   }
 }

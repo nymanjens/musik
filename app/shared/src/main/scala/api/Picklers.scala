@@ -8,7 +8,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
 import models.access.ModelField
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.EntityType._
 import models.modification.{EntityModification, EntityType}
 import models.user.User
@@ -66,25 +66,28 @@ object Picklers {
   implicit object EntityTypePickler extends Pickler[EntityType.any] {
     override def pickle(entityType: EntityType.any)(implicit state: PickleState): Unit = logExceptions {
       val intValue: Int = entityType match {
-        case UserType           => 1
-        case DocumentEntityType => 2
-        case TaskEntityType     => 3
+        case UserType   => 1
+        case SongType   => 2
+        case AlbumType  => 3
+        case ArtistType => 4
       }
       state.pickle(intValue)
     }
     override def unpickle(implicit state: UnpickleState): EntityType.any = logExceptions {
       state.unpickle[Int] match {
         case 1 => UserType
-        case 2 => DocumentEntityType
-        case 3 => TaskEntityType
+        case 2 => SongType
+        case 3 => AlbumType
+        case 4 => ArtistType
       }
     }
   }
 
   implicit val entityPickler = compositePickler[Entity]
     .addConcreteType[User]
-    .addConcreteType[DocumentEntity]
-    .addConcreteType[TaskEntity]
+    .addConcreteType[Song]
+    .addConcreteType[Album]
+    .addConcreteType[Artist]
 
   implicit object EntityModificationPickler extends Pickler[EntityModification] {
     val addNumber = 1

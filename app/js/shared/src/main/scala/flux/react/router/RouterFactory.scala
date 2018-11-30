@@ -3,7 +3,6 @@ package flux.react.router
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
-import flux.stores.document.AllDocumentsStore
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._
@@ -12,8 +11,7 @@ import scala.reflect.ClassTag
 
 private[router] final class RouterFactory(implicit reactAppModule: flux.react.app.Module,
                                           dispatcher: Dispatcher,
-                                          i18n: I18n,
-                                          allDocumentsStore: AllDocumentsStore) {
+                                          i18n: I18n) {
 
   def createRouter(): Router[Page] = {
     Router(BaseUrl.until(RouterFactory.pathPrefix), routerConfig)
@@ -44,22 +42,13 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
         (emptyRule
 
           | staticRoute(RouterFactory.pathPrefix, Page.Root)
-            ~> redirectToPage(
-              allDocumentsStore.state.allDocuments.headOption match {
-                case Some(firstDocument) => Page.DesktopTaskList(documentId = firstDocument.id)
-                case None                => Page.DocumentAdministration
-              }
-            )(Redirect.Replace)
+            ~> redirectToPage(Page.Home)(Redirect.Replace)
 
           | staticRuleFromPage(Page.UserProfile, reactAppModule.userProfile.apply)
 
           | staticRuleFromPage(Page.UserAdministration, reactAppModule.userAdministration.apply)
 
-          | staticRuleFromPage(Page.DocumentAdministration, reactAppModule.documentAdministration.apply)
-
-          | dynamicRuleFromPage(_ / long.caseClass[Page.DesktopTaskList]) { (page, ctl) =>
-            reactAppModule.desktopTaskList(page.documentId, ctl)
-          }
+          | staticRuleFromPage(Page.Home, reactAppModule.home.apply)
 
         // Fallback
         ).notFound(redirectToPage(Page.Root)(Redirect.Replace))

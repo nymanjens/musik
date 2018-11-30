@@ -24,11 +24,6 @@ object Page {
   case object UserProfile extends PageBase("app.user-profile", iconClass = "fa fa-user fa-fw")
   case object UserAdministration extends PageBase("app.user-administration", iconClass = "fa fa-cogs fa-fw")
 
-  // **************** Document views **************** //
-  case object DocumentAdministration
-      extends PageBase("app.document-administration", iconClass = "fa fa-pencil fa-fw")
-  case class DesktopTaskList(documentId: Long) extends Page {
-    override def title(implicit i18n: I18n) = "Playlist Keeper"
-    override def iconClass = "icon-list"
-  }
+  // **************** Media views **************** //
+  case object Home extends PageBase("app.home", iconClass = "fa fa-home fa-fw")
 }

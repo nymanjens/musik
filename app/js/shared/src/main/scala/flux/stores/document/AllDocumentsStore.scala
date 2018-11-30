@@ -9,7 +9,7 @@ import flux.stores.document.AllDocumentsStore.State
 import flux.stores.{AsyncEntityDerivedStateStore, StateStore}
 import models.access.JsEntityAccess
 import models.document
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.{EntityModification, EntityType}
 
 import scala.async.Async.{async, await}

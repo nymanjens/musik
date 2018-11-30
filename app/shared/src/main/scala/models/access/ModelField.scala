@@ -5,7 +5,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
 import models.access.ModelField.FieldType
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.EntityType
 import models.modification.EntityType._
 import models.user.User

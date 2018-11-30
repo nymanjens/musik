@@ -8,7 +8,7 @@ import boopickle.Default.{Pickle, Unpickle}
 import common.{OrderToken, Tags}
 import common.time.LocalDateTime
 import models.Entity
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.{EntityModification, EntityModificationEntity}
 import models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import models.slick.SlickUtils.localDateTimeToSqlDateMapper

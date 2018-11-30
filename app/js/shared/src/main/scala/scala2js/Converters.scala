@@ -7,7 +7,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models._
 import models.access.ModelField
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification._
 import models.user.User
 

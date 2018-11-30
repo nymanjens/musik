@@ -3,7 +3,6 @@ package api
 import api.Picklers._
 import api.ScalaJsApi._
 import models.Entity
-import models.document.DocumentEntity
 import models.modification.{EntityModification, EntityType}
 import models.user.User
 
@@ -27,9 +26,6 @@ trait ScalaJsApi {
 
   /** Adds or updates a user according to the present fields in the given prototype. */
   def upsertUser(userPrototype: UserPrototype): Unit
-
-  /** For each given document, updates the existing document with the same ID to match the other fields. */
-  def updateDocuments(documents: Seq[DocumentEntity]): Unit
 }
 
 object ScalaJsApi {
@@ -40,7 +36,6 @@ object ScalaJsApi {
     * @param nextUpdateToken An update token for all changes since this call
     */
   case class GetInitialDataResponse(user: User,
-                                    allAccessibleDocuments: Seq[DocumentEntity],
                                     i18nMessages: Map[String, String],
                                     nextUpdateToken: UpdateToken)
 

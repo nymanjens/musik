@@ -2,7 +2,7 @@ package models.modification
 
 import common.ScalaUtils
 import models.Entity
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.user.User
 
 import scala.collection.immutable.Seq
@@ -28,9 +28,10 @@ object EntityType {
 
   // @formatter:off
   implicit case object UserType extends EntityType[User] { override def entityClass = classOf[User]}
-  implicit case object DocumentEntityType extends EntityType[DocumentEntity] { override def entityClass = classOf[DocumentEntity]}
-  implicit case object TaskEntityType extends EntityType[TaskEntity] { override def entityClass = classOf[TaskEntity]}
+  implicit case object SongType extends EntityType[Song] { override def entityClass = classOf[Song]}
+  implicit case object AlbumType extends EntityType[Album] { override def entityClass = classOf[Album]}
+  implicit case object ArtistType extends EntityType[Artist] { override def entityClass = classOf[Artist]}
   // @formatter:on
 
-  val values: Seq[EntityType.any] = Seq(UserType, DocumentEntityType, TaskEntityType)
+  val values: Seq[EntityType.any] = Seq(UserType, SongType, AlbumType, ArtistType)
 }

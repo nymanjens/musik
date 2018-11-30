@@ -5,7 +5,7 @@ import java.time.Month.MARCH
 import common.testing.TestObjects._
 import common.time.LocalDateTime
 import models.access.ModelField
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.{EntityModification, EntityType}
 import models.user.User
 import utest._
@@ -83,11 +83,14 @@ object ConvertersTest extends TestSuite {
     "UserConverter: testToJsAndBack" - {
       testToJsAndBack[User](testUserRedacted)
     }
-    "DocumentEntityConverter: testToJsAndBack" - {
-      testToJsAndBack[DocumentEntity](testDocumentEntity)
+    "SongConverter: testToJsAndBack" - {
+      testToJsAndBack[Song](testSong)
     }
-    "TaskEntityConverter: testToJsAndBack" - {
-      testToJsAndBack[TaskEntity](testTaskEntity)
+    "AlbumConverter: testToJsAndBack" - {
+      testToJsAndBack[Album](testAlbum)
+    }
+    "ArtistConverter: testToJsAndBack" - {
+      testToJsAndBack[Artist](testArtist)
     }
   }
 

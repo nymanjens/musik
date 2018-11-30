@@ -8,7 +8,7 @@ import com.google.inject._
 import common.publisher.TriggerablePublisher
 import common.time.Clock
 import models.Entity
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.EntityType.{DocumentEntityType, TaskEntityType, UserType}
 import models.modification.{EntityModification, EntityModificationEntity, EntityType}
 import models.slick.SlickUtils.dbApi._

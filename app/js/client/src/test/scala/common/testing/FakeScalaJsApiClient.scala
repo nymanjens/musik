@@ -4,7 +4,6 @@ import api.ScalaJsApi.{GetAllEntitiesResponse, UserPrototype}
 import api.ScalaJsApiClient
 import models.Entity
 import models.access.{DbQuery, DbQueryExecutor}
-import models.document.DocumentEntity
 import models.modification.{EntityModification, EntityType}
 
 import scala.async.Async.{async, await}
@@ -53,8 +52,6 @@ final class FakeScalaJsApiClient extends ScalaJsApiClient {
   override def upsertUser(userPrototype: UserPrototype): Future[Unit] = async {
     upsertedUserPrototypes += userPrototype
   }
-
-  override def updateDocuments(documents: Seq[DocumentEntity]): Future[Unit] = ???
 
   // **************** Additional methods for tests ****************//
   def addEntities[E <: Entity: EntityType](entities: E*): Unit = {

@@ -6,7 +6,7 @@ import java.time.Month._
 import api.ScalaJsApi.{GetInitialDataResponse, UpdateToken, UserPrototype}
 import common.OrderToken
 import common.time.{LocalDateTime, LocalDateTimes}
-import models.document.{DocumentEntity, TaskEntity}
+import models.media.{Song, Album, Artist}
 import models.modification.EntityModification
 import models.user.User
 
