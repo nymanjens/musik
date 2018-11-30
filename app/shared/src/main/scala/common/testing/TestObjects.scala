@@ -60,7 +60,7 @@ object TestObjects {
   def testModification: EntityModification = testModificationA
 
   val testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
-    user = testUserA,
+    user = testUserRedacted,
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken
   )
