@@ -91,64 +91,7 @@ final class ApplicationStartHook @Inject()(implicit app: Application,
   private def loadDummyData(): Unit = {
     implicit val user = Users.getOrCreateRobotUser()
 
-    val documentIdA = 12121212L
-    val documentIdB = 34343434L
-    entityAccess.persistEntityModifications(
-      EntityModification.Add(
-        DocumentEntity(
-          name = "Test document A",
-          orderToken = OrderToken.middle,
-          idOption = Some(documentIdA))),
-      EntityModification.Add(
-        DocumentEntity(
-          name = "Test document B",
-          orderToken = OrderToken.middleBetween(Some(OrderToken.middle), None),
-          idOption = Some(documentIdB))),
-      EntityModification.Add(
-        TaskEntity(
-          documentId = documentIdA,
-          contentHtml = "<b>Hello</b><br/>World",
-          orderToken = OrderToken.middleBetween(None, Some(OrderToken.middle)),
-          indentation = 0,
-          collapsed = true,
-          delayedUntil = None,
-          tags = Seq(),
-          idOption = Some(11)
-        )),
-      EntityModification.Add(
-        TaskEntity(
-          documentId = documentIdA,
-          contentHtml = "<i>&lt;indented&gt;</i>",
-          orderToken = OrderToken.middle,
-          indentation = 2,
-          collapsed = false,
-          delayedUntil = None,
-          tags = Seq("indented"),
-          idOption = Some(22)
-        )),
-      EntityModification.Add(
-        TaskEntity(
-          documentId = documentIdA,
-          contentHtml = """<a href="www.example.com">link to www.example.com</a>""",
-          orderToken = OrderToken.middleBetween(Some(OrderToken.middle), None),
-          indentation = 1,
-          collapsed = false,
-          delayedUntil = None,
-          tags = Seq(),
-          idOption = Some(33)
-        )),
-      EntityModification.Add(
-        TaskEntity(
-          documentId = documentIdB,
-          contentHtml = "Second document",
-          orderToken = OrderToken.middle,
-          indentation = 0,
-          collapsed = false,
-          delayedUntil = None,
-          tags = Seq(),
-          idOption = Some(44)
-        ))
-    )
+    // TODO: Implement
   }
 
   private def assertExists(path: Path): Path = {

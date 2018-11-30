@@ -7,10 +7,11 @@ import models.Entity
 import models.access.LocalDatabaseImpl.{ModificationWithId, Singleton}
 import models.access.webworker.LocalDatabaseWebWorkerApi
 import models.access.webworker.LocalDatabaseWebWorkerApi.{LokiQuery, WriteOperation}
-import models.document.DocumentEntity
-import models.modification.EntityType.{DocumentEntityType, TaskEntityType, UserType}
+import models.modification.EntityType.UserType
 import models.modification.{EntityModification, EntityType}
 import org.scalajs.dom.console
+import scala2js.Converters._
+import scala2js.Scala2Js
 
 import scala.async.Async.{async, await}
 import scala.collection.immutable.Seq
@@ -19,8 +20,6 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala.util.matching.Regex
-import scala2js.Converters._
-import scala2js.Scala2Js
 
 private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorkerApi) extends LocalDatabase {
 
@@ -194,9 +193,10 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
     EntityType.values.map(collectionNameOf) :+ singletonsCollectionName :+ pendingModificationsCollectionName
 
   private def secondaryIndices(entityType: EntityType.any): Seq[ModelField[_, _]] = entityType match {
-    case UserType           => Seq()
-    case DocumentEntityType => Seq()
-    case TaskEntityType     => Seq(ModelField.TaskEntity.documentId)
+    case UserType   => Seq()
+    case SongType   => Seq(ModelField.Song.albumId)
+    case AlbumType  => Seq(ModelField.Album.artistId)
+    case ArtistType => Seq()
   }
 }
 
