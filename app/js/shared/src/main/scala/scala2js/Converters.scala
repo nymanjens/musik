@@ -1,5 +1,6 @@
 package scala2js
 
+import scala.concurrent.duration._
 import java.time.{LocalDate, LocalTime}
 
 import common.GuavaReplacement.ImmutableBiMap
@@ -7,7 +8,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models._
 import models.access.ModelField
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song}
 import models.modification._
 import models.user.User
 
@@ -16,15 +17,18 @@ import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 import scala2js.Scala2Js.{Converter, MapConverter}
 
+import scala.concurrent.duration.FiniteDuration
+
 object Converters {
 
   // **************** Convertor generators **************** //
   implicit def fromEntityType[E <: Entity: EntityType]: MapConverter[E] = {
     val entityType: EntityType[E] = implicitly[EntityType[E]]
     val converter: MapConverter[_ <: Entity] = entityType match {
-      case EntityType.UserType           => UserConverter
-      case EntityType.DocumentEntityType => DocumentEntityConverter
-      case EntityType.TaskEntityType     => TaskEntityConverter
+      case EntityType.UserType   => UserConverter
+      case EntityType.SongType   => SongConverter
+      case EntityType.AlbumType  => AlbumConverter
+      case EntityType.ArtistType => ArtistConverter
     }
     converter.asInstanceOf[MapConverter[E]]
   }
@@ -40,8 +44,9 @@ object Converters {
       case ModelField.FieldType.LocalDateTimeType => fromType(ModelField.FieldType.LocalDateTimeType)
       case ModelField.FieldType.MaybeLocalDateTimeType =>
         fromType(ModelField.FieldType.MaybeLocalDateTimeType)
-      case ModelField.FieldType.StringSeqType  => fromType(ModelField.FieldType.StringSeqType)
-      case ModelField.FieldType.OrderTokenType => fromType(ModelField.FieldType.OrderTokenType)
+      case ModelField.FieldType.FiniteDurationType => fromType(ModelField.FieldType.FiniteDurationType)
+      case ModelField.FieldType.StringSeqType      => fromType(ModelField.FieldType.StringSeqType)
+      case ModelField.FieldType.OrderTokenType     => fromType(ModelField.FieldType.OrderTokenType)
     }
     result.asInstanceOf[Converter[V]]
   }
@@ -141,6 +146,18 @@ object Converters {
     }
   }
 
+  implicit object FiniteDurationConverter extends Converter[FiniteDuration] {
+
+    private val secondsInDay = 60 * 60 * 24
+
+    override def toJs(duration: FiniteDuration) = {
+      Scala2Js.toJs(duration.toMillis)
+    }
+    override def toScala(value: js.Any) = {
+      Scala2Js.toScala[Long](value) millis
+    }
+  }
+
   implicit object OrderTokenConverter extends Converter[OrderToken] {
     override def toJs(token: OrderToken) = {
       token.parts.toJSArray
@@ -151,7 +168,7 @@ object Converters {
   }
 
   implicit val EntityTypeConverter: Converter[EntityType.any] =
-    enumConverter(EntityType.UserType, EntityType.DocumentEntityType, EntityType.TaskEntityType)
+    enumConverter(EntityType.UserType, EntityType.SongType, EntityType.AlbumType, EntityType.ArtistType)
 
   implicit object EntityModificationConverter extends Converter[EntityModification] {
     private val addNumber: Int = 1
@@ -256,44 +273,62 @@ object Converters {
     }
   }
 
-  implicit object DocumentEntityConverter extends EntityConverter[DocumentEntity] {
-    override def allFieldsWithoutId =
-      Seq(ModelField.DocumentEntity.name, ModelField.DocumentEntity.orderToken)
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, DocumentEntity]) =
-        getRequiredValueFromDict(dict)(field)
-
-      DocumentEntity(
-        name = getRequired(ModelField.DocumentEntity.name),
-        orderToken = getRequired(ModelField.DocumentEntity.orderToken))
-    }
-  }
-
-  implicit object TaskEntityConverter extends EntityConverter[TaskEntity] {
+  implicit object SongConverter extends EntityConverter[Song] {
     override def allFieldsWithoutId =
       Seq(
-        ModelField.TaskEntity.documentId,
-        ModelField.TaskEntity.contentHtml,
-        ModelField.TaskEntity.orderToken,
-        ModelField.TaskEntity.indentation,
-        ModelField.TaskEntity.collapsed,
-        ModelField.TaskEntity.delayedUntil,
-        ModelField.TaskEntity.tags
+        ModelField.Song.albumId,
+        ModelField.Song.title,
+        ModelField.Song.trackNumber,
+        ModelField.Song.duration,
+        ModelField.Song.year,
+        ModelField.Song.disc
       )
 
     override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, TaskEntity]) =
+      def getRequired[T](field: ModelField[T, Song]) =
         getRequiredValueFromDict(dict)(field)
 
-      TaskEntity(
-        documentId = getRequired(ModelField.TaskEntity.documentId),
-        contentHtml = getRequired(ModelField.TaskEntity.contentHtml),
-        orderToken = getRequired(ModelField.TaskEntity.orderToken),
-        indentation = getRequired(ModelField.TaskEntity.indentation),
-        collapsed = getRequired(ModelField.TaskEntity.collapsed),
-        delayedUntil = getRequired(ModelField.TaskEntity.delayedUntil),
-        tags = getRequired(ModelField.TaskEntity.tags)
+      Song(
+        albumId = getRequired(ModelField.Song.albumId),
+        title = getRequired(ModelField.Song.title),
+        trackNumber = getRequired(ModelField.Song.trackNumber),
+        duration = getRequired(ModelField.Song.duration),
+        year = getRequired(ModelField.Song.year),
+        disc = getRequired(ModelField.Song.disc)
+      )
+    }
+  }
+
+  implicit object AlbumConverter extends EntityConverter[Album] {
+    override def allFieldsWithoutId =
+      Seq(
+        ModelField.Album.artistId,
+        ModelField.Album.title
+      )
+
+    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
+      def getRequired[T](field: ModelField[T, Album]) =
+        getRequiredValueFromDict(dict)(field)
+
+      Album(
+        artistId = getRequired(ModelField.Album.artistId),
+        title = getRequired(ModelField.Album.title)
+      )
+    }
+  }
+
+  implicit object ArtistConverter extends EntityConverter[Artist] {
+    override def allFieldsWithoutId =
+      Seq(
+        ModelField.Artist.name
+      )
+
+    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
+      def getRequired[T](field: ModelField[T, Artist]) =
+        getRequiredValueFromDict(dict)(field)
+
+      Artist(
+        name = getRequired(ModelField.Artist.name)
       )
     }
   }

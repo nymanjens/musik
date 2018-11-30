@@ -2,10 +2,11 @@ package scala2js
 
 import java.time.Month.MARCH
 
+import scala.concurrent.duration._
 import common.testing.TestObjects._
 import common.time.LocalDateTime
 import models.access.ModelField
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song}
 import models.modification.{EntityModification, EntityType}
 import models.user.User
 import utest._
@@ -13,6 +14,8 @@ import utest._
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 import scala2js.Converters._
+
+import scala.concurrent.duration.FiniteDuration
 
 object ConvertersTest extends TestSuite {
   val dateTime = LocalDateTime.of(2022, MARCH, 13, 12, 13)
@@ -62,6 +65,11 @@ object ConvertersTest extends TestSuite {
 
     "LocalDateTimeConverter: testToJsAndBack" - {
       testToJsAndBack[LocalDateTime](LocalDateTime.of(2022, MARCH, 13, 12, 13))
+    }
+
+
+    "LocalDateTimeConverter: testToJsAndBack" - {
+      testToJsAndBack[FiniteDuration](28 minutes)
     }
 
     "EntityTypeConverter" - {
