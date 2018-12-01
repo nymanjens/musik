@@ -82,29 +82,34 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
     } {
       val supportedExtension = supportedExtensions contains getLowercaseExtension(path)
       if (supportedExtension) {
-        val audioFile = AudioFileIO.read(path.toFile)
-        val tag = audioFile.getTag
-        val audioHeader = audioFile.getAudioHeader
+        try {
+          val audioFile = AudioFileIO.read(path.toFile)
+          val tag = audioFile.getTag
+          val audioHeader = audioFile.getAudioHeader
 
-        def getFirstInTag(fieldKey: FieldKey): String = {
-          if (null == tag) {
-            null
-          } else {
-            tag.getFirst(fieldKey).toString
+          def getFirstInTag(fieldKey: FieldKey): String = {
+            if (null == tag) {
+              null
+            } else {
+              tag.getFirst(fieldKey).toString
+            }
           }
+          jsonResults += toJsonString(
+            supportedExtension = supportedExtension,
+            path = path,
+            title = getFirstInTag(FieldKey.TITLE),
+            album = getFirstInTag(FieldKey.ALBUM),
+            artist = getFirstInTag(FieldKey.ARTIST),
+            track = getFirstInTag(FieldKey.TRACK),
+            duration = audioHeader.getTrackLength.toString,
+            year = getFirstInTag(FieldKey.YEAR),
+            disc = getFirstInTag(FieldKey.DISC_NO),
+            albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
+          )
+        } catch {
+          case _: Throwable =>
+            jsonResults += toJsonString(supportedExtension = supportedExtension, path = path)
         }
-        jsonResults += toJsonString(
-          supportedExtension = supportedExtension,
-          path = path,
-          title = getFirstInTag(FieldKey.TITLE),
-          album = getFirstInTag(FieldKey.ALBUM),
-          artist = getFirstInTag(FieldKey.ARTIST),
-          track = getFirstInTag(FieldKey.TRACK),
-          duration = audioHeader.getTrackLength.toString,
-          year = getFirstInTag(FieldKey.YEAR),
-          disc = getFirstInTag(FieldKey.DISC_NO),
-          albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
-        )
       } else {
         jsonResults += toJsonString(supportedExtension = supportedExtension, path = path)
       }
