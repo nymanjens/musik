@@ -61,7 +61,6 @@ object BuildSettings {
       "com.typesafe.play" %% "play-cache" % versions.play,
       "com.typesafe.play" %% "play-ws" % versions.play,
       "com.typesafe.play" %% "play-specs2" % versions.play % Test,
-      "org.yaml" % "snakeyaml" % "1.14",
       "com.typesafe.slick" %% "slick" % "3.2.0",
       "com.typesafe.slick" %% "slick-hikaricp" % "3.2.0",
       "commons-lang" % "commons-lang" % "2.6",
@@ -69,6 +68,9 @@ object BuildSettings {
       "com.h2database" % "h2" % "1.4.195",
       "org.xerial" % "sqlite-jdbc" % "3.8.11.2",
       "com.google.code.findbugs" % "jsr305" % "1.3.9",
+      "org" % "jaudiotagger" % "2.0.3",
+      "com.google.guava" % "guava" % "27.0-jre",
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "net.jcip" % "jcip-annotations" % "1.0"
     ))
 
