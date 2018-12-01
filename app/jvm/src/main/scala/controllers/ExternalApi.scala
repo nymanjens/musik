@@ -1,6 +1,7 @@
 package controllers
 
-import java.io.File
+import scala.concurrent.ExecutionContext.Implicits.global
+import java.io.{BufferedWriter, File, FileWriter}
 
 import org.json.simple.JSONObject
 import java.nio.file.{Files, Path, Paths}
@@ -19,6 +20,7 @@ import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.FieldKey
 
 import scala.collection.{SortedMap, mutable}
+import scala.concurrent.Future
 
 final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi,
                                   components: ControllerComponents,
@@ -35,12 +37,20 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   }
 
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
+    validateApplicationSecret(applicationSecret)
+
+    rescanMediaLibraryAsync()
+
+    Ok(s"OK")
+  }
+
+  def rescanMediaLibraryAsync(): Future[_] = Future {
     def toJsonStringFromMap(map: Map[String, Any]): String = {
       val obj = new JSONObject(map.asJava)
-//      for ((key, value) <- map) value match {
-//        case v: Boolean => obj.put(key, (if (v) java.lang.Boolean.TRUE else java.lang.Boolean.FALSE))
-//        case v: String  => obj.put(key, v)
-//      }
+      //      for ((key, value) <- map) value match {
+      //        case v: Boolean => obj.put(key, (if (v) java.lang.Boolean.TRUE else java.lang.Boolean.FALSE))
+      //        case v: String  => obj.put(key, v)
+      //      }
       obj.toString
     }
     def toJsonString(supportedExtension: Boolean,
@@ -67,15 +77,15 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
           "albumartist" -> albumartist
         ))
 
-    validateApplicationSecret(applicationSecret)
-
     val supportedExtensions = Seq("mp3", "wav", "ogg", "opus", "flac", "wma", "mp4", "m4a")
     val mediaFolder = Paths.get(
       playConfiguration
         .get[String]("app.media.mediaFolder")
         .replaceFirst("^~", System.getProperty("user.home")))
 
-    val jsonResults = mutable.Buffer[String]()
+    val writer = new BufferedWriter(new FileWriter(new File("/tmp/jaudiotagger.json")))
+    writer.write("[\n")
+
     for {
       path <- MoreFiles.fileTraverser().depthFirstPreOrder(mediaFolder).asScala
       if !Files.isDirectory(path)
@@ -94,30 +104,33 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
               tag.getFirst(fieldKey).toString
             }
           }
-          jsonResults += toJsonString(
-            supportedExtension = supportedExtension,
-            path = path,
-            title = getFirstInTag(FieldKey.TITLE),
-            album = getFirstInTag(FieldKey.ALBUM),
-            artist = getFirstInTag(FieldKey.ARTIST),
-            track = getFirstInTag(FieldKey.TRACK),
-            duration = audioHeader.getTrackLength.toString,
-            year = getFirstInTag(FieldKey.YEAR),
-            disc = getFirstInTag(FieldKey.DISC_NO),
-            albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
-          )
+          writer.write(
+            toJsonString(
+              supportedExtension = supportedExtension,
+              path = path,
+              title = getFirstInTag(FieldKey.TITLE),
+              album = getFirstInTag(FieldKey.ALBUM),
+              artist = getFirstInTag(FieldKey.ARTIST),
+              track = getFirstInTag(FieldKey.TRACK),
+              duration = audioHeader.getTrackLength.toString,
+              year = getFirstInTag(FieldKey.YEAR),
+              disc = getFirstInTag(FieldKey.DISC_NO),
+              albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
+            ))
+          writer.write(",\n")
         } catch {
           case _: Throwable =>
-            jsonResults += toJsonString(supportedExtension = supportedExtension, path = path)
+            writer.write(toJsonString(supportedExtension = supportedExtension, path = path))
+            writer.write(",\n")
         }
       } else {
-        jsonResults += toJsonString(supportedExtension = supportedExtension, path = path)
+        writer.write(toJsonString(supportedExtension = supportedExtension, path = path))
+        writer.write(",\n")
       }
     }
-    // TODO
 
-    //Ok(s"OK")
-    Ok(s"""[\n${jsonResults.mkString(",\n")}\n]""")
+    writer.write("]\n")
+    writer.close()
   }
 
   // ********** private helper methods ********** //
