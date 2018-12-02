@@ -1,5 +1,7 @@
 package controllers.helpers
 
+import java.io.IOException
+
 import scala.collection.JavaConverters._
 import java.nio.file.{Files, Path, Paths}
 
@@ -10,7 +12,8 @@ import common.GuavaReplacement.Splitter
 import controllers.helpers.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.FieldKey
+import org.jaudiotagger.tag.{FieldKey, TagException}
+import org.jaudiotagger.audio.exceptions._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.{FiniteDuration, _}
@@ -57,7 +60,8 @@ final class MediaScanner @Inject()(implicit
             albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
           )
         } catch {
-          case _: Throwable =>
+          case _: CannotReadException | _: IOException | _: TagException | _: ReadOnlyFileException |
+              _: InvalidAudioFrameException =>
             MediaFile(
               relativePath = relativePath,
               title = None,
