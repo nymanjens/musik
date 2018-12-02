@@ -2,6 +2,7 @@ package controllers
 
 import com.google.inject.Inject
 import common.time.Clock
+import controllers.helpers.MediaScanner
 import models.access.JvmEntityAccess
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -13,7 +14,8 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
                                   components: ControllerComponents,
                                   clock: Clock,
                                   playConfiguration: play.api.Configuration,
-                                  entityAccess: JvmEntityAccess)
+                                  entityAccess: JvmEntityAccess,
+                                  mediaScanner: MediaScanner)
     extends AbstractController(components)
     with I18nSupport {
 
@@ -26,13 +28,9 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
     validateApplicationSecret(applicationSecret)
 
-    rescanMediaLibraryAsync()
+    println(mediaScanner.scanAllMedia())
 
     Ok(s"OK")
-  }
-
-  def rescanMediaLibraryAsync(): Future[_] = Future {
-    ???
   }
 
   // ********** private helper methods ********** //
