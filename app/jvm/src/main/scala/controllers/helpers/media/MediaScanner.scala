@@ -1,19 +1,12 @@
-package controllers.helpers
+package controllers.helpers.media
 
 import java.io.IOException
-
-import scala.collection.JavaConverters._
 import java.nio.file.{Files, Path, Paths}
 
-import scala.collection.immutable.{ListMap, Seq}
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
-import controllers.helpers.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
-import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.{FieldKey, TagException}
-import org.jaudiotagger.audio.exceptions._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.{FiniteDuration, _}

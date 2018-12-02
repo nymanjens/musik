@@ -2,7 +2,7 @@ package controllers
 
 import com.google.inject.Inject
 import common.time.Clock
-import controllers.helpers.MediaScanner
+import controllers.helpers.media.MediaScanner
 import models.access.JvmEntityAccess
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
