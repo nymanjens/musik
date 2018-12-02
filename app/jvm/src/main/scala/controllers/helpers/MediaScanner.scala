@@ -1,20 +1,19 @@
 package controllers.helpers
 
-import scala.concurrent.duration._
-import java.io.{BufferedWriter, File, FileWriter}
+import scala.collection.JavaConverters._
 import java.nio.file.{Files, Path, Paths}
 
+import scala.collection.immutable.{ListMap, Seq}
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
 import controllers.helpers.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
+import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.tag.FieldKey
 
-import scala.collection.JavaConverters._
-import scala.collection.immutable.{ListMap, Seq}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration.FiniteDuration
+import scala.collection.immutable.Seq
+import scala.concurrent.duration.{FiniteDuration, _}
 
 final class MediaScanner @Inject()(implicit
                                    playConfiguration: play.api.Configuration,
@@ -52,7 +51,7 @@ final class MediaScanner @Inject()(implicit
             album = getFirstInTag(FieldKey.ALBUM),
             artist = getFirstInTag(FieldKey.ARTIST),
             trackNumber = getFirstInTag(FieldKey.TRACK),
-            duration = audioHeader.getTrackLength.toString,
+            duration = audioHeader.getTrackLength.seconds,
             year = getFirstInTag(FieldKey.YEAR),
             disc = getFirstInTag(FieldKey.DISC_NO),
             albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
@@ -72,7 +71,7 @@ final class MediaScanner @Inject()(implicit
             )
         }
       }
-    }.toSeq
+    }.toVector
   }
 
   private def getLowercaseExtension(path: Path): String = {

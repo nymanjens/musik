@@ -43,6 +43,7 @@ object ModelField {
     implicit case object IntType extends FieldType[Int]
     implicit case object MaybeIntType extends FieldType[Option[Int]]
     implicit case object LongType extends FieldType[Long]
+    implicit case object MaybeLongType extends FieldType[Option[Long]]
     implicit case object DoubleType extends FieldType[Double]
     implicit case object StringType extends FieldType[String]
     implicit case object LocalDateTimeType extends FieldType[LocalDateTime]
@@ -69,9 +70,10 @@ object ModelField {
     private type E = Song
 
     case object id extends IdModelField[E]
-    case object relativePath extends ModelField[String, E]("relativePath", _.relativePath)
-    case object albumId extends ModelField[Long, E]("albumId", _.albumId)
+    case object filename extends ModelField[String, E]("filename", _.filename)
     case object title extends ModelField[String, E]("title", _.title)
+    case object albumId extends ModelField[Long, E]("albumId", _.albumId)
+    case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
     case object trackNumber extends ModelField[Int, E]("trackNumber", _.trackNumber)
     case object duration extends ModelField[FiniteDuration, E]("duration", _.duration)
     case object year extends ModelField[Option[Int], E]("year", _.year)
@@ -82,8 +84,9 @@ object ModelField {
     private type E = Album
 
     case object id extends IdModelField[E]
-    case object artistId extends ModelField[Long, E]("artistId", _.artistId)
+    case object relativePath extends ModelField[String, E]("relativePath", _.relativePath)
     case object title extends ModelField[String, E]("title", _.title)
+    case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
   }
 
   object Artist {
@@ -95,27 +98,36 @@ object ModelField {
 
   // **************** Field numbers **************** //
   private val fieldToNumberMap: ImmutableBiMap[ModelField[_, _], Int] =
-    ImmutableBiMap
-      .builder[ModelField[_, _], Int]()
-      .put(User.id, 2)
-      .put(User.loginName, 3)
-      .put(User.passwordHash, 4)
-      .put(User.name, 5)
-      .put(User.isAdmin, 6)
-      .put(Song.id, 7)
-      .put(Song.relativePath, 19)
-      .put(Song.albumId, 8)
-      .put(Song.title, 9)
-      .put(Song.trackNumber, 10)
-      .put(Song.duration, 11)
-      .put(Song.year, 12)
-      .put(Song.disc, 13)
-      .put(Album.id, 14)
-      .put(Album.artistId, 15)
-      .put(Album.title, 16)
-      .put(Artist.id, 17)
-      .put(Artist.name, 18)
-      .build()
+    toBiMapWithUniqueValues(
+      User.id,
+      User.loginName,
+      User.passwordHash,
+      User.name,
+      User.isAdmin,
+      Song.id,
+      Song.filename,
+      Song.title,
+      Song.albumId,
+      Song.artistId,
+      Song.trackNumber,
+      Song.duration,
+      Song.year,
+      Song.disc,
+      Album.id,
+      Album.relativePath,
+      Album.title,
+      Album.artistId,
+      Artist.id,
+      Artist.name
+    )
   def toNumber(field: ModelField[_, _]): Int = fieldToNumberMap.get(field)
   def fromNumber(number: Int): ModelField[_, _] = fieldToNumberMap.inverse().get(number)
+
+  private def toBiMapWithUniqueValues(fields: ModelField[_, _]*): ImmutableBiMap[ModelField[_, _], Int] = {
+    val resultBuilder = ImmutableBiMap.builder[ModelField[_, _], Int]()
+    for ((field, index) <- fields.zipWithIndex) {
+      resultBuilder.put(field, index + 1)
+    }
+    resultBuilder.build()
+  }
 }

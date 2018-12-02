@@ -66,11 +66,16 @@ object TestObjects {
   )
 
   val testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
-  val testAlbum = Album(artistId = testArtist.id, title = "Test Album", idOption = Some(91723969))
+  val testAlbum = Album(
+    relativePath = "folderA/folderB",
+    title = "Test Album",
+    artistId = Some(testArtist.id),
+    idOption = Some(91723969))
   val testSong = Song(
-    relativePath = "folderA/folderB/test-song.mp3",
-    albumId = testAlbum.id,
+    filename = "test-song.mp3",
     title = "Test Song",
+    albumId = testAlbum.id,
+    artistId = Some(testArtist.id),
     trackNumber = 8,
     duration = 2.minutes,
     year = Some(1999),

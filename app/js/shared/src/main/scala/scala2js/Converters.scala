@@ -40,6 +40,7 @@ object Converters {
       case ModelField.FieldType.IntType           => fromType(ModelField.FieldType.IntType)
       case ModelField.FieldType.MaybeIntType      => fromType(ModelField.FieldType.MaybeIntType)
       case ModelField.FieldType.LongType          => fromType(ModelField.FieldType.LongType)
+      case ModelField.FieldType.MaybeLongType     => fromType(ModelField.FieldType.MaybeLongType)
       case ModelField.FieldType.DoubleType        => fromType(ModelField.FieldType.DoubleType)
       case ModelField.FieldType.StringType        => fromType(ModelField.FieldType.StringType)
       case ModelField.FieldType.LocalDateTimeType => fromType(ModelField.FieldType.LocalDateTimeType)
@@ -277,9 +278,10 @@ object Converters {
   implicit object SongConverter extends EntityConverter[Song] {
     override def allFieldsWithoutId =
       Seq(
-        ModelField.Song.relativePath,
-        ModelField.Song.albumId,
+        ModelField.Song.filename,
         ModelField.Song.title,
+        ModelField.Song.albumId,
+        ModelField.Song.artistId,
         ModelField.Song.trackNumber,
         ModelField.Song.duration,
         ModelField.Song.year,
@@ -291,9 +293,10 @@ object Converters {
         getRequiredValueFromDict(dict)(field)
 
       Song(
-        relativePath = getRequired(ModelField.Song.relativePath),
-        albumId = getRequired(ModelField.Song.albumId),
+        filename = getRequired(ModelField.Song.filename),
         title = getRequired(ModelField.Song.title),
+        albumId = getRequired(ModelField.Song.albumId),
+        artistId = getRequired(ModelField.Song.artistId),
         trackNumber = getRequired(ModelField.Song.trackNumber),
         duration = getRequired(ModelField.Song.duration),
         year = getRequired(ModelField.Song.year),
@@ -305,8 +308,9 @@ object Converters {
   implicit object AlbumConverter extends EntityConverter[Album] {
     override def allFieldsWithoutId =
       Seq(
-        ModelField.Album.artistId,
-        ModelField.Album.title
+        ModelField.Album.relativePath,
+        ModelField.Album.title,
+        ModelField.Album.artistId
       )
 
     override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
@@ -314,8 +318,9 @@ object Converters {
         getRequiredValueFromDict(dict)(field)
 
       Album(
-        artistId = getRequired(ModelField.Album.artistId),
-        title = getRequired(ModelField.Album.title)
+        relativePath = getRequired(ModelField.Album.relativePath),
+        title = getRequired(ModelField.Album.title),
+        artistId = getRequired(ModelField.Album.artistId)
       )
     }
   }

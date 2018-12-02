@@ -4,9 +4,10 @@ import models.Entity
 
 import scala.concurrent.duration.FiniteDuration
 
-case class Song(relativePath: String,
-                albumId: Long,
+case class Song(filename: String,
                 title: String,
+                albumId: Long,
+                artistId: Option[Long],
                 trackNumber: Int,
                 duration: FiniteDuration,
                 year: Option[Int],

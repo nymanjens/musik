@@ -66,16 +66,17 @@ object SlickEntityTableDef {
 
     /* override */
     final class Table(tag: SlickTag) extends EntityTable[Song](tag, tableName) {
-      def relativePath = column[String]("relativePath")
-      def albumId = column[Long]("albumId")
+      def filename = column[String]("filename")
       def title = column[String]("title")
+      def albumId = column[Long]("albumId")
+      def artistId = column[Option[Long]]("artistId")
       def trackNumber = column[Int]("trackNumber")
       def duration = column[FiniteDuration]("duration")
       def year = column[Option[Int]]("year")
       def disc = column[Int]("disc")
 
       override def * =
-        (relativePath, albumId, title, trackNumber, duration, year, disc, id.?) <> (Song.tupled, Song.unapply)
+        (filename, title, albumId, artistId, trackNumber, duration, year, disc, id.?) <> (Song.tupled, Song.unapply)
     }
   }
 
@@ -86,11 +87,12 @@ object SlickEntityTableDef {
 
     /* override */
     final class Table(tag: SlickTag) extends EntityTable[Album](tag, tableName) {
-      def artistId = column[Long]("artistId")
+      def relativePath = column[String]("relativePath")
       def title = column[String]("title")
+      def artistId = column[Option[Long]]("artistId")
 
       override def * =
-        (artistId, title, id.?) <> (Album.tupled, Album.unapply)
+        (relativePath, title, artistId, id.?) <> (Album.tupled, Album.unapply)
     }
   }
 

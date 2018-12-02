@@ -194,7 +194,7 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
 
   private def secondaryIndices(entityType: EntityType.any): Seq[ModelField[_, _]] = entityType match {
     case UserType   => Seq()
-    case SongType   => Seq(ModelField.Song.albumId)
+    case SongType   => Seq(ModelField.Song.albumId, ModelField.Album.artistId)
     case AlbumType  => Seq(ModelField.Album.artistId)
     case ArtistType => Seq()
   }
