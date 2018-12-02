@@ -67,7 +67,6 @@ object ConvertersTest extends TestSuite {
       testToJsAndBack[LocalDateTime](LocalDateTime.of(2022, MARCH, 13, 12, 13))
     }
 
-
     "LocalDateTimeConverter: testToJsAndBack" - {
       testToJsAndBack[FiniteDuration](28.minutes)
     }

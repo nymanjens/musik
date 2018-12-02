@@ -156,6 +156,7 @@ object Picklers {
         field.fieldType match {
           case ModelField.FieldType.BooleanType       => fromType(ModelField.FieldType.BooleanType)
           case ModelField.FieldType.IntType           => fromType(ModelField.FieldType.IntType)
+          case ModelField.FieldType.MaybeIntType      => fromType(ModelField.FieldType.MaybeIntType)
           case ModelField.FieldType.LongType          => fromType(ModelField.FieldType.LongType)
           case ModelField.FieldType.DoubleType        => fromType(ModelField.FieldType.DoubleType)
           case ModelField.FieldType.StringType        => fromType(ModelField.FieldType.StringType)

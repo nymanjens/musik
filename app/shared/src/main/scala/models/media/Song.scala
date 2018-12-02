@@ -4,11 +4,12 @@ import models.Entity
 
 import scala.concurrent.duration.FiniteDuration
 
-case class Song(albumId: Long,
+case class Song(relativePath: String,
+                albumId: Long,
                 title: String,
                 trackNumber: Int,
                 duration: FiniteDuration,
-                year: Int,
+                year: Option[Int],
                 disc: Int,
                 idOption: Option[Long] = None)
     extends Entity {

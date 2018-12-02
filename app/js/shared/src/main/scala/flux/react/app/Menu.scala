@@ -12,10 +12,7 @@ import jsfacades.Mousetrap
 import models.access.EntityAccess
 import models.user.User
 
-private[app] final class Menu(implicit entityAccess: EntityAccess,
-                              user: User,
-                              clock: Clock,
-                              i18n: I18n) {
+private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, clock: Clock, i18n: I18n) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -49,8 +46,6 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
         case _ =>
       }
     }
-
-
 
     def render(props: Props, state: State) = logExceptions {
       implicit val router = props.router

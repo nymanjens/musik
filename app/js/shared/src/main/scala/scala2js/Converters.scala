@@ -38,6 +38,7 @@ object Converters {
     val result = modelField.fieldType match {
       case ModelField.FieldType.BooleanType       => fromType(ModelField.FieldType.BooleanType)
       case ModelField.FieldType.IntType           => fromType(ModelField.FieldType.IntType)
+      case ModelField.FieldType.MaybeIntType      => fromType(ModelField.FieldType.MaybeIntType)
       case ModelField.FieldType.LongType          => fromType(ModelField.FieldType.LongType)
       case ModelField.FieldType.DoubleType        => fromType(ModelField.FieldType.DoubleType)
       case ModelField.FieldType.StringType        => fromType(ModelField.FieldType.StringType)
@@ -276,6 +277,7 @@ object Converters {
   implicit object SongConverter extends EntityConverter[Song] {
     override def allFieldsWithoutId =
       Seq(
+        ModelField.Song.relativePath,
         ModelField.Song.albumId,
         ModelField.Song.title,
         ModelField.Song.trackNumber,
@@ -289,6 +291,7 @@ object Converters {
         getRequiredValueFromDict(dict)(field)
 
       Song(
+        relativePath = getRequired(ModelField.Song.relativePath),
         albumId = getRequired(ModelField.Song.albumId),
         title = getRequired(ModelField.Song.title),
         trackNumber = getRequired(ModelField.Song.trackNumber),

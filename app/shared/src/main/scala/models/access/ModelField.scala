@@ -41,6 +41,7 @@ object ModelField {
   object FieldType {
     implicit case object BooleanType extends FieldType[Boolean]
     implicit case object IntType extends FieldType[Int]
+    implicit case object MaybeIntType extends FieldType[Option[Int]]
     implicit case object LongType extends FieldType[Long]
     implicit case object DoubleType extends FieldType[Double]
     implicit case object StringType extends FieldType[String]
@@ -68,11 +69,12 @@ object ModelField {
     private type E = Song
 
     case object id extends IdModelField[E]
+    case object relativePath extends ModelField[String, E]("relativePath", _.relativePath)
     case object albumId extends ModelField[Long, E]("albumId", _.albumId)
     case object title extends ModelField[String, E]("title", _.title)
     case object trackNumber extends ModelField[Int, E]("trackNumber", _.trackNumber)
     case object duration extends ModelField[FiniteDuration, E]("duration", _.duration)
-    case object year extends ModelField[Int, E]("year", _.year)
+    case object year extends ModelField[Option[Int], E]("year", _.year)
     case object disc extends ModelField[Int, E]("disc", _.disc)
   }
 
@@ -101,6 +103,7 @@ object ModelField {
       .put(User.name, 5)
       .put(User.isAdmin, 6)
       .put(Song.id, 7)
+      .put(Song.relativePath, 19)
       .put(Song.albumId, 8)
       .put(Song.title, 9)
       .put(Song.trackNumber, 10)
