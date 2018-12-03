@@ -3,6 +3,8 @@ package controllers
 import java.nio.file.Paths
 
 import com.google.inject.Inject
+import common.RelativePaths
+import common.RelativePaths.joinPaths
 import common.time.Clock
 import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner, StoredMediaSyncer}
 import models.access.JvmEntityAccess
@@ -58,13 +60,5 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
     require(
       applicationSecret == realApplicationSecret,
       s"Invalid application secret. Found '$applicationSecret' but should be '$realApplicationSecret'")
-  }
-
-  private def joinPaths(s1: String, s2: String): String = {
-    if (s1.endsWith("/")) {
-      s1 + s2
-    } else {
-      s1 + "/" + s2
-    }
   }
 }
