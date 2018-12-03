@@ -1,9 +1,13 @@
 package controllers
 
+import java.nio.file.Paths
+
 import com.google.inject.Inject
 import common.time.Clock
 import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner}
 import models.access.JvmEntityAccess
+import models.media.{Album, Artist, Song}
+import models.slick.SlickUtils.dbRun
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
 
@@ -30,9 +34,16 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
     validateApplicationSecret(applicationSecret)
 
-    val allMediaFiles = mediaScanner.scanAllMedia()
-    val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(allMediaFiles)
-    albumParser.parse(allMediaFiles, artistAssigner)
+    val oldRelativePaths = {
+      val albumIdToRelativePath =
+        dbRun(entityAccess.newSlickQuery[Album]()).map(album => album.id -> album.relativePath).toMap
+      dbRun(entityAccess.newSlickQuery[Song]()).map(song =>
+        joinPaths(albumIdToRelativePath(song.albumId), song.filename))
+    }
+    val addedAndRemovedMedia =
+      mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)
+    val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(addedAndRemovedMedia.added)
+    val parsedAlbums = albumParser.parse(addedAndRemovedMedia.added, artistAssigner)
 
     Ok(s"OK")
   }
@@ -43,5 +54,13 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
     require(
       applicationSecret == realApplicationSecret,
       s"Invalid application secret. Found '$applicationSecret' but should be '$realApplicationSecret'")
+  }
+
+  private def joinPaths(s1: String, s2: String): String = {
+    if (s1.endsWith("/")) {
+      s1 + s2
+    } else {
+      s1 + "/" + s2
+    }
   }
 }
