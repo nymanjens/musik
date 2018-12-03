@@ -39,9 +39,11 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
 
     val oldRelativePaths = {
       val albumIdToRelativePath =
-        dbRun(entityAccess.newSlickQuery[Album]()).map(album => album.id -> album.relativePath).toMap
-      dbRun(entityAccess.newSlickQuery[Song]()).map(song =>
-        joinPaths(albumIdToRelativePath(song.albumId), song.filename))
+        entityAccess.newQuerySync[Album]().data().map(album => album.id -> album.relativePath).toMap
+      entityAccess
+        .newQuerySync[Song]()
+        .data()
+        .map(song => joinPaths(albumIdToRelativePath(song.albumId), song.filename))
     }
     val addedAndRemovedMedia =
       mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)

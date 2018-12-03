@@ -15,7 +15,7 @@ final class ArtistAssignerFactory @Inject()(implicit entityAccess: JvmEntityAcce
 
   def fromDbAndMediaFiles(mediaFiles: Seq[MediaFile]): ArtistAssigner = {
     val storedLookupToCanonicalNameMap = {
-      val allArtists = dbRun(entityAccess.newSlickQuery[Artist]())
+      val allArtists = entityAccess.newQuerySync[Artist]().data()
       allArtists.map(_.name).groupBy(ArtistAssignerFactory.lookupName).mapValues(getOnlyElement)
     }
 
