@@ -6,6 +6,7 @@ import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
 
 import scala.concurrent.duration.FiniteDuration
+import scala.collection.immutable.Seq
 
 final class AlbumParser @Inject()() {
 

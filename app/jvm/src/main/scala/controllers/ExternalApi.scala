@@ -4,7 +4,7 @@ import java.nio.file.Paths
 
 import com.google.inject.Inject
 import common.time.Clock
-import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner}
+import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner, StoredMediaSyncer}
 import models.access.JvmEntityAccess
 import models.media.{Album, Artist, Song}
 import models.slick.SlickUtils.dbRun
@@ -21,7 +21,8 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
                                   entityAccess: JvmEntityAccess,
                                   mediaScanner: MediaScanner,
                                   artistAssignerFactory: ArtistAssignerFactory,
-                                  albumParser: AlbumParser)
+                                  albumParser: AlbumParser,
+                                  storedMediaSyncer: StoredMediaSyncer)
     extends AbstractController(components)
     with I18nSupport {
 
@@ -44,6 +45,9 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
       mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)
     val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(addedAndRemovedMedia.added)
     val parsedAlbums = albumParser.parse(addedAndRemovedMedia.added, artistAssigner)
+
+    storedMediaSyncer.addEntitiesFromParsedAlbums(parsedAlbums)
+    storedMediaSyncer.removeEntitiesFromRelativeSongPaths(addedAndRemovedMedia.removedRelativePaths)
 
     Ok(s"OK")
   }

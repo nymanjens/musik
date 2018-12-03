@@ -9,6 +9,7 @@ import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 import models.media.Artist
 import models.slick.SlickUtils.dbRun
+import scala.collection.immutable.Seq
 
 final class ArtistAssignerFactory @Inject()(implicit entityAccess: JvmEntityAccess) {
 
