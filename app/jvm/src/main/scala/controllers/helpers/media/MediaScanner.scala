@@ -6,6 +6,7 @@ import java.nio.file.{Files, Path, Paths}
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
+import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 
 import scala.collection.immutable.Seq

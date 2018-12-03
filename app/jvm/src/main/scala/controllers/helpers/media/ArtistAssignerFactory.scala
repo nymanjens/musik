@@ -1,6 +1,7 @@
 package controllers.helpers.media
 
 import com.google.inject.Inject
+import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 
