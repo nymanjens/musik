@@ -2,7 +2,7 @@ package controllers
 
 import com.google.inject.Inject
 import common.time.Clock
-import controllers.helpers.media.MediaScanner
+import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner}
 import models.access.JvmEntityAccess
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
@@ -15,7 +15,9 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
                                   clock: Clock,
                                   playConfiguration: play.api.Configuration,
                                   entityAccess: JvmEntityAccess,
-                                  mediaScanner: MediaScanner)
+                                  mediaScanner: MediaScanner,
+                                  artistAssignerFactory: ArtistAssignerFactory,
+                                  albumParser: AlbumParser)
     extends AbstractController(components)
     with I18nSupport {
 
@@ -28,7 +30,9 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
     validateApplicationSecret(applicationSecret)
 
-    println(mediaScanner.scanAllMedia())
+    val allMediaFiles = mediaScanner.scanAllMedia()
+    val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(allMediaFiles)
+    albumParser.parse(allMediaFiles, artistAssigner)
 
     Ok(s"OK")
   }

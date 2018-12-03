@@ -12,7 +12,7 @@ import models.slick.SlickUtils.dbRun
 
 final class ArtistAssignerFactory @Inject()(implicit entityAccess: JvmEntityAccess) {
 
-  def fromMediaFiles(mediaFiles: Seq[MediaFile]): ArtistAssigner = {
+  def fromDbAndMediaFiles(mediaFiles: Seq[MediaFile]): ArtistAssigner = {
     val storedLookupToCanonicalNameMap = {
       val allArtists = dbRun(entityAccess.newSlickQuery[Artist]())
       allArtists.map(_.name).groupBy(ArtistAssignerFactory.lookupName).mapValues(getOnlyElement)
