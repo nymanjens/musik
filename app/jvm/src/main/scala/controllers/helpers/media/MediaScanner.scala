@@ -8,6 +8,11 @@ import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
 import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
+import scala.collection.JavaConverters._
+import scala.collection.immutable.{ListMap, Seq}
+import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.tag.{FieldKey, TagException}
+import org.jaudiotagger.audio.exceptions._
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.{FiniteDuration, _}
