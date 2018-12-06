@@ -1,7 +1,7 @@
 package controllers.helpers.media
 
 import com.google.inject.Inject
-import common.CollectionUtils.getMostCommonStringIgnoringCase
+import common.CollectionUtils.{getMostCommonString, getMostCommonStringIgnoringCase}
 import common.GuavaReplacement.Splitter
 import common.{CollectionUtils, RelativePaths}
 import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
@@ -17,18 +17,25 @@ final class AlbumParser @Inject()() {
   def parse(mediaFiles: Seq[MediaFile], artistAssigner: ArtistAssigner): Seq[ParsedAlbum] = {
     val albumRelativePathToFiles = mediaFiles.groupBy(f => RelativePaths.getFolderPath(f.relativePath))
     for ((albumRelativePath, albumFiles) <- albumRelativePathToFiles.toVector) yield {
-      val albumTitle = albumFiles.flatMap(_.album) match {
-        case Seq()      => RelativePaths.getFilename(albumRelativePath)
-        case albumNames => getMostCommonStringIgnoringCase(albumNames)
+      val albumTitle = {
+        def fallback = RelativePaths.getFilename(albumRelativePath)
+        albumFiles.flatMap(_.album) match {
+          case Seq() => fallback
+          case albumNames =>
+            getDominantStringIgnoringCase(albumNames, minimalFraction = 0.4) getOrElse fallback
+        }
       }
 
       val canonicalArtistName = {
-        def mostCommonCanonical(artistNames: Seq[String]): Option[String] = artistNames match {
+        def dominantCanonical(artistNames: Seq[String]): Option[String] = artistNames match {
           case Seq() => None
-          case names => Some(getMostCommonStringIgnoringCase(names.map(artistAssigner.canonicalArtistName)))
+          case names =>
+            getDominantStringIgnoringCase(
+              names.map(artistAssigner.canonicalArtistName),
+              minimalFraction = 0.4)
         }
-        mostCommonCanonical(albumFiles.flatMap(_.albumartist))
-          .orElse(mostCommonCanonical(albumFiles.flatMap(_.artist)))
+        dominantCanonical(albumFiles.flatMap(_.albumartist))
+          .orElse(dominantCanonical(albumFiles.flatMap(_.artist)))
       }
 
       ParsedAlbum(
@@ -68,6 +75,18 @@ final class AlbumParser @Inject()() {
 
   private def parseFirstInt(string: String): Option[Int] = {
     raw"\d+".r.findFirstIn(string).map(_.toInt)
+  }
+
+  def getDominantStringIgnoringCase(strings: Iterable[String], minimalFraction: Double): Option[String] = {
+    require(strings.nonEmpty)
+    val lowercaseStrings = strings.toVector.map(_.toLowerCase)
+    val mostCommonLowerCaseString = getMostCommonString(lowercaseStrings)
+    val mostCommonFraction = 1.0 * lowercaseStrings.count(_ == mostCommonLowerCaseString) / lowercaseStrings.size
+    if (mostCommonFraction >= minimalFraction) {
+      Some(getMostCommonString(strings.filter(_.toLowerCase == mostCommonLowerCaseString)))
+    } else {
+      None
+    }
   }
 
   private def withoutExtension(filename: String): String = {
