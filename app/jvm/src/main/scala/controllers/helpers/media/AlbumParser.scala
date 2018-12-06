@@ -1,16 +1,15 @@
 package controllers.helpers.media
 
 import com.google.inject.Inject
-import common.CollectionUtils.{getMostCommonString, getMostCommonStringIgnoringCase}
+import common.CollectionUtils.getMostCommonString
 import common.GuavaReplacement.Splitter
-import common.{CollectionUtils, RelativePaths}
+import common.RelativePaths
 import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
 
-import scala.concurrent.duration.FiniteDuration
 import scala.collection.immutable.Seq
-import scala.util.matching.Regex
+import scala.concurrent.duration.FiniteDuration
 
 final class AlbumParser @Inject()() {
 
@@ -77,7 +76,7 @@ final class AlbumParser @Inject()() {
     raw"\d+".r.findFirstIn(string).map(_.toInt)
   }
 
-  def getDominantStringIgnoringCase(strings: Iterable[String], minimalFraction: Double): Option[String] = {
+  private def getDominantStringIgnoringCase(strings: Iterable[String], minimalFraction: Double): Option[String] = {
     require(strings.nonEmpty)
     val lowercaseStrings = strings.toVector.map(_.toLowerCase)
     val mostCommonLowerCaseString = getMostCommonString(lowercaseStrings)

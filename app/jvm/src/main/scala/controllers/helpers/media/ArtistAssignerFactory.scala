@@ -52,7 +52,8 @@ object ArtistAssignerFactory {
     lookupNameCharMatcher.retainFrom(interim)
   }
 
-  final class ArtistAssigner(lookupToCanonicalNameMap: Map[String, String]) {
+  final class ArtistAssigner @visibleForTesting private[media] (
+      lookupToCanonicalNameMap: Map[String, String]) {
 
     def canonicalArtistName(artistName: String): String = lookupToCanonicalNameMap(lookupName(artistName))
   }
