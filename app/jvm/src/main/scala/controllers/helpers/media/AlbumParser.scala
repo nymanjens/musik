@@ -2,6 +2,7 @@ package controllers.helpers.media
 
 import com.google.inject.Inject
 import common.CollectionUtils.getMostCommonStringIgnoringCase
+import common.GuavaReplacement.Splitter
 import common.{CollectionUtils, RelativePaths}
 import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
@@ -55,7 +56,7 @@ final class AlbumParser @Inject()() {
 
     ParsedSong(
       filename = filename,
-      title = file.title getOrElse filename,
+      title = file.title getOrElse withoutExtension(filename),
       canonicalArtistName = file.artist map artistAssigner.canonicalArtistName,
       trackNumber =
         if (allSongsHaveUniqueTrackNumber) parseFirstInt(file.trackNumber.get).get else trackNumberFromIndex,
@@ -67,6 +68,13 @@ final class AlbumParser @Inject()() {
 
   private def parseFirstInt(string: String): Option[Int] = {
     raw"\d+".r.findFirstIn(string).map(_.toInt)
+  }
+
+  private def withoutExtension(filename: String): String = {
+    Splitter.on('.').split(filename) match {
+      case Seq(single) => single
+      case parts       => parts.slice(0, parts.size - 1).mkString(".")
+    }
   }
 }
 object AlbumParser {
