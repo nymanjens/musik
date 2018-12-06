@@ -4,11 +4,13 @@ import com.google.common.base.{CharMatcher, Splitter}
 import com.google.inject.Inject
 import common.CollectionUtils.getMostCommonStringIgnoringCase
 import common.GuavaReplacement.Iterables.getOnlyElement
+import common.ScalaUtils.visibleForTesting
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 import models.media.Artist
 import models.slick.SlickUtils.dbRun
+
 import scala.collection.immutable.Seq
 
 final class ArtistAssignerFactory @Inject()(implicit entityAccess: JvmEntityAccess) {
@@ -38,7 +40,7 @@ object ArtistAssignerFactory {
     digits or letters
   }
 
-  private def lookupName(artistName: String): String = {
+  @visibleForTesting private[media] def lookupName(artistName: String): String = {
     var interim = artistName.toLowerCase
     for (split <- Seq("(", " f/", "/", "&", " and ", ", ")) {
       val firstPart = Splitter.on(split).splitToList(interim).get(0)

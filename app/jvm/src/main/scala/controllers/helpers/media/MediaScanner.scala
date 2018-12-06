@@ -20,7 +20,7 @@ import scala.concurrent.duration.{FiniteDuration, _}
 
 final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configuration) {
   private val supportedExtensions: Seq[String] = Seq("mp3", "wav", "ogg", "opus", "flac", "wma", "mp4", "m4a")
-  private val mediaFolder: Path = Paths.get(
+  private lazy val mediaFolder: Path = Paths.get(
     playConfiguration
       .get[String]("app.media.mediaFolder")
       .replaceFirst("^~", System.getProperty("user.home")))
