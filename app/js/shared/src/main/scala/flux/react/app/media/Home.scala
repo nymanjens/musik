@@ -52,15 +52,15 @@ private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, d
         uielements.PageHeader(router.currentPage),
         <.div("Artist:"), {
           for (artist <- props.allArtists)
-            yield <.div(^.key := s"artist-${artist.id}", "- ", artist.name)
+            yield <.div(^.key := s"artist-${artist.id}", "- ", artist.toString)
         }.toVdomArray,
         <.div("Albums:"), {
           for (album <- props.allAlbums)
-            yield <.div(^.key := s"album-${album.id}", "- ", album.title)
+            yield <.div(^.key := s"album-${album.id}", "- ", album.toString)
         }.toVdomArray,
         <.div("Songs:"), {
           for (song <- props.allSongs)
-            yield <.div(^.key := s"song-${song.id}", "- ", song.title)
+            yield <.div(^.key := s"song-${song.id}", "- ", song.toString)
         }.toVdomArray
       )
     }
