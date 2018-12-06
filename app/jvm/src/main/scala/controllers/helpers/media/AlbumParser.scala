@@ -92,7 +92,11 @@ final class AlbumParser @Inject()() {
   private def withoutExtension(filename: String): String = {
     Splitter.on('.').split(filename) match {
       case Seq(single) => single
-      case parts       => parts.slice(0, parts.size - 1).mkString(".")
+      case parts =>
+        parts.slice(0, parts.size - 1).mkString(".").trim match {
+          case "" => filename
+          case s  => s
+        }
     }
   }
 }

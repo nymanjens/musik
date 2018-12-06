@@ -15,6 +15,7 @@ object RelativePaths {
   }
 
   def getFilename(relativePath: String): String = Splitter.on('/').split(relativePath).last
+
   def getFolderPath(relativePath: String): String =
     relativePath.stripSuffix(getFilename(relativePath)).stripSuffix("/")
 }
