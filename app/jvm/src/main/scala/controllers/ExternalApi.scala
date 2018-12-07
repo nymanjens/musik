@@ -37,6 +37,12 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
     validateApplicationSecret(applicationSecret)
 
+    rescanMediaLibraryAsync()
+
+    Ok(s"OK")
+  }
+
+  private def rescanMediaLibraryAsync(): Future[_] = Future {
     val oldRelativePaths = {
       val albumIdToRelativePath =
         entityAccess.newQuerySync[Album]().data().map(album => album.id -> album.relativePath).toMap
@@ -52,8 +58,6 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
 
     storedMediaSyncer.addEntitiesFromParsedAlbums(parsedAlbums)
     storedMediaSyncer.removeEntitiesFromRelativeSongPaths(addedAndRemovedMedia.removedRelativePaths)
-
-    Ok(s"OK")
   }
 
   // ********** private helper methods ********** //
