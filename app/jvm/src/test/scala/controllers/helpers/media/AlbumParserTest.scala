@@ -1,23 +1,16 @@
 package controllers.helpers.media
 
-import scala.concurrent.duration._
 import com.google.inject.{Guice, Inject}
-import common.GuavaReplacement.Iterables
 import common.GuavaReplacement.Iterables.getOnlyElement
-import common.testing.JvmTestObjects.{mediaFile, _}
-import common.testing.TestObjects._
+import common.testing.JvmTestObjects.mediaFile
 import common.testing._
 import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
-import models.access.JvmEntityAccess
-import models.media.Artist
-import models.modification.EntityModification
-import models.user.User
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
-import play.api.test.WithApplication
 
 import scala.collection.immutable.Seq
+import scala.concurrent.duration._
 
 @RunWith(classOf[JUnitRunner])
 class AlbumParserTest extends HookedSpecification {
