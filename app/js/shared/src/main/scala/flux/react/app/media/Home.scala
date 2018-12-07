@@ -1,7 +1,7 @@
 package flux.react.app.media
 
 import scala.collection.immutable.Seq
-import common.I18n
+import common.{Formatting, I18n}
 import common.LoggingUtils.logExceptions
 import flux.action.Dispatcher
 import flux.react.router.RouterContext
@@ -45,6 +45,8 @@ private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, d
 
   private class Backend($ : BackendScope[Props, State]) {
 
+    private val musicPlayerRef = uielements.media.MusicPlayer.ref()
+
     def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
 
@@ -61,7 +63,23 @@ private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, d
         <.div("Songs:"), {
           for (song <- props.allSongs)
             yield <.div(^.key := s"song-${song.id}", "- ", song.toString)
-        }.toVdomArray
+        }.toVdomArray,
+        <.div(
+          <.button(
+            ^.className := "btn btn-default",
+            ^.onClick ==> { _ =>
+              musicPlayerRef().pause()
+              Callback.empty
+            },
+            "Pause"
+          )
+        ),
+        <.div(
+          uielements.media.MusicPlayer(
+            ref = musicPlayerRef,
+            src = "/test"
+          )
+        )
       )
     }
   }
