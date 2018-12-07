@@ -17,7 +17,26 @@ object JvmTestObjects {
     albumartist = Some("test-albumartist")
   )
 
-  def mediaFile(artist: String = null, albumartist: String = null): MediaFile = {
-    testMediaFile.copy(artist = Option(artist), albumartist = Option(albumartist))
-  }
+  def mediaFile(
+      relativePath: String = "test-relative-path",
+      title: String = null,
+      album: String = null,
+      artist: String = null,
+      albumartist: String = null,
+      trackNumber: String = null,
+      duration: FiniteDuration = 2.minutes,
+      year: String = null,
+      disc: String = null
+  ): MediaFile =
+    MediaFile(
+      relativePath = relativePath,
+      title = Option(title),
+      album = Option(album),
+      artist = Option(artist),
+      trackNumber = Option(trackNumber),
+      duration = duration,
+      year = Option(year),
+      disc = Option(disc),
+      albumartist = Option(albumartist)
+    )
 }

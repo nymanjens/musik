@@ -21,7 +21,7 @@ final class AlbumParser @Inject()() {
         albumFiles.flatMap(_.album) match {
           case Seq() => fallback
           case albumNames =>
-            getDominantStringIgnoringCase(albumNames, minimalFraction = 0.4) getOrElse fallback
+            getDominantStringIgnoringCase(albumNames, minimalFraction = 0.6) getOrElse fallback
         }
       }
 
@@ -31,7 +31,7 @@ final class AlbumParser @Inject()() {
           case names =>
             getDominantStringIgnoringCase(
               names.map(artistAssigner.canonicalArtistName),
-              minimalFraction = 0.4)
+              minimalFraction = 0.6)
         }
         dominantCanonical(albumFiles.flatMap(_.albumartist))
           .orElse(dominantCanonical(albumFiles.flatMap(_.artist)))
@@ -76,7 +76,8 @@ final class AlbumParser @Inject()() {
     raw"\d+".r.findFirstIn(string).map(_.toInt)
   }
 
-  private def getDominantStringIgnoringCase(strings: Iterable[String], minimalFraction: Double): Option[String] = {
+  private def getDominantStringIgnoringCase(strings: Iterable[String],
+                                            minimalFraction: Double): Option[String] = {
     require(strings.nonEmpty)
     val lowercaseStrings = strings.toVector.map(_.toLowerCase)
     val mostCommonLowerCaseString = getMostCommonString(lowercaseStrings)
