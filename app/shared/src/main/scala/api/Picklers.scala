@@ -164,8 +164,9 @@ object Picklers {
           case ModelField.FieldType.LocalDateTimeType => fromType(ModelField.FieldType.LocalDateTimeType)
           case ModelField.FieldType.MaybeLocalDateTimeType =>
             fromType(ModelField.FieldType.MaybeLocalDateTimeType)
-          case ModelField.FieldType.StringSeqType  => fromType(ModelField.FieldType.StringSeqType)
-          case ModelField.FieldType.OrderTokenType => fromType(ModelField.FieldType.OrderTokenType)
+          case ModelField.FieldType.FiniteDurationType => fromType(ModelField.FieldType.FiniteDurationType)
+          case ModelField.FieldType.StringSeqType      => fromType(ModelField.FieldType.StringSeqType)
+          case ModelField.FieldType.OrderTokenType     => fromType(ModelField.FieldType.OrderTokenType)
         }
       }
     }
