@@ -197,6 +197,8 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
     case SongType   => Seq(ModelField.Song.albumId, ModelField.Album.artistId)
     case AlbumType  => Seq(ModelField.Album.artistId)
     case ArtistType => Seq()
+    case PlaylistEntryType => Seq()
+    case PlayStatusType => Seq()
   }
 }
 

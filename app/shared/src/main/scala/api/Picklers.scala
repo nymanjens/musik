@@ -8,7 +8,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
 import models.access.ModelField
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.EntityType._
 import models.modification.{EntityModification, EntityType}
 import models.user.User
@@ -70,6 +70,8 @@ object Picklers {
         case SongType   => 2
         case AlbumType  => 3
         case ArtistType => 4
+        case PlaylistEntryType => 5
+        case PlayStatusType => 6
       }
       state.pickle(intValue)
     }
@@ -79,6 +81,8 @@ object Picklers {
         case 2 => SongType
         case 3 => AlbumType
         case 4 => ArtistType
+        case 5 => PlaylistEntryType
+        case 6 => PlayStatusType
       }
     }
   }
@@ -88,6 +92,8 @@ object Picklers {
     .addConcreteType[Song]
     .addConcreteType[Album]
     .addConcreteType[Artist]
+    .addConcreteType[PlaylistEntry]
+    .addConcreteType[PlayStatus]
 
   implicit object EntityModificationPickler extends Pickler[EntityModification] {
     val addNumber = 1

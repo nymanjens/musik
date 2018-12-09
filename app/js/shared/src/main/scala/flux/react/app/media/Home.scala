@@ -11,7 +11,7 @@ import flux.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.access.EntityAccess
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 
 private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, dispatcher: Dispatcher) {
 

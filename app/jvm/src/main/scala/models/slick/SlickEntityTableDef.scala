@@ -8,7 +8,7 @@ import boopickle.Default.{Pickle, Unpickle}
 import common.{OrderToken, Tags}
 import common.time.LocalDateTime
 import models.Entity
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.{EntityModification, EntityModificationEntity}
 import models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import models.slick.SlickUtils.localDateTimeToSqlDateMapper
@@ -29,7 +29,7 @@ sealed trait SlickEntityTableDef[E <: Entity] {
 object SlickEntityTableDef {
 
   val all: Seq[SlickEntityTableDef[_]] =
-    Seq(UserDef, SongDef, AlbumDef, ArtistDef, EntityModificationEntityDef)
+    Seq(UserDef, SongDef, AlbumDef, ArtistDef,PlaylistEntryDef, PlayStatusDef, EntityModificationEntityDef)
 
   /** Table extension to be used with an Entity model. */
   // Based on active-slick (https://github.com/strongtyped/active-slick)
@@ -107,6 +107,39 @@ object SlickEntityTableDef {
 
       override def * =
         (name, id.?) <> (Artist.tupled, Artist.unapply)
+    }
+  }
+
+  implicit object PlaylistEntryDef extends SlickEntityTableDef[PlaylistEntry] {
+
+    override val tableName: String = "PLAYLIST_ENTRIES"
+    override def table(tag: SlickTag): Table = new Table(tag)
+
+    /* override */
+    final class Table(tag: SlickTag) extends EntityTable[PlaylistEntry](tag, tableName) {
+      def songId = column[Long]("songId")
+      def orderToken = column[OrderToken]("orderToken")
+      def userId = column[Long]("userId")
+
+      override def * =
+        (songId, orderToken, userId, id.?) <> (PlaylistEntry.tupled, PlaylistEntry.unapply)
+    }
+  }
+
+  implicit object PlayStatusDef extends SlickEntityTableDef[PlayStatus] {
+
+    override val tableName: String = "PLAY_STATUSES"
+    override def table(tag: SlickTag): Table = new Table(tag)
+
+    /* override */
+    final class Table(tag: SlickTag) extends EntityTable[PlayStatus](tag, tableName) {
+      def currentPlaylistEntryId = column[Long]("currentPlaylistEntryId")
+      def hasStarted = column[Boolean]("hasStarted")
+      def stopAfterCurrentSong = column[Boolean]("stopAfterCurrentSong")
+      def userId = column[Long]("userId")
+
+      override def * =
+        (currentPlaylistEntryId, hasStarted, stopAfterCurrentSong, userId, id.?) <> (PlayStatus.tupled, PlayStatus.unapply)
     }
   }
 

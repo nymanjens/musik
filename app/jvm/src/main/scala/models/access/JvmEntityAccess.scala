@@ -8,7 +8,7 @@ import com.google.inject._
 import common.publisher.TriggerablePublisher
 import common.time.Clock
 import models.Entity
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.{EntityModification, EntityModificationEntity, EntityType}
 import models.slick.SlickUtils.dbApi._
 import models.slick.SlickUtils.dbRun
@@ -152,6 +152,8 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
       case EntityType.SongType   => implicitly[SlickEntityTableDef[Song]]
       case EntityType.AlbumType  => implicitly[SlickEntityTableDef[Album]]
       case EntityType.ArtistType => implicitly[SlickEntityTableDef[Artist]]
+      case EntityType.PlaylistEntryType => implicitly[SlickEntityTableDef[PlaylistEntry]]
+      case EntityType.PlayStatusType => implicitly[SlickEntityTableDef[PlayStatus]]
     }
     tableDef.asInstanceOf[SlickEntityTableDef[entityType.get]]
   }

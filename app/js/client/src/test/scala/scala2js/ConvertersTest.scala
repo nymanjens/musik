@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import common.testing.TestObjects._
 import common.time.LocalDateTime
 import models.access.ModelField
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.{EntityModification, EntityType}
 import models.user.User
 import utest._
@@ -98,6 +98,12 @@ object ConvertersTest extends TestSuite {
     }
     "ArtistConverter: testToJsAndBack" - {
       testToJsAndBack[Artist](testArtist)
+    }
+    "PlaylistEntryConverter: testToJsAndBack" - {
+      testToJsAndBack[PlaylistEntry](testPlaylistEntry)
+    }
+    "PlayStatusConverter: testToJsAndBack" - {
+      testToJsAndBack[PlayStatus](testPlayStatus)
     }
   }
 

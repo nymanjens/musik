@@ -4,8 +4,9 @@ import common.GuavaReplacement.ImmutableBiMap
 import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
+import models.access.ModelField.Album.E
 import models.access.ModelField.FieldType
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, PlayStatus, PlaylistEntry, Song}
 import models.modification.EntityType
 import models.modification.EntityType._
 import models.user.User
@@ -30,10 +31,12 @@ object ModelField {
 
   // **************** Methods **************** //
   def id[E <: Entity](implicit entityType: EntityType[E]): ModelField[Long, E] = entityType match {
-    case UserType   => User.id.asInstanceOf[ModelField[Long, E]]
-    case SongType   => Song.id.asInstanceOf[ModelField[Long, E]]
-    case AlbumType  => Album.id.asInstanceOf[ModelField[Long, E]]
-    case ArtistType => Artist.id.asInstanceOf[ModelField[Long, E]]
+    case UserType          => User.id.asInstanceOf[ModelField[Long, E]]
+    case SongType          => Song.id.asInstanceOf[ModelField[Long, E]]
+    case AlbumType         => Album.id.asInstanceOf[ModelField[Long, E]]
+    case ArtistType        => Artist.id.asInstanceOf[ModelField[Long, E]]
+    case PlaylistEntryType => PlaylistEntry.id.asInstanceOf[ModelField[Long, E]]
+    case PlayStatusType    => PlayStatus.id.asInstanceOf[ModelField[Long, E]]
   }
 
   // **************** Related types **************** //
@@ -94,6 +97,27 @@ object ModelField {
 
     case object id extends IdModelField[E]
     case object name extends ModelField[String, E]("name", _.name)
+  }
+
+  object PlaylistEntry {
+    private type E = PlaylistEntry
+
+    case object id extends IdModelField[E]
+    case object songId extends ModelField[Long, E]("songId", _.songId)
+    case object orderToken extends ModelField[OrderToken, E]("orderToken", _.orderToken)
+    case object userId extends ModelField[Long, E]("userId", _.userId)
+  }
+
+  object PlayStatus {
+    private type E = PlayStatus
+
+    case object id extends IdModelField[E]
+    case object currentPlaylistEntryId
+        extends ModelField[Long, E]("currentPlaylistEntryId", _.currentPlaylistEntryId)
+    case object hasStarted extends ModelField[Boolean, E]("hasStarted", _.hasStarted)
+    case object stopAfterCurrentSong
+        extends ModelField[Boolean, E]("stopAfterCurrentSong", _.stopAfterCurrentSong)
+    case object userId extends ModelField[Long, E]("userId", _.userId)
   }
 
   // **************** Field numbers **************** //

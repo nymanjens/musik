@@ -8,7 +8,7 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models._
 import models.access.ModelField
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification._
 import models.user.User
 
@@ -25,10 +25,12 @@ object Converters {
   implicit def fromEntityType[E <: Entity: EntityType]: MapConverter[E] = {
     val entityType: EntityType[E] = implicitly[EntityType[E]]
     val converter: MapConverter[_ <: Entity] = entityType match {
-      case EntityType.UserType   => UserConverter
-      case EntityType.SongType   => SongConverter
-      case EntityType.AlbumType  => AlbumConverter
-      case EntityType.ArtistType => ArtistConverter
+      case EntityType.UserType          => UserConverter
+      case EntityType.SongType          => SongConverter
+      case EntityType.AlbumType         => AlbumConverter
+      case EntityType.ArtistType        => ArtistConverter
+      case EntityType.PlaylistEntryType => PlaylistEntryConverter
+      case EntityType.PlayStatusType    => PlayStatusConverter
     }
     converter.asInstanceOf[MapConverter[E]]
   }
@@ -170,7 +172,13 @@ object Converters {
   }
 
   implicit val EntityTypeConverter: Converter[EntityType.any] =
-    enumConverter(EntityType.UserType, EntityType.SongType, EntityType.AlbumType, EntityType.ArtistType)
+    enumConverter(
+      EntityType.UserType,
+      EntityType.SongType,
+      EntityType.AlbumType,
+      EntityType.ArtistType,
+      EntityType.PlaylistEntryType,
+      EntityType.PlayStatusType)
 
   implicit object EntityModificationConverter extends Converter[EntityModification] {
     private val addNumber: Int = 1
@@ -337,6 +345,48 @@ object Converters {
 
       Artist(
         name = getRequired(ModelField.Artist.name)
+      )
+    }
+  }
+
+  implicit object PlaylistEntryConverter extends EntityConverter[PlaylistEntry] {
+    override def allFieldsWithoutId =
+      Seq(
+        ModelField.PlaylistEntry.songId,
+        ModelField.PlaylistEntry.orderToken,
+        ModelField.PlaylistEntry.userId
+      )
+
+    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
+      def getRequired[T](field: ModelField[T, PlaylistEntry]) =
+        getRequiredValueFromDict(dict)(field)
+
+      PlaylistEntry(
+        songId = getRequired(ModelField.PlaylistEntry.songId),
+        orderToken = getRequired(ModelField.PlaylistEntry.orderToken),
+        userId = getRequired(ModelField.PlaylistEntry.userId)
+      )
+    }
+  }
+
+  implicit object PlayStatusConverter extends EntityConverter[PlayStatus] {
+    override def allFieldsWithoutId =
+      Seq(
+        ModelField.PlayStatus.currentPlaylistEntryId,
+        ModelField.PlayStatus.hasStarted,
+        ModelField.PlayStatus.stopAfterCurrentSong,
+        ModelField.PlayStatus.userId
+      )
+
+    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
+      def getRequired[T](field: ModelField[T, PlayStatus]) =
+        getRequiredValueFromDict(dict)(field)
+
+      PlayStatus(
+        currentPlaylistEntryId = getRequired(ModelField.PlayStatus.currentPlaylistEntryId),
+        hasStarted = getRequired(ModelField.PlayStatus.hasStarted),
+        stopAfterCurrentSong = getRequired(ModelField.PlayStatus.stopAfterCurrentSong),
+        userId = getRequired(ModelField.PlayStatus.userId)
       )
     }
   }

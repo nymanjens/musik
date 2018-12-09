@@ -22,6 +22,11 @@ class PicklersTest extends HookedSpecification {
 
   "EntityModification" in {
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testUserRedacted))
+    testPickleAndUnpickle[EntityModification](EntityModification.Add(testSong))
+    testPickleAndUnpickle[EntityModification](EntityModification.Add(testAlbum))
+    testPickleAndUnpickle[EntityModification](EntityModification.Add(testArtist))
+    testPickleAndUnpickle[EntityModification](EntityModification.Add(testPlaylistEntry))
+    testPickleAndUnpickle[EntityModification](EntityModification.Add(testPlayStatus))
     testPickleAndUnpickle[EntityModification](EntityModification.Update(testUserRedacted))
     testPickleAndUnpickle[EntityModification](EntityModification.Remove[User](123054))
   }

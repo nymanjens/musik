@@ -6,7 +6,7 @@ import com.google.inject.Inject
 import common.time.Clock
 import common.{OrderToken, ResourceFiles}
 import models.access.JvmEntityAccess
-import models.media.{Song, Album, Artist}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.EntityModification
 import models.user.Users
 import play.api.{Application, Mode}

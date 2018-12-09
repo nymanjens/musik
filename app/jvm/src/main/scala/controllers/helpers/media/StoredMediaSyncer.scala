@@ -7,7 +7,7 @@ import common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import models.Entity
 import models.access.{JvmEntityAccess, ModelField}
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.{EntityModification, EntityType}
 import models.user.{User, Users}
 

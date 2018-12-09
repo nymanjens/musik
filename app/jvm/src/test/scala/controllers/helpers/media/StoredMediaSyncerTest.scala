@@ -5,7 +5,7 @@ import common.testing.TestObjects._
 import common.testing._
 import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
 import models.access.JvmEntityAccess
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.modification.EntityModification
 import models.user.User
 import org.junit.runner.RunWith

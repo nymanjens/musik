@@ -8,7 +8,7 @@ import common.RelativePaths.joinPaths
 import common.time.Clock
 import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner, StoredMediaSyncer}
 import models.access.JvmEntityAccess
-import models.media.{Album, Artist, Song}
+import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 import models.slick.SlickUtils.dbRun
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
