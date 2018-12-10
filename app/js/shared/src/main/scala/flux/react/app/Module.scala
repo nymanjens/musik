@@ -23,6 +23,7 @@ final class Module(implicit i18n: I18n,
 
   // Configuration of submodules
   private val userManagementModule = new flux.react.app.usermanagement.Module
+  private val mediaModule = new flux.react.app.media.Module
 
   implicit private lazy val menu: Menu = new Menu
   implicit private lazy val globalMessages: GlobalMessages = new GlobalMessages
@@ -37,7 +38,7 @@ final class Module(implicit i18n: I18n,
   implicit lazy val userProfile = userManagementModule.userProfile
   implicit lazy val userAdministration = userManagementModule.userAdministration
 
-  implicit lazy val home = new media.Home
-  implicit lazy val playlist = new media.Playlist
-  implicit lazy val allArtists = new media.AllArtists
+  implicit lazy val home = mediaModule.home
+  implicit lazy val playlist = mediaModule.playlist
+  implicit lazy val allArtists = mediaModule.allArtists
 }
