@@ -35,5 +35,6 @@ object EntityType {
   implicit case object PlayStatusType extends EntityType[PlayStatus] { override def entityClass = classOf[PlayStatus]}
   // @formatter:on
 
-  val values: Seq[EntityType.any] = Seq(UserType, SongType, AlbumType, ArtistType)
+  val values: Seq[EntityType.any] =
+    Seq(UserType, SongType, AlbumType, ArtistType, PlaylistEntryType, PlayStatusType)
 }
