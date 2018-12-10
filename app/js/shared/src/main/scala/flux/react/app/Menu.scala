@@ -100,7 +100,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, c
         <.li(
           menuItem("<u>H</u>ome", Page.Home),
           menuItem("<u>P</u>laylist", Page.Playlist),
-          menuItem("<u>A</u>artists", Page.Artists)
+          menuItem("<u>A</u>rtists", Page.Artists)
         )
       )
     }
