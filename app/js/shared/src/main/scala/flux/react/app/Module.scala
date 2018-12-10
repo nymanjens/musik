@@ -4,7 +4,7 @@ import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
 import flux.stores._
-import flux.stores.media.PlaylistStore
+import flux.stores.media.{PlaylistStore, AllArtistsStore}
 import models.access.JsEntityAccess
 import models.user.User
 
@@ -17,6 +17,7 @@ final class Module(implicit i18n: I18n,
                    applicationIsOnlineStore: ApplicationIsOnlineStore,
                    userStore: UserStore,
                    playlistStore: PlaylistStore,
+                   allArtistsStore: AllArtistsStore,
                    dispatcher: Dispatcher,
                    clock: Clock) {
 

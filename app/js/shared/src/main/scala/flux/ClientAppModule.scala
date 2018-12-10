@@ -35,6 +35,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit private val applicationIsOnlineStore = fluxStoresModule.applicationIsOnlineStore
   implicit private val userStore = fluxStoresModule.userStore
   implicit private val playlistStore = fluxStoresModule.playlistStore
+  implicit private val allArtistsStore = fluxStoresModule.allArtistsStore
 
   // Create other Flux modules
   implicit private val reactAppModule = new flux.react.app.Module

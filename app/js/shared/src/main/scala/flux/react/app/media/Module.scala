@@ -3,14 +3,15 @@ package flux.react.app.media
 import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
-import flux.stores.media.PlaylistStore
+import flux.stores.media.{PlaylistStore, AllArtistsStore}
 import models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,
                    dispatcher: Dispatcher,
                    clock: Clock,
                    entityAccess: JsEntityAccess,
-                   playlistStore: PlaylistStore) {
+                   playlistStore: PlaylistStore,
+                   allArtistsStore: AllArtistsStore) {
 
   implicit lazy val home = new Home
   implicit lazy val playlist = new Playlist
