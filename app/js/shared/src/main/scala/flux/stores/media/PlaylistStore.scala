@@ -35,7 +35,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User)
   }
 
   def removeEntries(playlistEntries: Iterable[PlaylistEntry]): Future[Unit] = {
-    val modifications = playlistEntries.toVector.map(EntityModification.createDelete)
+    val modifications = playlistEntries.toVector.map(EntityModification.createDelete[PlaylistEntry])
     entityAccess.persistModifications(modifications)
   }
 
