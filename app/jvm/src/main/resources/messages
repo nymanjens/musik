@@ -113,3 +113,4 @@ app.is-admin=Is admin?
 app.no-entries=No entries
 app.home=Home
 app.playlist=Playlist
+app.artists=Artists

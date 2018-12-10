@@ -52,6 +52,8 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
 
           | staticRuleFromPage(Page.Playlist, reactAppModule.playlist.apply)
 
+          | staticRuleFromPage(Page.Artists, reactAppModule.allArtists.apply)
+
         // Fallback
         ).notFound(redirectToPage(Page.Root)(Redirect.Replace))
           .onPostRender((prev, cur) =>
