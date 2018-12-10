@@ -26,4 +26,5 @@ object Page {
 
   // **************** Media views **************** //
   case object Home extends PageBase("app.home", iconClass = "fa fa-home fa-fw")
+  case object Playlist extends PageBase("app.playlist", iconClass = "icon-list")
 }

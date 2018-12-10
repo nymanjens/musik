@@ -38,4 +38,5 @@ final class Module(implicit i18n: I18n,
   implicit lazy val userAdministration = userManagementModule.userAdministration
 
   implicit lazy val home = mediaModule.home
+  implicit lazy val playlist = mediaModule.playlist
 }

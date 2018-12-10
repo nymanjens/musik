@@ -13,4 +13,5 @@ final class Module(implicit i18n: I18n,
                    playlistStore: PlaylistStore) {
 
   implicit lazy val home = new Home
+  implicit lazy val playlist = new Playlist
 }

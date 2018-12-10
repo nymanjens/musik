@@ -98,7 +98,8 @@ private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, c
         //    ))
         //),
         <.li(
-          menuItem("<u>H</u>ome", Page.Home)
+          menuItem("<u>H</u>ome", Page.Home),
+          menuItem("<u>P</u>laylist", Page.Playlist)
         )
       )
     }
@@ -117,6 +118,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, c
 
       bind("shift+alt+f", () => queryInputRef().focus())
       bindToPage("shift+alt+h", Page.Home)
+      bindToPage("shift+alt+p", Page.Playlist)
     }
   }
 }
