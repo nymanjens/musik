@@ -62,6 +62,7 @@ private[app] final class Playlist(implicit i18n: I18n, playlistStore: PlaylistSt
           case Some(entries) =>
             entries.map { entry =>
               <.div(
+                ^.key := entry.id,
                 s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})")
             }.toVdomArray
         }
