@@ -58,7 +58,7 @@ private[app] final class AllArtists(implicit i18n: I18n, allArtistsStore: AllArt
             <.div("Loading...")
           case Some(artists) =>
             artists.map { artist =>
-              <.div(s"- ${artist.name}")
+              <.div(^.key := artist.id, s"- ${artist.name}")
             }.toVdomArray
         }
       )
