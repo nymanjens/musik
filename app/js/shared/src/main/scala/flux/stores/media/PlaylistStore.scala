@@ -8,7 +8,7 @@ import flux.action.Dispatcher
 import flux.stores.AsyncEntityDerivedStateStore
 import flux.stores.media.PlaylistStore.State
 import models.access.{JsEntityAccess, ModelField}
-import models.media.{PlaylistEntry, Song}
+import models.media.{JsPlaylistEntry, PlaylistEntry, Song}
 import models.modification.{EntityModification, EntityType}
 import models.user.User
 
@@ -44,7 +44,8 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User)
     val entries =
       await(entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
         .sortBy(e => (e.orderToken, e.id))
-    State(entries = entries)
+    val jsEntries = await(Future.sequence(entries.map(JsPlaylistEntry.fromEntity)))
+    State(entries = jsEntries)
   }
 
   override protected def modificationImpactsState(entityModification: EntityModification,
@@ -52,5 +53,5 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User)
     entityModification.entityType == EntityType.PlaylistEntryType
 }
 object PlaylistStore {
-  case class State(entries: Seq[PlaylistEntry])
+  case class State(entries: Seq[JsPlaylistEntry])
 }

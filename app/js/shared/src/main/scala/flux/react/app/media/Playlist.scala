@@ -9,7 +9,7 @@ import flux.stores.media.PlaylistStore
 import flux.stores.{StateStore, UserStore}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.PlaylistEntry
+import models.media.{JsPlaylistEntry, PlaylistEntry}
 import models.user.User
 
 import scala.collection.immutable.Seq
@@ -32,7 +32,7 @@ private[app] final class Playlist(implicit i18n: I18n, playlistStore: PlaylistSt
 
   // **************** Private inner types ****************//
   private case class Props(router: RouterContext)
-  private case class State(maybeEntries: Option[Seq[PlaylistEntry]])
+  private case class State(maybeEntries: Option[Seq[JsPlaylistEntry]])
 
   private class Backend($ : BackendScope[Props, State]) extends StateStore.Listener {
 
@@ -61,7 +61,8 @@ private[app] final class Playlist(implicit i18n: I18n, playlistStore: PlaylistSt
             <.div("Loading...")
           case Some(entries) =>
             entries.map { entry =>
-              <.div(s"- ${entry.songId}")
+              <.div(
+                s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})")
             }.toVdomArray
         }
       )
