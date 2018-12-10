@@ -142,7 +142,16 @@ object ModelField {
       Album.title,
       Album.artistId,
       Artist.id,
-      Artist.name
+      Artist.name,
+      PlaylistEntry.id,
+      PlaylistEntry.songId,
+      PlaylistEntry.orderToken,
+      PlaylistEntry.userId,
+      PlayStatus.id,
+      PlayStatus.currentPlaylistEntryId,
+      PlayStatus.hasStarted,
+      PlayStatus.stopAfterCurrentSong,
+      PlayStatus.userId
     )
   def toNumber(field: ModelField[_, _]): Int = fieldToNumberMap.get(field)
   def fromNumber(number: Int): ModelField[_, _] = fieldToNumberMap.inverse().get(number)
