@@ -19,7 +19,8 @@ final class AllArtistsStore(implicit entityAccess: JsEntityAccess, user: User)
   // **************** Implementation of base class methods **************** //
   override protected def calculateState(): Future[State] = async {
     val artists =
-      await(entityAccess.newQuery[Artist]().sort(Sorting.ascBy(ModelField.Artist.name)).data())
+      await(entityAccess.newQuery[Artist]().data())
+        .sortWith((a, b) => (a.name compareToIgnoreCase b.name) < 0)
     State(artists = artists.map(JsArtist.fromEntity))
   }
 
