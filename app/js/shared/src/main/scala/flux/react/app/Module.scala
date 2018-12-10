@@ -4,6 +4,7 @@ import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
 import flux.stores._
+import flux.stores.media.PlaylistStore
 import models.access.JsEntityAccess
 import models.user.User
 
@@ -15,6 +16,7 @@ final class Module(implicit i18n: I18n,
                    pendingModificationsStore: PendingModificationsStore,
                    applicationIsOnlineStore: ApplicationIsOnlineStore,
                    userStore: UserStore,
+                   playlistStore: PlaylistStore,
                    dispatcher: Dispatcher,
                    clock: Clock) {
 
