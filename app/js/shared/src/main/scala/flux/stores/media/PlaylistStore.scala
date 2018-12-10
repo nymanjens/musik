@@ -25,8 +25,8 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User)
     val currentPlaylist = await(stateFuture).entries
     val orderTokens = OrderToken.evenlyDistributedValuesBetween(
       numValues = songs.size,
-      lower = currentPlaylist.lastOption.map(_.orderToken),
-      higher = None)
+      lowerExclusive = currentPlaylist.lastOption.map(_.orderToken),
+      higherExclusive = None)
     val modifications = for ((song, orderToken) <- songs.toVector zip orderTokens)
       yield
         EntityModification.createAddWithRandomId(
