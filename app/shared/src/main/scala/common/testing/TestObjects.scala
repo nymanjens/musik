@@ -54,17 +54,6 @@ object TestObjects {
     name = testUser.name,
     isAdmin = testUser.isAdmin)
 
-  val testModificationA: EntityModification = EntityModification.Add(testUserRedacted)
-  val testModificationB: EntityModification =
-    EntityModification.Add(testUserB.copy(passwordHash = "<redacted>"))
-  def testModification: EntityModification = testModificationA
-
-  val testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
-    user = testUserRedacted,
-    i18nMessages = Map("abc" -> "def"),
-    nextUpdateToken = testUpdateToken
-  )
-
   val testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
   val testAlbum = Album(
     relativePath = "folderA/folderB",
@@ -94,5 +83,16 @@ object TestObjects {
     stopAfterCurrentSong = true,
     userId = testUser.id,
     idOption = Some(1271626262),
+  )
+
+  val testModificationA: EntityModification = EntityModification.Add(testArtist)
+  val testModificationB: EntityModification =
+    EntityModification.Add(testUserB.copy(passwordHash = "<redacted>"))
+  def testModification: EntityModification = testModificationA
+
+  val testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
+    user = testUserRedacted,
+    i18nMessages = Map("abc" -> "def"),
+    nextUpdateToken = testUpdateToken
   )
 }
