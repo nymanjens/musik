@@ -29,7 +29,7 @@ final class ArtistDetailStoreFactory(implicit entityAccess: JsEntityAccess, user
       val artist = await(JsArtist.fromEntityId(artistId))
       val albums =
         await(entityAccess.newQuery[Album]().filter(ModelField.Album.artistId === Some(artistId)).data())
-          .sortWith((a, b) => (a.title compareToIgnoreCase b.title) < 0)
+          .sortBy(album => (album.year, album.title.toLowerCase))
       val albumIds = albums.map(_.id)
       val songsWithoutAlbum =
         await(
