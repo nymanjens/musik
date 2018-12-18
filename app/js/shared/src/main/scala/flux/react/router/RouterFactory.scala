@@ -1,17 +1,23 @@
 package flux.react.router
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.async.Async.{async, await}
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
+import japgolly.scalajs.react.Callback
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._
+import models.access.EntityAccess
+import org.scalajs.dom
 
 import scala.reflect.ClassTag
 
 private[router] final class RouterFactory(implicit reactAppModule: flux.react.app.Module,
                                           dispatcher: Dispatcher,
-                                          i18n: I18n) {
+                                          i18n: I18n,
+                                          entityAccess: EntityAccess) {
 
   def createRouter(): Router[Page] = {
     Router(BaseUrl.until(RouterFactory.pathPrefix), routerConfig)
@@ -64,9 +70,13 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
 
         // Fallback
         ).notFound(redirectToPage(Page.Root)(Redirect.Replace))
-          .onPostRender((prev, cur) =>
+          .onPostRender((_, _) =>
             LogExceptionsCallback(dispatcher.dispatch(Action.SetPageLoadingState(isLoading = false))))
-          .setTitle(page => s"${page.title} | Playlist Keeper")
+          .onPostRender((_, page) =>
+            LogExceptionsCallback(async {
+              val title = await(page.title)
+              dom.document.title = s"${title} | Playlist Keeper"
+            }))
       }
       .renderWith(layout)
   }

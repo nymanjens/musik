@@ -9,7 +9,8 @@ import flux.stores.media.AlbumDetailStoreFactory
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-private[app] final class AlbumDetail(implicit i18n: I18n, albumDetailStoreFactory: AlbumDetailStoreFactory) {
+private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
+                                     albumDetailStoreFactory: AlbumDetailStoreFactory) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -49,7 +50,7 @@ private[app] final class AlbumDetail(implicit i18n: I18n, albumDetailStoreFactor
       implicit val router = props.router
 
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         state.maybeStoreState match {
           case None =>
             <.div("Loading...")

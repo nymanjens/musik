@@ -39,6 +39,10 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit private val albumDetailStoreFactory = fluxStoresModule.albumDetailStoreFactory
   implicit private val artistDetailStoreFactory = fluxStoresModule.artistDetailStoreFactory
 
+  // Create and unpack UI elements module
+  private val fluxUielementsModule = new flux.react.uielements.Module
+  implicit private val pageHeader = fluxUielementsModule.pageHeader
+
   // Create other Flux modules
   implicit private val reactAppModule = new flux.react.app.Module
   implicit private val routerModule = new flux.react.router.Module

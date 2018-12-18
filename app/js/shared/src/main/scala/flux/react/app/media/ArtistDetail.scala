@@ -9,7 +9,7 @@ import flux.stores.media.ArtistDetailStoreFactory
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-private[app] final class ArtistDetail(implicit i18n: I18n,
+private[app] final class ArtistDetail(implicit pageHeader: uielements.PageHeader,
                                       artistDetailStoreFactory: ArtistDetailStoreFactory) {
 
   private val component = ScalaComponent
@@ -50,7 +50,7 @@ private[app] final class ArtistDetail(implicit i18n: I18n,
       implicit val router = props.router
 
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         state.maybeStoreState match {
           case None =>
             <.div("Loading...")

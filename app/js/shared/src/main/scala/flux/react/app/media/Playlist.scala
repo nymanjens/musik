@@ -15,7 +15,7 @@ import models.user.User
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 
-private[app] final class Playlist(implicit i18n: I18n, playlistStore: PlaylistStore) {
+private[app] final class Playlist(implicit pageHeader: uielements.PageHeader, playlistStore: PlaylistStore) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -55,7 +55,7 @@ private[app] final class Playlist(implicit i18n: I18n, playlistStore: PlaylistSt
       implicit val router = props.router
 
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         state.maybeEntries match {
           case None =>
             <.div("Loading...")

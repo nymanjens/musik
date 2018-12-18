@@ -7,6 +7,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class UserAdministration(implicit i18n: I18n,
+                                            pageHeader: uielements.PageHeader,
                                             allUsersList: AllUsersList,
                                             addUserForm: AddUserForm) {
 
@@ -15,7 +16,7 @@ private[app] final class UserAdministration(implicit i18n: I18n,
     .renderP(($, props) => {
       implicit val router = props.router
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         <.div(^.className := "row", allUsersList()),
         <.div(^.className := "row", addUserForm())
       )

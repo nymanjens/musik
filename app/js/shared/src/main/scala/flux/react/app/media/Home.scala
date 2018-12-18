@@ -13,7 +13,10 @@ import japgolly.scalajs.react.vdom.html_<^._
 import models.access.EntityAccess
 import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
 
-private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, dispatcher: Dispatcher) {
+private[app] final class Home(implicit i18n: I18n,
+                              entityAccess: EntityAccess,
+                              pageHeader: uielements.PageHeader,
+                              dispatcher: Dispatcher) {
 
   private val waitForFutureArtists = new WaitForFuture[Seq[Artist]]
   private val waitForFutureAlbums = new WaitForFuture[Seq[Album]]
@@ -51,7 +54,7 @@ private[app] final class Home(implicit entityAccess: EntityAccess, i18n: I18n, d
       implicit val router = props.router
 
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         <.div("Artist:"), {
           for (artist <- props.allArtists)
             yield <.div(^.key := s"artist-${artist.id}", "- ", artist.toString)

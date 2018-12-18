@@ -1,22 +1,25 @@
 package flux.react.router
 
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import common.I18n
-import japgolly.scalajs.react.extra.router.Path
+import models.access.EntityAccess
+import models.media.Artist
 
-import scala.scalajs.js
+import scala.concurrent.Future
 
 sealed trait Page {
-  def title(implicit i18n: I18n): String
+  def title(implicit i18n: I18n, entityAccess: EntityAccess): Future[String]
   def iconClass: String
 }
 object Page {
 
   sealed abstract class PageBase(titleKey: String, override val iconClass: String) extends Page {
-    override def title(implicit i18n: I18n) = i18n(titleKey)
+    override def title(implicit i18n: I18n, entityAccess: EntityAccess) = Future.successful(titleSync)
+    def titleSync(implicit i18n: I18n) = i18n(titleKey)
   }
 
   case object Root extends Page {
-    override def title(implicit i18n: I18n) = "Root"
+    override def title(implicit i18n: I18n, entityAccess: EntityAccess) = Future.successful("Root")
     override def iconClass = ""
   }
 
@@ -30,11 +33,13 @@ object Page {
   case object Artists extends PageBase("app.artists", iconClass = "fa fa-group fa-fw")
 
   case class Artist(artistId: Long) extends Page {
-    override def title(implicit i18n: I18n) = "TODO"
+    override def title(implicit i18n: I18n, entityAccess: EntityAccess) =
+      entityAccess.newQuery[models.media.Artist]().findById(artistId).map(_.name)
     override def iconClass = "fa fa-user fa-fw"
   }
   case class Album(albumId: Long) extends Page {
-    override def title(implicit i18n: I18n) = "TODO"
+    override def title(implicit i18n: I18n, entityAccess: EntityAccess) =
+      entityAccess.newQuery[models.media.Album]().findById(albumId).map(_.title)
     override def iconClass = "glyphicon glyphicon-cd"
   }
 }

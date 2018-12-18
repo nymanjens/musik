@@ -6,14 +6,16 @@ import flux.react.uielements
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-private[app] final class UserProfile(implicit i18n: I18n, updatePasswordForm: UpdatePasswordForm) {
+private[app] final class UserProfile(implicit i18n: I18n,
+                                     pageHeader: uielements.PageHeader,
+                                     updatePasswordForm: UpdatePasswordForm) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
     .renderP(($, props) => {
       implicit val router = props.router
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         <.div(
           ^.className := "row",
           updatePasswordForm()

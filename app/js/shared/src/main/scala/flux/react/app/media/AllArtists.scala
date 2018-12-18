@@ -12,7 +12,8 @@ import models.media.JsArtist
 
 import scala.collection.immutable.Seq
 
-private[app] final class AllArtists(implicit i18n: I18n, allArtistsStore: AllArtistsStore) {
+private[app] final class AllArtists(implicit pageHeader: uielements.PageHeader,
+                                    allArtistsStore: AllArtistsStore) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -52,7 +53,7 @@ private[app] final class AllArtists(implicit i18n: I18n, allArtistsStore: AllArt
       implicit val router = props.router
 
       <.span(
-        uielements.PageHeader(router.currentPage),
+        pageHeader(router.currentPage),
         state.maybeArtists match {
           case None =>
             <.div("Loading...")

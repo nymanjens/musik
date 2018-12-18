@@ -4,8 +4,10 @@ import common.I18n
 import flux.react.router.Page
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
+import models.access.EntityAccess
 
-object PageHeader {
+final class PageHeader(implicit i18n: I18n, entityAccess: EntityAccess) {
+
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
     .renderPC { (_, props, children) =>
@@ -17,10 +19,19 @@ object PageHeader {
       )
     }
     .build
+  private val waitForFuture = new WaitForFuture[String]
 
   // **************** API ****************//
-  def apply(page: Page, title: String = null)(implicit i18n: I18n): VdomElement = {
-    component(Props(title = Option(title) getOrElse page.title(i18n), iconClass = page.iconClass))()
+  def apply(page: Page, title: String = null): VdomElement = {
+    def newComponent(title: String): VdomElement =
+      component(Props(title = title, iconClass = page.iconClass))()
+    if (title != null) {
+      newComponent(title = title)
+    } else {
+      waitForFuture(futureInput = page.title, waitingElement = newComponent(title = "")) { titleFromPage =>
+        newComponent(title = titleFromPage)
+      }
+    }
   }
 
   // **************** Private inner types ****************//

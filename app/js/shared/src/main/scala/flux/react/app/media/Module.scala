@@ -3,13 +3,15 @@ package flux.react.app.media
 import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
-import flux.stores.media.{PlaylistStore, AllArtistsStore, AlbumDetailStoreFactory, ArtistDetailStoreFactory}
+import flux.react.uielements
+import flux.stores.media.{AlbumDetailStoreFactory, AllArtistsStore, ArtistDetailStoreFactory, PlaylistStore}
 import models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,
                    dispatcher: Dispatcher,
                    clock: Clock,
                    entityAccess: JsEntityAccess,
+                   pageHeader: uielements.PageHeader,
                    playlistStore: PlaylistStore,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
