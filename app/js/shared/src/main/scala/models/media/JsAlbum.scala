@@ -24,4 +24,14 @@ object JsAlbum {
       id = album.id
     )
   }
+
+  def fromEntities(album: Album, artist: JsArtist): JsAlbum = {
+    require(album.artistId == Some(artist.id))
+    media.JsAlbum(
+      relativePath = album.relativePath,
+      title = album.title,
+      artist = Some(artist),
+      id = album.id
+    )
+  }
 }
