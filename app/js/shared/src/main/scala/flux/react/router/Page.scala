@@ -31,7 +31,7 @@ object Page {
 
   case class Artist(artistId: Long) extends Page {
     override def title(implicit i18n: I18n) = "TODO"
-    override def iconClass = "fa fa-group fa-fw"
+    override def iconClass = "fa fa-user fa-fw"
   }
   case class Album(albumId: Long) extends Page {
     override def title(implicit i18n: I18n) = "TODO"
