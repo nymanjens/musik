@@ -18,4 +18,6 @@ final class Module(implicit i18n: I18n,
   implicit lazy val home = new Home
   implicit lazy val playlist = new Playlist
   implicit lazy val allArtists = new AllArtists
+  implicit lazy val artistDetail = new ArtistDetail
+  implicit lazy val albumDetail = new AlbumDetail
 }

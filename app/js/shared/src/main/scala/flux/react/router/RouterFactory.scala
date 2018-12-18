@@ -54,6 +54,14 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
 
           | staticRuleFromPage(Page.Artists, reactAppModule.allArtists.apply)
 
+          | dynamicRuleFromPage(_ / long.caseClass[Page.Artist]) { (page, ctl) =>
+            reactAppModule.artistDetail(page.artistId, ctl)
+          }
+
+          | dynamicRuleFromPage(_ / long.caseClass[Page.Album]) { (page, ctl) =>
+            reactAppModule.albumDetail(page.albumId, ctl)
+          }
+
         // Fallback
         ).notFound(redirectToPage(Page.Root)(Redirect.Replace))
           .onPostRender((prev, cur) =>
