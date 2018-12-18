@@ -35,6 +35,6 @@ object Page {
   }
   case class Album(albumId: Long) extends Page {
     override def title(implicit i18n: I18n) = "TODO"
-    override def iconClass = "glyphicon-cd"
+    override def iconClass = "glyphicon glyphicon-cd"
   }
 }
