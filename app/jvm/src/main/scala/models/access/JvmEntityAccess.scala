@@ -101,12 +101,12 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   private def getEntityTableDef(entityType: EntityType.any): SlickEntityTableDef[entityType.get] = {
     val tableDef = entityType match {
-      case EntityType.UserType   => implicitly[SlickEntityTableDef[User]]
-      case EntityType.SongType   => implicitly[SlickEntityTableDef[Song]]
-      case EntityType.AlbumType  => implicitly[SlickEntityTableDef[Album]]
-      case EntityType.ArtistType => implicitly[SlickEntityTableDef[Artist]]
+      case EntityType.UserType          => implicitly[SlickEntityTableDef[User]]
+      case EntityType.SongType          => implicitly[SlickEntityTableDef[Song]]
+      case EntityType.AlbumType         => implicitly[SlickEntityTableDef[Album]]
+      case EntityType.ArtistType        => implicitly[SlickEntityTableDef[Artist]]
       case EntityType.PlaylistEntryType => implicitly[SlickEntityTableDef[PlaylistEntry]]
-      case EntityType.PlayStatusType => implicitly[SlickEntityTableDef[PlayStatus]]
+      case EntityType.PlayStatusType    => implicitly[SlickEntityTableDef[PlayStatus]]
     }
     tableDef.asInstanceOf[SlickEntityTableDef[entityType.get]]
   }

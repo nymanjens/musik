@@ -193,12 +193,12 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
     EntityType.values.map(collectionNameOf) :+ singletonsCollectionName :+ pendingModificationsCollectionName
 
   private def secondaryIndices(entityType: EntityType.any): Seq[ModelField[_, _]] = entityType match {
-    case UserType   => Seq()
-    case SongType   => Seq(ModelField.Song.albumId, ModelField.Album.artistId)
-    case AlbumType  => Seq(ModelField.Album.artistId)
-    case ArtistType => Seq()
+    case UserType          => Seq()
+    case SongType          => Seq(ModelField.Song.albumId, ModelField.Album.artistId)
+    case AlbumType         => Seq(ModelField.Album.artistId)
+    case ArtistType        => Seq()
     case PlaylistEntryType => Seq()
-    case PlayStatusType => Seq()
+    case PlayStatusType    => Seq()
   }
 }
 
