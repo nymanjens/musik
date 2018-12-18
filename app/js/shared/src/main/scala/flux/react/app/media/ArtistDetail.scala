@@ -56,10 +56,10 @@ private[app] final class ArtistDetail(implicit i18n: I18n,
             <.div("Loading...")
           case Some(storeState) =>
             storeState.albums.map { album =>
-              <.div(album.toString)
+              uielements.media.AlbumDiv(album, key = album.id)
             }.toVdomArray
             storeState.songsWithoutAlbum.map { song =>
-              <.div(song.toString)
+              uielements.media.SongDiv(song, key = song.id)
             }.toVdomArray
         }
       )
