@@ -42,9 +42,9 @@ class StoredMediaSyncerTest extends HookedSpecification {
               canonicalArtistName = Some("Socks"),
               trackNumber = 22,
               duration = 5.minutes,
-              year = Some(1999),
               disc = 1
-            ))
+            )),
+          year = Some(1999)
         )))
 
       val Seq(songA) = entityAccess.newQuerySync[Song]().data()
@@ -75,9 +75,9 @@ class StoredMediaSyncerTest extends HookedSpecification {
               canonicalArtistName = Some("Socks"),
               trackNumber = 22,
               duration = 5.minutes,
-              year = Some(1999),
               disc = 1
-            ))
+            )),
+          year = Some(1999)
         )))
 
       val Seq(songA) = entityAccess.newQuerySync[Song]().data()

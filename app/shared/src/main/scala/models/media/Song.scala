@@ -10,7 +10,6 @@ case class Song(filename: String,
                 artistId: Option[Long],
                 trackNumber: Int,
                 duration: FiniteDuration,
-                year: Option[Int],
                 disc: Int,
                 idOption: Option[Long] = None)
     extends Entity {

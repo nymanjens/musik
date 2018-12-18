@@ -24,16 +24,16 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
         val artistId = song.canonicalArtistName.map(name => fetchOrAddArtist(name).id)
 
         entityAccess.persistEntityModifications(
-          EntityModification.createAddWithRandomId(Song(
-            filename = song.filename,
-            title = song.title,
-            albumId = albumId,
-            artistId = artistId,
-            trackNumber = song.trackNumber,
-            duration = song.duration,
-            year = song.year,
-            disc = song.disc
-          )))
+          EntityModification.createAddWithRandomId(
+            Song(
+              filename = song.filename,
+              title = song.title,
+              albumId = albumId,
+              artistId = artistId,
+              trackNumber = song.trackNumber,
+              duration = song.duration,
+              disc = song.disc
+            )))
       }
     }
   }
@@ -85,7 +85,8 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
 
     fetchOrAddEntity(
       fetchExistingEntity = () => maybeFetchAlbum(album.relativePath),
-      entityWithoutId = Album(relativePath = album.relativePath, title = album.title, artistId = artistId)
+      entityWithoutId =
+        Album(relativePath = album.relativePath, title = album.title, artistId = artistId, year = album.year)
     )
   }
 

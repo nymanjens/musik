@@ -37,11 +37,20 @@ final class AlbumParser @Inject()() {
           .orElse(dominantCanonical(albumFiles.flatMap(_.artist)))
       }
 
+      val year = {
+        val years = albumFiles.flatMap(file => file.year flatMap parseFirstInt)
+        years.distinct match {
+          case Seq(y) => Some(y)
+          case _      => None
+        }
+      }
+
       ParsedAlbum(
         relativePath = albumRelativePath,
         title = albumTitle,
         canonicalArtistName = canonicalArtistName,
-        songs = albumFiles.map(file => parseSong(file, albumFiles, artistAssigner))
+        songs = albumFiles.map(file => parseSong(file, albumFiles, artistAssigner)),
+        year = year
       )
     }
   }
@@ -67,7 +76,6 @@ final class AlbumParser @Inject()() {
       trackNumber =
         if (allSongsHaveUniqueTrackNumber) parseFirstInt(file.trackNumber.get).get else trackNumberFromIndex,
       duration = file.duration,
-      year = file.year flatMap parseFirstInt,
       disc = file.disc flatMap parseFirstInt getOrElse 1
     )
   }
@@ -104,12 +112,12 @@ object AlbumParser {
   case class ParsedAlbum(relativePath: String,
                          title: String,
                          canonicalArtistName: Option[String],
-                         songs: Seq[ParsedSong])
+                         songs: Seq[ParsedSong],
+                         year: Option[Int])
   case class ParsedSong(filename: String,
                         title: String,
                         canonicalArtistName: Option[String],
                         trackNumber: Int,
                         duration: FiniteDuration,
-                        year: Option[Int],
                         disc: Int)
 }

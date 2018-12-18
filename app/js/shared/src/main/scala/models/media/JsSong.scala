@@ -14,7 +14,6 @@ case class JsSong(filename: String,
                   artist: Option[JsArtist],
                   trackNumber: Int,
                   duration: FiniteDuration,
-                  year: Option[Int],
                   disc: Int,
                   id: Long)
 
@@ -35,7 +34,6 @@ object JsSong {
       artist = artist,
       trackNumber = song.trackNumber,
       duration = song.duration,
-      year = song.year,
       disc = song.disc,
       id = song.id
     )

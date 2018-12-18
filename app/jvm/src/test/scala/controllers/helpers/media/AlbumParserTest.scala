@@ -54,10 +54,11 @@ class AlbumParserTest extends HookedSpecification {
               canonicalArtistName = Some("Socks"),
               trackNumber = 22,
               duration = 5.minutes,
-              year = Some(1999),
               disc = 1
-            ))
-        ))
+            )),
+          year = Some(1999)
+        )
+      )
     }
 
     "nothing is set" in {
@@ -76,10 +77,11 @@ class AlbumParserTest extends HookedSpecification {
               canonicalArtistName = None,
               trackNumber = 1,
               duration = 5.minutes,
-              year = None,
               disc = 1
-            ))
-        ))
+            )),
+          year = None
+        )
+      )
     }
 
     "multiple albums" in {
@@ -112,13 +114,13 @@ class AlbumParserTest extends HookedSpecification {
     "parses year" in {
       val parsedAlbums = albumParser.parse(Seq(mediaFile(year = "2012-08-22")), assigner)
 
-      getOnlyElement(getOnlyElement(parsedAlbums).songs).year must beSome(2012)
+      getOnlyElement(parsedAlbums).year must beSome(2012)
     }
 
     "parses year: no number" in {
       val parsedAlbums = albumParser.parse(Seq(mediaFile(year = "xyz")), assigner)
 
-      getOnlyElement(getOnlyElement(parsedAlbums).songs).year must beNone
+      getOnlyElement(parsedAlbums).year must beNone
     }
 
     "parses disc" in {

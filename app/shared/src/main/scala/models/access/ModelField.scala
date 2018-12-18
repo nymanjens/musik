@@ -79,7 +79,6 @@ object ModelField {
     case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
     case object trackNumber extends ModelField[Int, E]("trackNumber", _.trackNumber)
     case object duration extends ModelField[FiniteDuration, E]("duration", _.duration)
-    case object year extends ModelField[Option[Int], E]("year", _.year)
     case object disc extends ModelField[Int, E]("disc", _.disc)
   }
 
@@ -90,6 +89,7 @@ object ModelField {
     case object relativePath extends ModelField[String, E]("relativePath", _.relativePath)
     case object title extends ModelField[String, E]("title", _.title)
     case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
+    case object year extends ModelField[Option[Int], E]("year", _.year)
   }
 
   object Artist {
@@ -135,12 +135,12 @@ object ModelField {
       Song.artistId,
       Song.trackNumber,
       Song.duration,
-      Song.year,
       Song.disc,
       Album.id,
       Album.relativePath,
       Album.title,
       Album.artistId,
+      Album.year,
       Artist.id,
       Artist.name,
       PlaylistEntry.id,

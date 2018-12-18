@@ -294,7 +294,6 @@ object Converters {
         ModelField.Song.artistId,
         ModelField.Song.trackNumber,
         ModelField.Song.duration,
-        ModelField.Song.year,
         ModelField.Song.disc
       )
 
@@ -309,7 +308,6 @@ object Converters {
         artistId = getRequired(ModelField.Song.artistId),
         trackNumber = getRequired(ModelField.Song.trackNumber),
         duration = getRequired(ModelField.Song.duration),
-        year = getRequired(ModelField.Song.year),
         disc = getRequired(ModelField.Song.disc)
       )
     }
@@ -320,7 +318,8 @@ object Converters {
       Seq(
         ModelField.Album.relativePath,
         ModelField.Album.title,
-        ModelField.Album.artistId
+        ModelField.Album.artistId,
+        ModelField.Album.year
       )
 
     override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
@@ -330,7 +329,8 @@ object Converters {
       Album(
         relativePath = getRequired(ModelField.Album.relativePath),
         title = getRequired(ModelField.Album.title),
-        artistId = getRequired(ModelField.Album.artistId)
+        artistId = getRequired(ModelField.Album.artistId),
+        year = getRequired(ModelField.Album.year)
       )
     }
   }

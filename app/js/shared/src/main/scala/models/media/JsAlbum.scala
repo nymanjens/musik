@@ -7,7 +7,7 @@ import scala.async.Async.{async, await}
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-case class JsAlbum(relativePath: String, title: String, artist: Option[JsArtist], id: Long)
+case class JsAlbum(relativePath: String, title: String, artist: Option[JsArtist], year: Option[Int], id: Long)
 object JsAlbum {
   def fromEntityId(albumId: Long)(implicit entityAccess: EntityAccess): Future[JsAlbum] = async {
     val album = await(entityAccess.newQuery[Album]().findById(albumId))
@@ -21,6 +21,7 @@ object JsAlbum {
       relativePath = album.relativePath,
       title = album.title,
       artist = artist,
+      year = album.year,
       id = album.id
     )
   }
@@ -31,6 +32,7 @@ object JsAlbum {
       relativePath = album.relativePath,
       title = album.title,
       artist = Some(artist),
+      year = album.year,
       id = album.id
     )
   }

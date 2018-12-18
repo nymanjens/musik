@@ -59,6 +59,7 @@ object TestObjects {
     relativePath = "folderA/folderB",
     title = "Test Album",
     artistId = Some(testArtist.id),
+    year = Some(1999),
     idOption = Some(91723969))
   val testSong = Song(
     filename = "test-song.mp3",
@@ -67,7 +68,6 @@ object TestObjects {
     artistId = Some(testArtist.id),
     trackNumber = 8,
     duration = 2.minutes,
-    year = Some(1999),
     disc = 1,
     idOption = Some(7646464),
   )

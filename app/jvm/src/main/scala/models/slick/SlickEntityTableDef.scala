@@ -72,11 +72,10 @@ object SlickEntityTableDef {
       def artistId = column[Option[Long]]("artistId")
       def trackNumber = column[Int]("trackNumber")
       def duration = column[FiniteDuration]("duration")
-      def year = column[Option[Int]]("year")
       def disc = column[Int]("disc")
 
       override def * =
-        (filename, title, albumId, artistId, trackNumber, duration, year, disc, id.?) <> (Song.tupled, Song.unapply)
+        (filename, title, albumId, artistId, trackNumber, duration, disc, id.?) <> (Song.tupled, Song.unapply)
     }
   }
 
@@ -90,9 +89,10 @@ object SlickEntityTableDef {
       def relativePath = column[String]("relativePath")
       def title = column[String]("title")
       def artistId = column[Option[Long]]("artistId")
+      def year = column[Option[Int]]("year")
 
       override def * =
-        (relativePath, title, artistId, id.?) <> (Album.tupled, Album.unapply)
+        (relativePath, title, artistId, year, id.?) <> (Album.tupled, Album.unapply)
     }
   }
 
