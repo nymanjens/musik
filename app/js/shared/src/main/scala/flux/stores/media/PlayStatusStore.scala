@@ -34,21 +34,35 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
   private def upsertPlayStatus(currentPlaylistEntryId: java.lang.Long = null,
                                hasStarted: java.lang.Boolean = null,
                                stopAfterCurrentSong: java.lang.Boolean = null): Future[Unit] = async {
-    def nonNullOrElse(bool: java.lang.Boolean, fallback: Boolean): Boolean = bool match {
+    def nonNullBooleanOrElse(bool: java.lang.Boolean, fallback: Boolean): Boolean = bool match {
       case null                    => fallback
       case java.lang.Boolean.TRUE  => true
       case java.lang.Boolean.FALSE => false
     }
+    def nonNullLongOrElse(long: java.lang.Long, fallback: Long): Long = long match {
+      case null => fallback
+      case v    => v
+    }
     val maybePlayStatus =
       await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId, user.id))
     val modifications = maybePlayStatus match {
-      case Some(playStatus) => Seq()
+      case Some(playStatus) =>
+        Seq(
+          EntityModification.createUpdate(PlayStatus(
+            currentPlaylistEntryId =
+              nonNullLongOrElse(currentPlaylistEntryId, fallback = playStatus.currentPlaylistEntryId),
+            hasStarted = nonNullBooleanOrElse(hasStarted, fallback = playStatus.hasStarted),
+            stopAfterCurrentSong =
+              nonNullBooleanOrElse(stopAfterCurrentSong, fallback = playStatus.stopAfterCurrentSong),
+            userId = user.id,
+            idOption = Some(playStatus.id)
+          )))
       case None if currentPlaylistEntryId != null =>
         Seq(
           EntityModification.createAddWithRandomId(PlayStatus(
             currentPlaylistEntryId = currentPlaylistEntryId,
-            hasStarted = nonNullOrElse(hasStarted, fallback = false),
-            stopAfterCurrentSong = nonNullOrElse(stopAfterCurrentSong, fallback = false),
+            hasStarted = nonNullBooleanOrElse(hasStarted, fallback = false),
+            stopAfterCurrentSong = nonNullBooleanOrElse(stopAfterCurrentSong, fallback = false),
             userId = user.id
           )))
       case _ => Seq()
