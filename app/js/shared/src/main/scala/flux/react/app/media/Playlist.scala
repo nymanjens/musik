@@ -6,7 +6,7 @@ import flux.action.Action.AddSongsToPlaylist.Placement
 import flux.react.ReactVdomUtils.{<<, ^^}
 import flux.react.router.RouterContext
 import flux.react.uielements
-import flux.stores.media.PlaylistStore
+import flux.stores.media.{PlayStatusStore, PlaylistStore}
 import flux.stores.{StateStore, UserStore}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^.{<, _}
@@ -16,7 +16,9 @@ import models.user.User
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 
-private[app] final class Playlist(implicit pageHeader: uielements.PageHeader, playlistStore: PlaylistStore) {
+private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
+                                  playlistStore: PlaylistStore,
+                                  playStatusStore: PlayStatusStore) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -77,8 +79,8 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader, pl
       )
     }
 
-    private def playCallback(entry: JsPlaylistEntry): Callback = LogExceptionsCallback {
-      println("play")
+    private def playCallback(playlistEntry: JsPlaylistEntry): Callback = LogExceptionsCallback {
+      playStatusStore.play(playlistEntryId = playlistEntry.id)
     }
   }
 }
