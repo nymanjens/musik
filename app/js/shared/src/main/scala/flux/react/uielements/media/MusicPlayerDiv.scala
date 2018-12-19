@@ -75,15 +75,6 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
                 " = ",
                 state.storeState.stopAfterCurrentSong.toString
               ),
-              " ",
-              <.button(
-                ^.className := "btn btn-default",
-                ^.onClick ==> { _ =>
-                  musicPlayerRef().pause()
-                  Callback.empty
-                },
-                "Pause"
-              )
             ),
             <.div(
               uielements.media.RawMusicPlayer(
