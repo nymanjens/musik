@@ -55,14 +55,14 @@ final class GlobalMessagesStore(implicit i18n: I18n,
   }
 
   private def getCompletionMessage: PartialFunction[Action, String] = {
-    // **************** Media-related actions **************** //
-    // TODO: Add
     // **************** User-related actions **************** //
     case UpsertUser(userPrototype)
         if userPrototype.id.isDefined && userPrototype.plainTextPassword.isDefined =>
       i18n("app.successfully-updated-password")
     case UpsertUser(userPrototype) if userPrototype.id.isEmpty =>
       i18n("app.successfully-added-user", userPrototype.loginName getOrElse "<Unknown name>")
+    // **************** Media-related actions **************** //
+    case _: AddSongsToPlaylist => "Added to playlist"
   }
 
   /** Clear this message after some delay */

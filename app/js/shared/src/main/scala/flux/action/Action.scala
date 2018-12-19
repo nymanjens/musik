@@ -1,6 +1,12 @@
 package flux.action
 
+import scala.collection.immutable.Seq
 import api.ScalaJsApi.UserPrototype
+import flux.action.Action.AddSongsToPlaylist.Placement
+import models.media.Song
+
+import scala.async.Async.async
+import scala.concurrent.Future
 
 sealed trait Action
 
@@ -10,7 +16,14 @@ object Action {
   case class UpsertUser(userPrototype: UserPrototype) extends Action
 
   // **************** Media-related actions **************** //
-  // TODO: Add
+  case class AddSongsToPlaylist(songIds: Seq[Long], placement: Placement) extends Action
+  object AddSongsToPlaylist {
+    sealed trait Placement
+    object Placement {
+      object AfterCurrentSong extends Placement
+      object AtEnd extends Placement
+    }
+  }
 
   // **************** Other actions **************** //
   case class SetPageLoadingState(isLoading: Boolean) extends Action
