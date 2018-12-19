@@ -2,13 +2,14 @@ package flux.react.app.media
 
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.react.ReactVdomUtils.<<
+import flux.action.Action.AddSongsToPlaylist.Placement
+import flux.react.ReactVdomUtils.{<<, ^^}
 import flux.react.router.RouterContext
 import flux.react.uielements
 import flux.stores.media.PlaylistStore
 import flux.stores.{StateStore, UserStore}
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.html_<^._
+import japgolly.scalajs.react.vdom.html_<^.{<, _}
 import models.media.{JsPlaylistEntry, PlaylistEntry}
 import models.user.User
 
@@ -63,10 +64,21 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader, pl
             entries.map { entry =>
               <.div(
                 ^.key := entry.id,
-                s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})")
+                s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
+                " ",
+                <.a(
+                  ^^.classes("btn", "btn-default", "btn-xs"),
+                  ^.onClick --> playCallback(entry),
+                  <.i(^.className := "fa fa-play-circle-o")
+                )
+              )
             }.toVdomArray
         }
       )
+    }
+
+    private def playCallback(entry: JsPlaylistEntry): Callback = LogExceptionsCallback {
+      println("play")
     }
   }
 }
