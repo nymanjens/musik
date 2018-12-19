@@ -1,12 +1,14 @@
 package flux.react.uielements.media
 
+import flux.action.Dispatcher
 import flux.react.ReactVdomUtils.^^
 import flux.react.router.{Page, RouterContext}
+import flux.stores.media.PlaylistStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsSong
 
-object SongDiv {
+final class SongDiv(implicit dispatcher: Dispatcher) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)

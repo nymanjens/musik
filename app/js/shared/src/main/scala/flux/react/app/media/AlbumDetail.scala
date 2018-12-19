@@ -10,6 +10,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
+                                     songDiv: uielements.media.SongDiv,
                                      albumDetailStoreFactory: AlbumDetailStoreFactory) {
 
   private val component = ScalaComponent
@@ -56,7 +57,7 @@ private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
             <.div("Loading...")
           case Some(storeState) =>
             storeState.songs.map { song =>
-              uielements.media.SongDiv(song, key = song.id)
+              songDiv(song, key = song.id)
             }.toVdomArray
         }
       )

@@ -10,6 +10,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class ArtistDetail(implicit pageHeader: uielements.PageHeader,
+                                      songDiv: uielements.media.SongDiv,
                                       artistDetailStoreFactory: ArtistDetailStoreFactory) {
 
   private val component = ScalaComponent
@@ -60,7 +61,7 @@ private[app] final class ArtistDetail(implicit pageHeader: uielements.PageHeader
                 uielements.media.AlbumDiv(album, key = album.id)
               }.toVdomArray,
               storeState.songsWithoutAlbum.map { song =>
-                uielements.media.SongDiv(song, key = song.id)
+                songDiv(song, key = song.id)
               }.toVdomArray
             )
         }
