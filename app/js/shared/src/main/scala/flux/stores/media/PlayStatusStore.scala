@@ -101,4 +101,8 @@ object PlayStatusStore {
   case class State(currentPlaylistEntry: Option[JsPlaylistEntry],
                    hasStarted: Boolean,
                    stopAfterCurrentSong: Boolean)
+  object State {
+    def nullInstance: State =
+      State(currentPlaylistEntry = None, hasStarted = false, stopAfterCurrentSong = false)
+  }
 }
