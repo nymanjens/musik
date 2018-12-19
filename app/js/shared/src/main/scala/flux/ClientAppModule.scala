@@ -44,6 +44,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   private val fluxUielementsModule = new flux.react.uielements.Module
   implicit private val pageHeader = fluxUielementsModule.pageHeader
   implicit private val songDiv = fluxUielementsModule.songDiv
+  implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
 
   // Create other Flux modules
   implicit private val reactAppModule = new flux.react.app.Module

@@ -4,12 +4,13 @@ import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
 import flux.react.uielements
+import flux.react.uielements.media.MusicPlayerDiv
 import flux.stores.media.{
   AlbumDetailStoreFactory,
   AllArtistsStore,
   ArtistDetailStoreFactory,
-  PlaylistStore,
-  PlayStatusStore
+  PlayStatusStore,
+  PlaylistStore
 }
 import models.access.JsEntityAccess
 
@@ -19,6 +20,7 @@ final class Module(implicit i18n: I18n,
                    entityAccess: JsEntityAccess,
                    pageHeader: uielements.PageHeader,
                    songDiv: uielements.media.SongDiv,
+                   musicPlayerDiv: MusicPlayerDiv,
                    playlistStore: PlaylistStore,
                    playStatusStore: PlayStatusStore,
                    allArtistsStore: AllArtistsStore,
