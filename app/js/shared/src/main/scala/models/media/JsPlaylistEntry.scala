@@ -20,4 +20,9 @@ object JsPlaylistEntry {
         id = playlistEntry.id
       )
     }
+
+  def fromEntityId(id: Long)(implicit entityAccess: EntityAccess): Future[JsPlaylistEntry] = async {
+    val entity = await(entityAccess.newQuery[PlaylistEntry]().findById(id))
+    await(fromEntity(entity))
+  }
 }
