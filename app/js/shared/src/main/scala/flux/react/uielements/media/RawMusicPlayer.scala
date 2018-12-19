@@ -9,7 +9,7 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.raw.HTMLAudioElement
 import org.scalajs.dom.{console, html}
 
-object MusicPlayer {
+object RawMusicPlayer {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -26,9 +26,9 @@ object MusicPlayer {
   def ref(): Reference = new Reference(Ref.toScalaComponent(component))
 
   // **************** Public inner types ****************//
-  final class Reference private[MusicPlayer] (private[MusicPlayer] val mutableRef: ThisMutableRef) {
+  final class Reference private[RawMusicPlayer](private[RawMusicPlayer] val mutableRef: ThisMutableRef) {
     def apply(): Proxy = new Proxy(
-      () => mutableRef.get.asCallback.runNow().flatMap(_.backend.theInput.get.asCallback.runNow())
+      () => mutableRef.get.asCallback.runNow().flatMap(_.backend.audioRef.get.asCallback.runNow())
     )
   }
 
@@ -43,7 +43,7 @@ object MusicPlayer {
   }
 
   // **************** Private inner types ****************//
-  private case class Props private[MusicPlayer] (src: String)
+  private case class Props private[RawMusicPlayer](src: String)
   private case class State()
 
   private type ThisCtorSummoner = CtorType.Summoner.Aux[Box[Props], Children.None, CtorType.Props]
@@ -51,7 +51,7 @@ object MusicPlayer {
   private type ThisComponentU = MountedImpure[Props, State, Backend]
 
   private class Backend($ : BackendScope[Props, State]) {
-    val theInput = Ref[html.Audio]
+    val audioRef = Ref[html.Audio]
 
     def render(props: Props, state: State) = logExceptions {
       <.audio(
@@ -63,7 +63,7 @@ object MusicPlayer {
           console.log("ENDED!")
           Callback.empty
         }
-      ).withRef(theInput)
+      ).withRef(audioRef)
     }
   }
 }
