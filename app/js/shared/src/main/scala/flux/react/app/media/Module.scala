@@ -4,7 +4,13 @@ import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
 import flux.react.uielements
-import flux.stores.media.{AlbumDetailStoreFactory, AllArtistsStore, ArtistDetailStoreFactory, PlaylistStore}
+import flux.stores.media.{
+  AlbumDetailStoreFactory,
+  AllArtistsStore,
+  ArtistDetailStoreFactory,
+  PlaylistStore,
+  PlayStatusStore
+}
 import models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,
@@ -14,6 +20,7 @@ final class Module(implicit i18n: I18n,
                    pageHeader: uielements.PageHeader,
                    songDiv: uielements.media.SongDiv,
                    playlistStore: PlaylistStore,
+                   playStatusStore: PlayStatusStore,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
                    artistDetailStoreFactory: ArtistDetailStoreFactory) {

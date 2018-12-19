@@ -5,7 +5,7 @@ import api.ScalaJsApiClient
 import common.I18n
 import common.time.Clock
 import flux.action.Dispatcher
-import flux.stores.media.{PlaylistStore, AllArtistsStore, AlbumDetailStoreFactory, ArtistDetailStoreFactory}
+import flux.stores.media._
 import models.access.{EntityModificationPushClientFactory, JsEntityAccess}
 import models.user.User
 
@@ -25,6 +25,7 @@ final class Module(implicit i18n: I18n,
   implicit val applicationIsOnlineStore = new ApplicationIsOnlineStore
 
   implicit val playlistStore = new PlaylistStore
+  implicit val playStatusStore = new PlayStatusStore
   implicit val allArtistsStore = new AllArtistsStore
   implicit val albumDetailStoreFactory = new AlbumDetailStoreFactory
   implicit val artistDetailStoreFactory = new ArtistDetailStoreFactory

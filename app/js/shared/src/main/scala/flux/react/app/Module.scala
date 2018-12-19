@@ -5,7 +5,13 @@ import common.time.Clock
 import flux.action.Dispatcher
 import flux.react.uielements
 import flux.stores._
-import flux.stores.media.{AlbumDetailStoreFactory, AllArtistsStore, ArtistDetailStoreFactory, PlaylistStore}
+import flux.stores.media.{
+  AlbumDetailStoreFactory,
+  AllArtistsStore,
+  ArtistDetailStoreFactory,
+  PlaylistStore,
+  PlayStatusStore
+}
 import models.access.JsEntityAccess
 import models.user.User
 
@@ -20,6 +26,7 @@ final class Module(implicit i18n: I18n,
                    applicationIsOnlineStore: ApplicationIsOnlineStore,
                    userStore: UserStore,
                    playlistStore: PlaylistStore,
+                   playStatusStore: PlayStatusStore,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
                    artistDetailStoreFactory: ArtistDetailStoreFactory,

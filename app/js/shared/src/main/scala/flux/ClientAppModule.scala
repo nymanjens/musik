@@ -35,6 +35,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit private val applicationIsOnlineStore = fluxStoresModule.applicationIsOnlineStore
   implicit private val userStore = fluxStoresModule.userStore
   implicit private val playlistStore = fluxStoresModule.playlistStore
+  implicit private val playStatusStore = fluxStoresModule.playStatusStore
   implicit private val allArtistsStore = fluxStoresModule.allArtistsStore
   implicit private val albumDetailStoreFactory = fluxStoresModule.albumDetailStoreFactory
   implicit private val artistDetailStoreFactory = fluxStoresModule.artistDetailStoreFactory
