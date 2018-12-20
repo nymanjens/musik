@@ -1,5 +1,6 @@
 package models.media
 
+import common.RelativePaths
 import models.access.EntityAccess
 import models.media
 
@@ -15,7 +16,9 @@ case class JsSong(filename: String,
                   trackNumber: Int,
                   duration: FiniteDuration,
                   disc: Int,
-                  id: Long)
+                  id: Long) {
+  def relativePath: String = RelativePaths.joinPaths(album.relativePath, filename)
+}
 
 object JsSong {
   def fromEntityId(songId: Long)(implicit entityAccess: EntityAccess): Future[JsSong] = async {
