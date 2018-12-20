@@ -86,7 +86,6 @@ private[media] object RawMusicPlayer {
         ^.controls := true,
         ^.src := props.src,
         ^.preload := "auto",
-        ^.className := "music-player",
         ^.onPlay --> LogExceptionsCallback(props.onPlayingChanged(true)),
         ^.onPause --> LogExceptionsCallback {
           val element = htmlAudioElement.get

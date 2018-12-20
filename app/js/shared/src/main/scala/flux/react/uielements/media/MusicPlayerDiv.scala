@@ -65,27 +65,50 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
         case None => "Empty playlist"
         case Some(playlistEntry) =>
           <.div(
+            ^.className := "music-player",
             <.div(
-              playlistEntry.song.title,
-              " ",
-              <.button(
-                ^.className := "btn btn-success btn-sm",
-                <.i(^.className := "fa fa-fast-forward"),
-                <.i(^.className := "fa fa-stop"),
-                " = ",
-                state.storeState.stopAfterCurrentSong.toString,
+              ^.className := "metadata",
+              <.span(
+                ^.className := "title",
+                playlistEntry.song.title,
               ),
-              " ",
-              s"hasStarted = ${state.storeState.hasStarted}",
+              ^^.ifThen(playlistEntry.song.artist) { artist =>
+                <.span(
+                  ^.className := "artist",
+                  artist.name,
+                )
+              },
+              <.span(
+                ^.className := "album",
+                playlistEntry.song.album.title,
+              ),
             ),
             <.div(
-              uielements.media.RawMusicPlayer(
-                ref = musicPlayerRef,
-                src = s"/media/${playlistEntry.song.relativePath}",
-                playing = state.storeState.hasStarted,
-                onEnded = () => playStatusStore.indicateSongEnded(),
-                onPlayingChanged = playing => playStatusStore.togglePlay(playing),
-              )
+              ^.className := "controls",
+              <.button(
+                ^.className := "btn btn-primary",
+                <.i(^.className := "fa fa-step-backward"),
+              ),
+              " ",
+              <.button(
+                ^.className := "btn btn-primary",
+                <.i(^.className := "fa fa-step-forward"),
+              ),
+              " ",
+              <.button(
+                ^.className := "btn btn-primary",
+                <.i(^.className := "fa fa-fast-forward"),
+                <.i(^.className := "fa fa-stop"),
+                " ",
+                <.i(^.className := "fa fa-square-o"),
+              ),
+            ),
+            uielements.media.RawMusicPlayer(
+              ref = musicPlayerRef,
+              src = s"/media/${playlistEntry.song.relativePath}",
+              playing = state.storeState.hasStarted,
+              onEnded = () => playStatusStore.indicateSongEnded(),
+              onPlayingChanged = playing => playStatusStore.togglePlay(playing),
             )
           )
       })
