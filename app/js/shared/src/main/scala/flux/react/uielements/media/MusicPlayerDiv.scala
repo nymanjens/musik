@@ -83,7 +83,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
                 ref = musicPlayerRef,
                 src = s"/media/${playlistEntry.song.relativePath}",
                 playing = state.storeState.hasStarted,
-                onEnded = () => {},
+                onEnded = () => playStatusStore.indicateSongEnded(),
                 onPlayingChanged = playing => playStatusStore.togglePlay(playing),
               )
             )

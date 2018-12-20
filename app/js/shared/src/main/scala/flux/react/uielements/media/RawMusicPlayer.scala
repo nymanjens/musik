@@ -24,13 +24,13 @@ private[media] object RawMusicPlayer {
           }
         }
     })
-    .componentWillReceiveProps(scope =>
+    .componentDidUpdate(scope =>
       LogExceptionsCallback {
-        if (scope.currentProps.playing != scope.nextProps.playing) {
+        if (scope.prevProps != scope.currentProps) {
           scope.backend.htmlAudioElement match {
-            case Some(e) if scope.nextProps.playing  => e.play()
-            case Some(e) if !scope.nextProps.playing => e.pause()
-            case None                                =>
+            case Some(e) if scope.currentProps.playing  => e.play()
+            case Some(e) if !scope.currentProps.playing => e.pause()
+            case None                                   =>
           }
         }
     })
