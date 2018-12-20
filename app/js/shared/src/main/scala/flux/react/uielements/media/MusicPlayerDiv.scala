@@ -63,23 +63,28 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
 
       <.div(state.storeState.currentPlaylistEntry match {
         case None => "Empty playlist"
-        case Some(currentPlaylistEntry) =>
+        case Some(playlistEntry) =>
           <.div(
             <.div(
-              currentPlaylistEntry.song.title,
+              playlistEntry.song.title,
               " ",
               <.button(
                 ^.className := "btn btn-success btn-sm",
                 <.i(^.className := "fa fa-fast-forward"),
                 <.i(^.className := "fa fa-stop"),
                 " = ",
-                state.storeState.stopAfterCurrentSong.toString
+                state.storeState.stopAfterCurrentSong.toString,
               ),
+              " ",
+              s"hasStarted = ${state.storeState.hasStarted}",
             ),
             <.div(
               uielements.media.RawMusicPlayer(
                 ref = musicPlayerRef,
-                src = s"/media/${currentPlaylistEntry.song.relativePath}"
+                src = s"/media/${playlistEntry.song.relativePath}",
+                playing = state.storeState.hasStarted,
+                onEnded = () => {},
+                onPlayingChanged = playing => playStatusStore.togglePlay(playing),
               )
             )
           )

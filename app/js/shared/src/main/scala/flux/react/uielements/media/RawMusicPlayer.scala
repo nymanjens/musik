@@ -1,5 +1,6 @@
 package flux.react.uielements.media
 
+import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import common.LoggingUtils.logExceptions
 import japgolly.scalajs.react.Ref.ToScalaComponent
 import japgolly.scalajs.react._
@@ -13,13 +14,36 @@ private[media] object RawMusicPlayer {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
-    .initialState(State())
     .renderBackend[Backend]
+    .componentDidMount(scope =>
+      LogExceptionsCallback {
+        if (scope.props.playing) {
+          scope.backend.htmlAudioElement match {
+            case Some(e) => e.play()
+            case None    =>
+          }
+        }
+    })
+    .componentWillReceiveProps(scope =>
+      LogExceptionsCallback {
+        if (scope.currentProps.playing != scope.nextProps.playing) {
+          scope.backend.htmlAudioElement match {
+            case Some(e) if scope.nextProps.playing  => e.play()
+            case Some(e) if !scope.nextProps.playing => e.pause()
+            case None                                =>
+          }
+        }
+    })
     .build
 
   // **************** API ****************//
-  def apply(ref: Reference, src: String): VdomElement = {
-    val props = Props(src = src)
+  def apply(ref: Reference,
+            src: String,
+            playing: Boolean,
+            onEnded: () => Unit,
+            onPlayingChanged: Boolean => Unit,
+  ): VdomElement = {
+    val props = Props(src = src, playing = playing, onEnded = onEnded, onPlayingChanged = onPlayingChanged)
     ref.mutableRef.component(props)
   }
 
@@ -28,7 +52,7 @@ private[media] object RawMusicPlayer {
   // **************** Public inner types ****************//
   final class Reference private[RawMusicPlayer] (private[RawMusicPlayer] val mutableRef: ThisMutableRef) {
     def apply(): Proxy = new Proxy(
-      () => mutableRef.get.asCallback.runNow().flatMap(_.backend.audioRef.get.asCallback.runNow())
+      () => mutableRef.get.asCallback.runNow().flatMap(_.backend.htmlAudioElement)
     )
   }
 
@@ -43,8 +67,12 @@ private[media] object RawMusicPlayer {
   }
 
   // **************** Private inner types ****************//
-  private case class Props private[RawMusicPlayer] (src: String)
-  private case class State()
+  private case class Props private[RawMusicPlayer] (src: String,
+                                                    playing: Boolean,
+                                                    onEnded: () => Unit,
+                                                    onPlayingChanged: Boolean => Unit,
+  )
+  private type State = Unit
 
   private type ThisCtorSummoner = CtorType.Summoner.Aux[Box[Props], Children.None, CtorType.Props]
   private type ThisMutableRef = ToScalaComponent[Props, State, Backend, ThisCtorSummoner#CT]
@@ -59,11 +87,12 @@ private[media] object RawMusicPlayer {
         ^.src := props.src,
         ^.preload := "auto",
         ^.className := "music-player",
-        ^.onEnded ==> { _ =>
-          console.log("ENDED!")
-          Callback.empty
-        }
+        ^.onPlay --> LogExceptionsCallback(props.onPlayingChanged(true)),
+        ^.onPause --> LogExceptionsCallback(props.onPlayingChanged(false)),
+        ^.onEnded --> LogExceptionsCallback(props.onEnded()),
       ).withRef(audioRef)
     }
+
+    def htmlAudioElement: Option[HTMLAudioElement] = audioRef.get.asCallback.runNow()
   }
 }

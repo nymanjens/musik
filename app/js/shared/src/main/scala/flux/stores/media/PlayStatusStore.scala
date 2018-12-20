@@ -26,9 +26,14 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
     upsertPlayStatus(currentPlaylistEntryId = playlistEntryId, hasStarted = true)
   }
 
-  def togglePlay(): Future[Unit] = async {
-    val state = await(stateFuture)
-    await(upsertPlayStatus(hasStarted = !state.hasStarted))
+  def togglePlay(playing: java.lang.Boolean = null): Future[Unit] = async {
+    val newHasStarted: Boolean = playing match {
+      case null =>
+        val state = await(stateFuture)
+        !state.hasStarted
+      case bool => bool
+    }
+    await(upsertPlayStatus(hasStarted = newHasStarted))
   }
 
   private def upsertPlayStatus(currentPlaylistEntryId: java.lang.Long = null,
