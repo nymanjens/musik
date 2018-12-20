@@ -106,21 +106,32 @@ private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, c
     }
 
     def configureKeyboardShortcuts(implicit router: RouterContext): Callback = LogExceptionsCallback {
-      def bind(shortcut: String, runnable: () => Unit): Unit = {
+      def bindGlobal(shortcut: String, runnable: () => Unit): Unit = {
         Mousetrap.bindGlobal(shortcut, e => {
           e.preventDefault()
           runnable()
         })
       }
-      def bindToPage(shortcut: String, page: Page): Unit =
-        bind(shortcut, () => {
+      def bind(shortcut: String, runnable: () => Unit): Unit = {
+        Mousetrap.bind(shortcut, e => {
+          e.preventDefault()
+          runnable()
+        })
+      }
+      def bindGlobalToPage(shortcut: String, page: Page): Unit =
+        bindGlobal(shortcut, () => {
           router.setPage(page)
         })
 
-      bind("shift+alt+f", () => queryInputRef().focus())
-      bindToPage("shift+alt+h", Page.Home)
-      bindToPage("shift+alt+p", Page.Playlist)
-      bindToPage("shift+alt+a", Page.Artists)
+      bindGlobal("shift+alt+f", () => queryInputRef().focus())
+      bindGlobalToPage("shift+alt+h", Page.Home)
+      bindGlobalToPage("shift+alt+p", Page.Playlist)
+      bindGlobalToPage("shift+alt+a", Page.Artists)
+
+      bind("space", () => println("SPACE!!"))
+      bind("ctrl+left", () => println("LEFT!!"))
+      bind("ctrl+right", () => println("RIGHT!!"))
+      bind("ctrl+shift+space", () => println("ctrl+shift+space!!"))
     }
   }
 }

@@ -24,7 +24,8 @@ if(Mousetrap.prototype) {
   Mousetrap.init();
 
   module.exports = {
-    bindGlobal: function(keys, callback, action) {
+    bind: Mousetrap.bind,
+    bindGlobal(keys, callback, action) {
       Mousetrap.bind(keys, callback, action);
 
       if (keys instanceof Array) {
@@ -35,13 +36,17 @@ if(Mousetrap.prototype) {
       }
 
       _globalCallbacks[keys] = true;
-    }
+    },
   };
 } else {
   module.exports = {
-    bindGlobal: function() {
+    bind() {
       console.log(
           "Error: Called bindGlobal but Mousetrap was undefined", Mousetrap);
-    }
+    },
+    bindGlobal() {
+      console.log(
+          "Error: Called bindGlobal but Mousetrap was undefined", Mousetrap);
+    },
   }
 }

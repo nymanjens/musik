@@ -9,6 +9,6 @@ import scala.scalajs.js.annotation.JSImport
 @JSImport("global-mousetrap", JSImport.Namespace)
 @js.native
 object Mousetrap extends js.Object {
-
+  def bind(key: String, callback: js.Function1[KeyboardEvent, Unit]): Unit = js.native
   def bindGlobal(key: String, callback: js.Function1[KeyboardEvent, Unit]): Unit = js.native
 }
