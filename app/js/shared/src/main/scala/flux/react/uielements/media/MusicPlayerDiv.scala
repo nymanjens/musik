@@ -2,7 +2,7 @@ package flux.react.uielements.media
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.react.ReactVdomUtils.^^
-import flux.react.router.RouterContext
+import flux.react.router.{Page, RouterContext}
 import flux.react.uielements
 import flux.stores.StateStore
 import flux.stores.media.PlayStatusStore
@@ -75,12 +75,12 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
                   playlistEntry.song.title,
                 ),
                 ^^.ifThen(playlistEntry.song.artist) { artist =>
-                  <.span(
+                  router.anchorWithHrefTo(Page.Artist(artist.id))(
                     ^.className := "artist",
                     artist.name,
                   )
                 },
-                <.span(
+                router.anchorWithHrefTo(Page.Album(playlistEntry.song.album.id))(
                   ^.className := "album",
                   playlistEntry.song.album.title,
                 ),
