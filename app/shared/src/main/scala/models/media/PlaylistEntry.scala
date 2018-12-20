@@ -21,7 +21,8 @@ object PlaylistEntry {
 
   def getOrderedSeq()(implicit user: User, entityAccess: EntityAccess): Future[Seq[PlaylistEntry]] = async {
     implicit val orderTokenOrdering: Ordering[OrderToken] = implicitly[Ordering[OrderToken]] // Fix for build error
+    val pairOrdering: Ordering[(OrderToken, Long)] = implicitly[Ordering[(OrderToken, Long)]] // Fix for build error
     await(entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
-      .sortBy(e => (e.orderToken, e.id))
+      .sortBy(e => (e.orderToken, e.id))(pairOrdering)
   }
 }
