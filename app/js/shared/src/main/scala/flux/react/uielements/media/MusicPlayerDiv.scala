@@ -89,11 +89,15 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
                 ^.className := "controls",
                 <.button(
                   ^.className := "btn btn-primary",
+                  ^.onClick --> LogExceptionsCallback[Unit](
+                    playStatusStore.advanceEntriesInPlaylist(step = -1)),
                   <.i(^.className := "fa fa-step-backward"),
                 ),
                 " ",
                 <.button(
                   ^.className := "btn btn-primary",
+                  ^.onClick --> LogExceptionsCallback[Unit](
+                    playStatusStore.advanceEntriesInPlaylist(step = +1)),
                   <.i(^.className := "fa fa-step-forward"),
                 ),
                 " ",
