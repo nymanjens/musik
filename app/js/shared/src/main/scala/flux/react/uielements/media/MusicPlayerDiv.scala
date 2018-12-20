@@ -1,8 +1,6 @@
 package flux.react.uielements.media
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Action.AddSongsToPlaylist.Placement
-import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
 import flux.react.router.RouterContext
 import flux.react.uielements
@@ -10,9 +8,9 @@ import flux.stores.StateStore
 import flux.stores.media.PlayStatusStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.{JsPlaylistEntry, JsSong}
 
 import scala.collection.immutable.Seq
+import scala.scalajs.js
 
 final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
 
@@ -61,6 +59,8 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
     def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
 
+      val stopAfterCurrentSong = state.storeState.stopAfterCurrentSong
+
       <.div(state.storeState.currentPlaylistEntry match {
         case None => "Empty playlist"
         case Some(playlistEntry) =>
@@ -98,11 +98,16 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
                 ),
                 " ",
                 <.button(
-                  ^.className := "btn btn-primary",
+                  ^^.classes(
+                    Seq("btn", "btn-primary") ++ (if (stopAfterCurrentSong) Seq("active") else Seq())),
+                  ^.onClick --> LogExceptionsCallback[Unit](playStatusStore.toggleStopAfterCurrentSong()),
                   <.i(^.className := "fa fa-fast-forward"),
                   <.i(^.className := "fa fa-stop"),
                   " ",
-                  <.i(^.className := "fa fa-square-o"),
+                  <.i(
+                    ^.className := (if (stopAfterCurrentSong) "fa fa-check-square-o" else "fa fa-square-o"),
+                    ^.style := js.Dictionary("width" -> "0.8em"),
+                  ),
                 ),
               ),
               uielements.media.RawMusicPlayer(
