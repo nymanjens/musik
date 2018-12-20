@@ -6,13 +6,18 @@ import common.time.Clock
 import flux.react.ReactVdomUtils.^^
 import flux.react.router.{Page, RouterContext}
 import flux.react.uielements
+import flux.stores.media.PlayStatusStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import jsfacades.Mousetrap
 import models.access.EntityAccess
 import models.user.User
 
-private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, clock: Clock, i18n: I18n) {
+private[app] final class Menu(implicit entityAccess: EntityAccess,
+                              user: User,
+                              clock: Clock,
+                              i18n: I18n,
+                              playStatusStore: PlayStatusStore) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -128,7 +133,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess, user: User, c
       bindGlobalToPage("shift+alt+p", Page.Playlist)
       bindGlobalToPage("shift+alt+a", Page.Artists)
 
-      bind("space", () => println("SPACE!!"))
+      bind("space", () => playStatusStore.togglePlay())
       bind("ctrl+left", () => println("LEFT!!"))
       bind("ctrl+right", () => println("RIGHT!!"))
       bind("ctrl+shift+space", () => println("ctrl+shift+space!!"))
