@@ -5,6 +5,7 @@ import common.LoggingUtils.LogExceptionsCallback
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
 import flux.react.router.{Page, RouterContext}
+import flux.react.uielements
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.PackageBase.VdomAttr
 import japgolly.scalajs.react.vdom.html_<^._
@@ -24,12 +25,14 @@ final class Layout(implicit globalMessages: GlobalMessages,
                    user: User,
                    i18n: I18n,
                    jsEntityAccess: JsEntityAccess,
-                   dispatcher: Dispatcher) {
+                   dispatcher: Dispatcher,
+                   musicPlayerDiv: uielements.media.MusicPlayerDiv,
+) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
     .renderPC { (_, props, children) =>
-      val router = props.router
+      implicit val router = props.router
       <.div(
         ^.id := "wrapper",
         // Navigation
@@ -116,9 +119,11 @@ final class Layout(implicit globalMessages: GlobalMessages,
                 ^.className := "col-lg-12",
                 globalMessages(),
                 children,
+                musicPlayerDiv(),
                 <.hr(),
                 <.span(^.dangerouslySetInnerHtml := "&copy;"),
-                " 2018 Jens Nyman"))
+                " 2018 Jens Nyman")
+            )
           )
         )
       )
