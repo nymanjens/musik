@@ -79,7 +79,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
             <.div(
               uielements.media.RawMusicPlayer(
                 ref = musicPlayerRef,
-                src = "/test"
+                src = s"/media/${currentPlaylistEntry.song.relativePath}"
               )
             )
           )
