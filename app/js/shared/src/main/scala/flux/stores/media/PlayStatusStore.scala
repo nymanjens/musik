@@ -36,6 +36,31 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
     await(upsertPlayStatus(hasStarted = newHasStarted))
   }
 
+  def toggleStopAfterCurrentSong(): Future[Unit] = async {
+    await(upsertPlayStatus(stopAfterCurrentSong = !await(stateFuture).stopAfterCurrentSong))
+  }
+  def advanceEntriesInPlaylist(step: Int): Future[Unit] = async {
+    val playlistEntries = await(PlaylistEntry.getOrderedSeq())
+    val currentSongIndex = {
+      for {
+        playStatus <- await(PlayStatus.get())
+        index <- {
+          val entryIds = playlistEntries.map(_.id)
+          if (entryIds contains playStatus.currentPlaylistEntryId) {
+            Some(entryIds.indexOf(playStatus.currentPlaylistEntryId))
+          } else {
+            None
+          }
+        }
+      } yield index
+    } getOrElse 0
+
+    val newSongIndex = currentSongIndex + step
+    if (playlistEntries.indices contains newSongIndex) {
+      await(upsertPlayStatus(currentPlaylistEntryId = playlistEntries(newSongIndex).id))
+    }
+  }
+
   private def upsertPlayStatus(currentPlaylistEntryId: java.lang.Long = null,
                                hasStarted: java.lang.Boolean = null,
                                stopAfterCurrentSong: java.lang.Boolean = null): Future[Unit] = async {
@@ -48,9 +73,7 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
       case null => fallback
       case v    => v
     }
-    val maybePlayStatus =
-      await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId, user.id))
-    val modifications = maybePlayStatus match {
+    val modifications = await(PlayStatus.get()) match {
       case Some(playStatus) =>
         Seq(
           EntityModification.createUpdate(PlayStatus(
@@ -77,16 +100,10 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
 
   // **************** Implementation of base class methods **************** //
   override protected def calculateState(): Future[State] = async {
-    val maybePlayStatus =
-      await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId, user.id))
+    val maybePlayStatus = await(PlayStatus.get())
     val currentPlaylistEntryId = maybePlayStatus.map(_.currentPlaylistEntryId) match {
       case Some(id) => Some(id)
-      case None =>
-        await(
-          entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
-          .sortBy(e => (e.orderToken, e.id))
-          .headOption
-          .map(_.id)
+      case None     => await(PlaylistEntry.getOrderedSeq()).headOption.map(_.id)
     }
     val currentPlaylistEntry =
       if (currentPlaylistEntryId.isDefined)

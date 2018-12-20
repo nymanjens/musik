@@ -134,9 +134,9 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
       bindGlobalToPage("shift+alt+a", Page.Artists)
 
       bind("space", () => playStatusStore.togglePlay())
-      bind("ctrl+left", () => println("LEFT!!"))
-      bind("ctrl+right", () => println("RIGHT!!"))
-      bind("ctrl+shift+space", () => println("ctrl+shift+space!!"))
+      bind("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))
+      bind("ctrl+right", () => playStatusStore.advanceEntriesInPlaylist(step = +1))
+      bind("ctrl+shift+space", () => playStatusStore.toggleStopAfterCurrentSong())
     }
   }
 }

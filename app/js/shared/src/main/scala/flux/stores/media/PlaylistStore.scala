@@ -33,8 +33,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
             if (index < currentPlaylist.size) Some(currentPlaylist(index)) else None
           placement match {
             case Placement.AfterCurrentSong =>
-              val maybePlayStatus =
-                await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId, user.id))
+              val maybePlayStatus = await(PlayStatus.get())
               val maybeCurrentPlaylistIndex =
                 for {
                   playStatus <- maybePlayStatus
@@ -67,9 +66,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
 
   // **************** Implementation of base class methods **************** //
   override protected def calculateState(): Future[State] = async {
-    val entries =
-      await(entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
-        .sortBy(e => (e.orderToken, e.id))
+    val entries = await(PlaylistEntry.getOrderedSeq())
     val jsEntries = await(Future.sequence(entries.map(JsPlaylistEntry.fromEntity)))
     State(entries = jsEntries)
   }
