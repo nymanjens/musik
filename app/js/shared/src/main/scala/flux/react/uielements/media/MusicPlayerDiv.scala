@@ -65,51 +65,54 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) {
         case None => "Empty playlist"
         case Some(playlistEntry) =>
           <.div(
-            ^.className := "music-player",
+            ^.className := "music-player-bar",
             <.div(
-              ^.className := "metadata",
-              <.span(
-                ^.className := "title",
-                playlistEntry.song.title,
-              ),
-              ^^.ifThen(playlistEntry.song.artist) { artist =>
+              ^.className := "container",
+              <.div(
+                ^.className := "metadata",
                 <.span(
-                  ^.className := "artist",
-                  artist.name,
-                )
-              },
-              <.span(
-                ^.className := "album",
-                playlistEntry.song.album.title,
+                  ^.className := "title",
+                  playlistEntry.song.title,
+                ),
+                ^^.ifThen(playlistEntry.song.artist) { artist =>
+                  <.span(
+                    ^.className := "artist",
+                    artist.name,
+                  )
+                },
+                <.span(
+                  ^.className := "album",
+                  playlistEntry.song.album.title,
+                ),
               ),
-            ),
-            <.div(
-              ^.className := "controls",
-              <.button(
-                ^.className := "btn btn-primary",
-                <.i(^.className := "fa fa-step-backward"),
-              ),
-              " ",
-              <.button(
-                ^.className := "btn btn-primary",
-                <.i(^.className := "fa fa-step-forward"),
-              ),
-              " ",
-              <.button(
-                ^.className := "btn btn-primary",
-                <.i(^.className := "fa fa-fast-forward"),
-                <.i(^.className := "fa fa-stop"),
+              <.div(
+                ^.className := "controls",
+                <.button(
+                  ^.className := "btn btn-primary",
+                  <.i(^.className := "fa fa-step-backward"),
+                ),
                 " ",
-                <.i(^.className := "fa fa-square-o"),
+                <.button(
+                  ^.className := "btn btn-primary",
+                  <.i(^.className := "fa fa-step-forward"),
+                ),
+                " ",
+                <.button(
+                  ^.className := "btn btn-primary",
+                  <.i(^.className := "fa fa-fast-forward"),
+                  <.i(^.className := "fa fa-stop"),
+                  " ",
+                  <.i(^.className := "fa fa-square-o"),
+                ),
+              ),
+              uielements.media.RawMusicPlayer(
+                ref = musicPlayerRef,
+                src = s"/media/${playlistEntry.song.relativePath}",
+                playing = state.storeState.hasStarted,
+                onEnded = () => playStatusStore.indicateSongEnded(),
+                onPlayingChanged = playing => playStatusStore.togglePlay(playing),
               ),
             ),
-            uielements.media.RawMusicPlayer(
-              ref = musicPlayerRef,
-              src = s"/media/${playlistEntry.song.relativePath}",
-              playing = state.storeState.hasStarted,
-              onEnded = () => playStatusStore.indicateSongEnded(),
-              onPlayingChanged = playing => playStatusStore.togglePlay(playing),
-            )
           )
       })
     }

@@ -119,10 +119,13 @@ final class Layout(implicit globalMessages: GlobalMessages,
                 ^.className := "col-lg-12",
                 globalMessages(),
                 children,
-                musicPlayerDiv(),
                 <.hr(),
                 <.span(^.dangerouslySetInnerHtml := "&copy;"),
-                " 2018 Jens Nyman")
+                " 2018 Jens Nyman",
+                musicPlayerDiv(),
+                // Add extra whitespace to make sure the MusicPlayerDiv isn't blocking any content
+                <.div(^.style := js.Dictionary("padding-top" -> "200px")),
+              ),
             )
           )
         )
