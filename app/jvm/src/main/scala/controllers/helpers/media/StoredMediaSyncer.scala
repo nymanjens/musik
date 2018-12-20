@@ -71,13 +71,13 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
     entityAccess
       .newQuerySync[Song]()
       .filter(ModelField.Song.albumId === album.id)
-      .findOne(ModelField.Song.filename, RelativePaths.getFilename(relativePath))
+      .findOne(ModelField.Song.filename === RelativePaths.getFilename(relativePath))
       .get
   }
 
   private def fetchAlbum(id: Long): Album = entityAccess.newQuerySync[Album]().findById(id)
   private def maybeFetchAlbum(relativePath: String): Option[Album] = {
-    entityAccess.newQuerySync[Album]().findOne(ModelField.Album.relativePath, relativePath)
+    entityAccess.newQuerySync[Album]().findOne(ModelField.Album.relativePath === relativePath)
   }
 
   private def fetchOrAddAlbum(album: ParsedAlbum)(implicit user: User): Album = {
@@ -92,7 +92,7 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
 
   private def fetchOrAddArtist(canonicalArtistName: String)(implicit user: User): Artist = fetchOrAddEntity(
     fetchExistingEntity =
-      () => entityAccess.newQuerySync[Artist]().findOne(ModelField.Artist.name, canonicalArtistName),
+      () => entityAccess.newQuerySync[Artist]().findOne(ModelField.Artist.name === canonicalArtistName),
     entityWithoutId = Artist(name = canonicalArtistName)
   )
 
