@@ -20,9 +20,12 @@ object PlaylistEntry {
   def tupled = (this.apply _).tupled
 
   def getOrderedSeq()(implicit user: User, entityAccess: EntityAccess): Future[Seq[PlaylistEntry]] = async {
-    implicit val orderTokenOrdering: Ordering[OrderToken] = implicitly[Ordering[OrderToken]] // Fix for build error
-    val pairOrdering: Ordering[(OrderToken, Long)] = implicitly[Ordering[(OrderToken, Long)]] // Fix for build error
     await(entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
-      .sortBy(e => (e.orderToken, e.id))(pairOrdering)
+      .sortWith(lt = (e1, e2) => {
+        e1.orderToken compare e2.orderToken match {
+          case 0 => e1.id < e2.id
+          case i => i < 0
+        }
+      })
   }
 }
