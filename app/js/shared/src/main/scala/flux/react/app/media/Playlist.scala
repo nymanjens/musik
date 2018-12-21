@@ -25,32 +25,15 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
 
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected def createBackend = new Backend(_)
-  override protected def initialState: State = State()
+  override protected def initialState = State()
+  override protected def stateStoresDependencies =
+    Seq(StateStoresDependency(playlistStore, _.copy(maybeEntries = playlistStore.state.map(_.entries))))
 
   // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(router: RouterContext)
   protected case class State(maybeEntries: Option[Seq[JsPlaylistEntry]] = None)
 
-  protected class Backend($ : BackendScope[Props, State])
-      extends BackendBase
-      with WillMount
-      with WillUnmount
-      with StateStore.Listener {
-
-    override def willMount(props: Props, state: State): Callback = LogExceptionsCallback {
-      playlistStore.register(this)
-      $.modState(state => logExceptions(state.copy(maybeEntries = playlistStore.state.map(_.entries))))
-        .runNow()
-    }
-
-    override def willUnmount(props: Props, state: State): Callback = LogExceptionsCallback {
-      playlistStore.deregister(this)
-    }
-
-    override def onStateUpdate() = {
-      $.modState(state => logExceptions(state.copy(maybeEntries = playlistStore.state.map(_.entries))))
-        .runNow()
-    }
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
     override def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router

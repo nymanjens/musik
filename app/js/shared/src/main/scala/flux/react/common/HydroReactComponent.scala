@@ -1,5 +1,10 @@
 package flux.react.common
 
+import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.logExceptions
+
+import scala.collection.immutable.Seq
+import flux.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Builder
 import japgolly.scalajs.react.vdom.html_<^._
@@ -15,6 +20,7 @@ abstract class HydroReactComponent {
   protected def createBackend: BackendScope[Props, State] => Backend
   protected def initialState: State
   protected def componentName: String = getClass.getSimpleName
+  protected def stateStoresDependencies: Seq[StateStoresDependency] = Seq()
 
   // **************** Protected final methods ****************//
   protected lazy val component = {
@@ -29,19 +35,52 @@ abstract class HydroReactComponent {
 
     val dummyBackend = createBackend(null)
     if (dummyBackend.isInstanceOf[WillMount]) {
-      step4 = step4.componentWillMount(scope =>
-        scope.backend.asInstanceOf[WillMount].willMount(scope.props, scope.state))
+      step4 = step4
+        .componentWillMount(scope =>
+          scope.backend.asInstanceOf[WillMount].willMount(scope.props, scope.state))
     }
     if (dummyBackend.isInstanceOf[WillUnmount]) {
-      step4 = step4.componentWillUnmount(scope =>
-        scope.backend.asInstanceOf[WillUnmount].willUnmount(scope.props, scope.state))
+      step4 = step4
+        .componentWillUnmount(scope =>
+          scope.backend.asInstanceOf[WillUnmount].willUnmount(scope.props, scope.state))
+    }
+    if (stateStoresDependencies.nonEmpty) {
+      step4 = step4
+        .componentWillMount { scope =>
+          for (StateStoresDependency(store, _) <- stateStoresDependencies) {
+            store.register(scope.backend)
+          }
+          scope.backend.updateStateFromStoresCallback
+        }
+        .componentWillUnmount { scope =>
+          LogExceptionsCallback {
+            for (StateStoresDependency(store, _) <- stateStoresDependencies) {
+              store.deregister(scope.backend)
+            }
+          }
+        }
     }
     step4.build
   }
 
   // **************** Protected final types ****************//
-  trait BackendBase {
+  abstract class BackendBase($ : BackendScope[Props, State]) extends StateStore.Listener {
     def render(props: Props, state: State): VdomElement
+
+    override final def onStateUpdate() = {
+      updateStateFromStoresCallback.runNow()
+    }
+
+    private[HydroReactComponent] def updateStateFromStoresCallback: Callback = {
+      $.modState(oldState =>
+        logExceptions {
+          var state = oldState
+          for (StateStoresDependency(_, stateUpdate) <- stateStoresDependencies) {
+            state = stateUpdate(state)
+          }
+          state
+      })
+    }
   }
   trait WillMount {
     def willMount(props: Props, state: State): Callback
@@ -49,6 +88,8 @@ abstract class HydroReactComponent {
   trait WillUnmount {
     def willUnmount(props: Props, state: State): Callback
   }
+
+  case class StateStoresDependency(store: StateStore[_], stateUpdate: State => State)
 }
 object HydroReactComponent {
   abstract class Stateless extends HydroReactComponent {
