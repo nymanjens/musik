@@ -12,7 +12,7 @@ private[app] final class PendingModificationsCounter(
 
   // **************** API ****************//
   def apply(): VdomElement = {
-    component()
+    component((): Unit)
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//

@@ -11,7 +11,7 @@ private[app] final class PageLoadingSpinner(implicit pageLoadingStateStore: Page
 
   // **************** API ****************//
   def apply(): VdomElement = {
-    component()
+    component((): Unit)
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//

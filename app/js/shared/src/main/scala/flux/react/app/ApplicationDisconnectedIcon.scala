@@ -14,7 +14,7 @@ private[app] final class ApplicationDisconnectedIcon(
 
   // **************** API ****************//
   def apply(): VdomElement = {
-    component()
+    component((): Unit)
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//
