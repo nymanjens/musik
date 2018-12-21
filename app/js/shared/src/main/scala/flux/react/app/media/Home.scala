@@ -24,7 +24,7 @@ private[app] final class Home(implicit i18n: I18n,
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(router: RouterContext)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {

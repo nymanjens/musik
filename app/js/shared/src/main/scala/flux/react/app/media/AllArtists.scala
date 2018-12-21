@@ -26,7 +26,7 @@ private[app] final class AllArtists(implicit pageHeader: uielements.PageHeader,
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
     .withStateStoresDependency(allArtistsStore, _.copy(maybeArtists = allArtistsStore.state.map(_.artists)))
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(router: RouterContext)
   protected case class State(maybeArtists: Option[Seq[JsArtist]] = None)
 

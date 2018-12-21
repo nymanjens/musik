@@ -24,7 +24,7 @@ private[app] final class AllUsersList(implicit i18n: I18n, userStore: UserStore)
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
     .withStateStoresDependency(userStore, _.copy(maybeAllUsers = userStore.state.map(_.allUsers)))
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected type Props = Unit
   protected case class State(maybeAllUsers: Option[Seq[User]] = None)
 

@@ -25,7 +25,7 @@ private[app] final class ArtistDetail(implicit pageHeader: uielements.PageHeader
       StateStoresDependency(store, _.copy(maybeStoreState = store.state))
     }
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(artistId: Long, router: RouterContext)
   protected case class State(maybeStoreState: Option[ArtistDetailStoreFactory.State] = None)
 

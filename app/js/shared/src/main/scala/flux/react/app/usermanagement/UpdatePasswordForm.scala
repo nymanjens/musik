@@ -26,7 +26,7 @@ private[usermanagement] final class UpdatePasswordForm(implicit user: User,
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props()
   protected case class State(showErrorMessages: Boolean = false, globalErrors: Seq[String] = Seq())
 

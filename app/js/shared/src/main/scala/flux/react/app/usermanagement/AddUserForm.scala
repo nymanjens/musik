@@ -24,7 +24,7 @@ private[usermanagement] final class AddUserForm(implicit user: User, i18n: I18n,
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
 
-  // **************** Private inner types ****************//
+  // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props()
   protected case class State(showErrorMessages: Boolean = false, globalErrors: Seq[String] = Seq())
 
