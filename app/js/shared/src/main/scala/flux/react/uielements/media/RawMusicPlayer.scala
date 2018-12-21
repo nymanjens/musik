@@ -1,7 +1,7 @@
 package flux.react.uielements.media
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import common.LoggingUtils.logExceptions
+import flux.react.common.HydroReactComponent
 import japgolly.scalajs.react.Ref.ToScalaComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.MountedImpure
@@ -10,31 +10,7 @@ import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.raw.HTMLAudioElement
 import org.scalajs.dom.{console, html}
 
-private[media] object RawMusicPlayer {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .renderBackend[Backend]
-    .componentDidMount(scope =>
-      LogExceptionsCallback {
-        if (scope.props.playing) {
-          scope.backend.htmlAudioElement match {
-            case Some(e) => e.play()
-            case None    =>
-          }
-        }
-    })
-    .componentDidUpdate(scope =>
-      LogExceptionsCallback {
-        if (scope.prevProps != scope.currentProps) {
-          scope.backend.htmlAudioElement match {
-            case Some(e) if scope.currentProps.playing  => e.play()
-            case Some(e) if !scope.currentProps.playing => e.pause()
-            case None                                   =>
-          }
-        }
-    })
-    .build
+private[media] object RawMusicPlayer extends HydroReactComponent.Stateless {
 
   // **************** API ****************//
   def apply(ref: Reference,
@@ -66,22 +42,49 @@ private[media] object RawMusicPlayer {
     }
   }
 
-  // **************** Private inner types ****************//
-  private case class Props private[RawMusicPlayer] (src: String,
-                                                    playing: Boolean,
-                                                    onEnded: () => Unit,
-                                                    onPlayingChanged: Boolean => Unit,
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
+
+  // **************** Implementation of HydroReactComponent types ****************//
+  protected case class Props private[RawMusicPlayer] (src: String,
+                                                      playing: Boolean,
+                                                      onEnded: () => Unit,
+                                                      onPlayingChanged: Boolean => Unit,
   )
-  private type State = Unit
 
   private type ThisCtorSummoner = CtorType.Summoner.Aux[Box[Props], Children.None, CtorType.Props]
   private type ThisMutableRef = ToScalaComponent[Props, State, Backend, ThisCtorSummoner#CT]
   private type ThisComponentU = MountedImpure[Props, State, Backend]
 
-  private class Backend($ : BackendScope[Props, State]) {
+  protected class Backend($ : BackendScope[Props, State])
+      extends BackendBase($)
+      with DidMount
+      with DidUpdate {
     val audioRef = Ref[html.Audio]
 
-    def render(props: Props, state: State) = logExceptions {
+    override def didMount(props: Props, state: Unit): Callback = LogExceptionsCallback {
+      if (props.playing) {
+        htmlAudioElement match {
+          case Some(e) => e.play()
+          case None    =>
+        }
+      }
+    }
+
+    override def didUpdate(prevProps: Props,
+                           currentProps: Props,
+                           prevState: Unit,
+                           currentState: Unit): Callback = LogExceptionsCallback {
+      if (prevProps != currentProps) {
+        htmlAudioElement match {
+          case Some(e) if currentProps.playing  => e.play()
+          case Some(e) if !currentProps.playing => e.pause()
+          case None                             =>
+        }
+      }
+    }
+
+    override def render(props: Props, state: State) = logExceptions {
       <.audio(
         ^.controls := true,
         ^.src := props.src,
