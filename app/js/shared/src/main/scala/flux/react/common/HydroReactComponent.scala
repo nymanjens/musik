@@ -129,10 +129,10 @@ abstract class HydroReactComponent {
 object HydroReactComponent {
   abstract class Stateless extends HydroReactComponent {
 
-    val statelessConfig: StatelessComponentConfig
+    protected val statelessConfig: StatelessComponentConfig
 
     type State = Unit
-    override val config = ComponentConfig(
+    override lazy val config = ComponentConfig(
       backendConstructor = statelessConfig.backendConstructor,
       initialState = (): Unit,
       componentName = statelessConfig.componentName,
