@@ -1,51 +1,35 @@
 package flux.react.app.media
 
-import common.I18n
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.logExceptions
+import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
-import flux.stores.StateStore
 import flux.stores.media.ArtistDetailStoreFactory
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class ArtistDetail(implicit pageHeader: uielements.PageHeader,
                                       songDiv: uielements.media.SongDiv,
-                                      artistDetailStoreFactory: ArtistDetailStoreFactory) {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .initialState[State](State(maybeStoreState = None))
-    .renderBackend[Backend]
-    .componentWillMount(scope => scope.backend.willMount(scope.props, scope.state))
-    .componentWillUnmount(scope => scope.backend.willUnmount(scope.props))
-    .build
+                                      artistDetailStoreFactory: ArtistDetailStoreFactory)
+    extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(artistId: Long, router: RouterContext): VdomElement = {
     component(Props(artistId, router))
   }
 
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
+    .withStateStoresDependencyFromProps { props =>
+      val store = artistDetailStoreFactory.get(props.artistId)
+      StateStoresDependency(store, _.copy(maybeStoreState = store.state))
+    }
+
   // **************** Private inner types ****************//
-  private case class Props(artistId: Long, router: RouterContext) {
-    lazy val store: artistDetailStoreFactory.Store = artistDetailStoreFactory.get(artistId)
-  }
-  private case class State(maybeStoreState: Option[ArtistDetailStoreFactory.State])
+  protected case class Props(artistId: Long, router: RouterContext)
+  protected case class State(maybeStoreState: Option[ArtistDetailStoreFactory.State] = None)
 
-  private class Backend($ : BackendScope[Props, State]) extends StateStore.Listener {
-
-    def willMount(props: Props, state: State): Callback = LogExceptionsCallback {
-      props.store.register(this)
-      $.modState(state => logExceptions(state.copy(maybeStoreState = props.store.state))).runNow()
-    }
-
-    def willUnmount(props: Props): Callback = LogExceptionsCallback {
-      props.store.deregister(this)
-    }
-
-    override def onStateUpdate() = {
-      $.modState(state => logExceptions(state.copy(maybeStoreState = $.props.runNow().store.state))).runNow()
-    }
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
     def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
