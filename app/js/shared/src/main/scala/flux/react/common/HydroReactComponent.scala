@@ -9,6 +9,8 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Builder
 import japgolly.scalajs.react.vdom.html_<^._
 
+import scala.collection.mutable
+
 abstract class HydroReactComponent {
 
   // **************** Protected types to be overridden ****************//
@@ -20,7 +22,7 @@ abstract class HydroReactComponent {
   protected def createBackend: BackendScope[Props, State] => Backend
   protected def initialState: State
   protected def componentName: String = getClass.getSimpleName
-  protected def stateStoresDependencies: Seq[StateStoresDependency] = Seq()
+  protected def stateStoresDependencies: StateStoresDependencyBuilder => Unit = _ => {}
 
   // **************** Protected final methods ****************//
   protected lazy val component = {
@@ -44,17 +46,38 @@ abstract class HydroReactComponent {
         .componentWillUnmount(scope =>
           scope.backend.asInstanceOf[WillUnmount].willUnmount(scope.props, scope.state))
     }
-    if (stateStoresDependencies.nonEmpty) {
+    if (stateStoresDependenciesFromProps.nonEmpty) {
       step4 = step4
         .componentWillMount { scope =>
-          for (StateStoresDependency(store, _) <- stateStoresDependencies) {
-            store.register(scope.backend)
+          logExceptions {
+            for (StateStoresDependency(store, _) <- getStateStoresDependencies(scope.props)) {
+              store.register(scope.backend)
+            }
+            scope.backend.updateStateFromStoresCallback(scope.props)
           }
-          scope.backend.updateStateFromStoresCallback
+        }
+        .componentWillReceiveProps { scope =>
+          logExceptions {
+            var anythingChanged = false
+            for {
+              (StateStoresDependency(oldStore, _), StateStoresDependency(newStore, _)) <- getStateStoresDependencies(
+                scope.currentProps) zip getStateStoresDependencies(scope.nextProps)
+              if oldStore != newStore
+            } {
+              oldStore.deregister(scope.backend)
+              newStore.register(scope.backend)
+              anythingChanged = true
+            }
+            if (anythingChanged) {
+              scope.backend.updateStateFromStoresCallback(scope.nextProps)
+            } else {
+              Callback.empty
+            }
+          }
         }
         .componentWillUnmount { scope =>
           LogExceptionsCallback {
-            for (StateStoresDependency(store, _) <- stateStoresDependencies) {
+            for (StateStoresDependency(store, _) <- getStateStoresDependencies(scope.props)) {
               store.deregister(scope.backend)
             }
           }
@@ -63,19 +86,29 @@ abstract class HydroReactComponent {
     step4.build
   }
 
-  // **************** Protected final types ****************//
+  // **************** Private helper methods ****************//
+  private lazy val stateStoresDependenciesFromProps: Seq[Props => StateStoresDependency] = {
+    val resultBuilder = new StateStoresDependencyBuilder
+    stateStoresDependencies(resultBuilder)
+    resultBuilder.build
+  }
+  private def getStateStoresDependencies(props: Props): Seq[StateStoresDependency] = {
+    stateStoresDependenciesFromProps.map(_.apply(props))
+  }
+
+  // **************** Protected types ****************//
   abstract class BackendBase($ : BackendScope[Props, State]) extends StateStore.Listener {
     def render(props: Props, state: State): VdomElement
 
     override final def onStateUpdate() = {
-      updateStateFromStoresCallback.runNow()
+      $.props.flatMap(updateStateFromStoresCallback).runNow()
     }
 
-    private[HydroReactComponent] def updateStateFromStoresCallback: Callback = {
+    private[HydroReactComponent] def updateStateFromStoresCallback(props: Props): Callback = {
       $.modState(oldState =>
         logExceptions {
           var state = oldState
-          for (StateStoresDependency(_, stateUpdate) <- stateStoresDependencies) {
+          for (StateStoresDependency(_, stateUpdate) <- getStateStoresDependencies(props)) {
             state = stateUpdate(state)
           }
           state
@@ -89,7 +122,24 @@ abstract class HydroReactComponent {
     def willUnmount(props: Props, state: State): Callback
   }
 
-  case class StateStoresDependency(store: StateStore[_], stateUpdate: State => State)
+  private case class StateStoresDependency(store: StateStore[_], stateUpdate: State => State)
+  class StateStoresDependencyBuilder {
+    private val dependencyProviders = mutable.Buffer[Props => StateStoresDependency]()
+    def addDependency(store: StateStore[_], stateUpdate: State => State): StateStoresDependencyBuilder = {
+      dependencyProviders += (_ => StateStoresDependency(store, stateUpdate))
+      this
+    }
+    def addDependencyFromProps[Store <: StateStore[_]](storeFromProps: Props => Store)(
+        stateUpdate: Store => State => State): StateStoresDependencyBuilder = {
+      dependencyProviders += { props =>
+        val store = storeFromProps(props)
+        StateStoresDependency(store, stateUpdate(store))
+      }
+      this
+    }
+
+    private[HydroReactComponent] def build: Seq[Props => StateStoresDependency] = dependencyProviders.toVector
+  }
 }
 object HydroReactComponent {
   abstract class Stateless extends HydroReactComponent {
