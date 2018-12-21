@@ -1,53 +1,36 @@
 package flux.react.app.media
 
-import common.I18n
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.logExceptions
+import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
-import flux.stores.StateStore
 import flux.stores.media.AlbumDetailStoreFactory
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
                                      songDiv: uielements.media.SongDiv,
-                                     albumDetailStoreFactory: AlbumDetailStoreFactory) {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .initialState[State](State(maybeStoreState = None))
-    .renderBackend[Backend]
-    .componentWillMount(scope => scope.backend.willMount(scope.props, scope.state))
-    .componentWillUnmount(scope => scope.backend.willUnmount(scope.props))
-    .build
+                                     albumDetailStoreFactory: AlbumDetailStoreFactory)
+    extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(albumId: Long, router: RouterContext): VdomElement = {
     component(Props(albumId, router))
   }
 
-  // **************** Private inner types ****************//
-  private case class Props(albumId: Long, router: RouterContext) {
-    lazy val store: albumDetailStoreFactory.Store = albumDetailStoreFactory.get(albumId)
-  }
-  private case class State(maybeStoreState: Option[AlbumDetailStoreFactory.State])
-
-  private class Backend($ : BackendScope[Props, State]) extends StateStore.Listener {
-
-    def willMount(props: Props, state: State): Callback = LogExceptionsCallback {
-      props.store.register(this)
-      $.modState(state => logExceptions(state.copy(maybeStoreState = props.store.state))).runNow()
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
+    .withStateStoresDependencyFromProps { props =>
+      val store = albumDetailStoreFactory.get(props.albumId)
+      StateStoresDependency(store, _.copy(maybeStoreState = store.state))
     }
 
-    def willUnmount(props: Props): Callback = LogExceptionsCallback {
-      props.store.deregister(this)
-    }
+  // **************** Implementation of HydroReactComponent types ****************//
+  protected case class Props(albumId: Long, router: RouterContext)
+  protected case class State(maybeStoreState: Option[AlbumDetailStoreFactory.State] = None)
 
-    override def onStateUpdate() = {
-      $.modState(state => logExceptions(state.copy(maybeStoreState = $.props.runNow().store.state))).runNow()
-    }
-
-    def render(props: Props, state: State): VdomElement = logExceptions {
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
+    override def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
 
       <.span(

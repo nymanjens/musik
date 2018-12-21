@@ -3,6 +3,7 @@ package flux.react.app.media
 import common.I18n
 import common.LoggingUtils.logExceptions
 import flux.action.Dispatcher
+import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
 import japgolly.scalajs.react._
@@ -12,25 +13,22 @@ import models.access.EntityAccess
 private[app] final class Home(implicit i18n: I18n,
                               entityAccess: EntityAccess,
                               pageHeader: uielements.PageHeader,
-                              dispatcher: Dispatcher) {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .renderBackend[Backend]
-    .build
+                              dispatcher: Dispatcher)
+    extends HydroReactComponent.Stateless {
 
   // **************** API ****************//
   def apply(router: RouterContext): VdomElement = {
     component(Props(router = router))
   }
 
-  // **************** Private inner types ****************//
-  private case class Props(router: RouterContext)
-  private type State = Unit
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
 
-  private class Backend($ : BackendScope[Props, State]) {
+  // **************** Implementation of HydroReactComponent types ****************//
+  protected case class Props(router: RouterContext)
 
-    def render(props: Props, state: State): VdomElement = logExceptions {
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
+    override def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
 
       <.div("Home page")

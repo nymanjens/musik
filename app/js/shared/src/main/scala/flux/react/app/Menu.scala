@@ -4,6 +4,7 @@ import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import common.time.Clock
 import flux.react.ReactVdomUtils.^^
+import flux.react.common.HydroReactComponent
 import flux.react.router.{Page, RouterContext}
 import flux.react.uielements
 import flux.stores.media.PlayStatusStore
@@ -17,32 +18,30 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
                               user: User,
                               clock: Clock,
                               i18n: I18n,
-                              playStatusStore: PlayStatusStore) {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .renderBackend[Backend]
-    .componentWillMount(scope => scope.backend.willMount(scope.props))
-    .componentDidMount(scope => scope.backend.didMount(scope.props))
-    .componentWillReceiveProps(scope => scope.backend.configureKeyboardShortcuts(scope.nextProps.router))
-    .build
+                              playStatusStore: PlayStatusStore)
+    extends HydroReactComponent.Stateless {
 
   // **************** API ****************//
   def apply(router: RouterContext): VdomElement = {
     component(Props(router))
   }
 
-  // **************** Private inner types ****************//
-  private case class Props(router: RouterContext)
-  private type State = Unit
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
 
-  private class Backend(val $ : BackendScope[Props, State]) {
+  // **************** Implementation of HydroReactComponent types ****************//
+  protected case class Props(router: RouterContext)
+
+  protected class Backend(val $ : BackendScope[Props, State])
+      extends BackendBase($)
+      with WillMount
+      with DidMount
+      with WillReceiveProps {
     val queryInputRef = uielements.input.TextInput.ref()
 
-    def willMount(props: Props): Callback = LogExceptionsCallback {
-      configureKeyboardShortcuts(props.router).runNow()
-    }
-    def didMount(props: Props): Callback = LogExceptionsCallback {
+    override def willMount(props: Props, state: State): Callback = configureKeyboardShortcuts(props.router)
+
+    override def didMount(props: Props, state: State): Callback = LogExceptionsCallback {
       props.router.currentPage match {
         // TODO: Restore global search
         //case page: Page.Search => {
@@ -52,7 +51,10 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
       }
     }
 
-    def render(props: Props, state: State) = logExceptions {
+    override def willReceiveProps(currentProps: Props, nextProps: Props, state: State): Callback =
+      configureKeyboardShortcuts(nextProps.router)
+
+    override def render(props: Props, state: State) = logExceptions {
       implicit val router = props.router
       def menuItem(label: String, page: Page, iconClass: String = null): VdomElement =
         router
