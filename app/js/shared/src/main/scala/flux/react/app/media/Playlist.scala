@@ -24,10 +24,8 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//
-  override protected def createBackend = new Backend(_)
-  override protected def initialState = State()
-  override protected val stateStoresDependencies =
-    _.addDependency(playlistStore, _.copy(maybeEntries = playlistStore.state.map(_.entries)))
+  override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
+    .withStateStoresDependency(playlistStore, _.copy(maybeEntries = playlistStore.state.map(_.entries)))
 
   // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(router: RouterContext)

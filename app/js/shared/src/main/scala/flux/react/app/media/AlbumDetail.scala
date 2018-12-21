@@ -1,16 +1,12 @@
 package flux.react.app.media
 
-import common.I18n
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.logExceptions
 import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
-import flux.stores.StateStore
 import flux.stores.media.AlbumDetailStoreFactory
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-
-import scala.collection.immutable.Seq
 
 private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
                                      songDiv: uielements.media.SongDiv,
@@ -23,11 +19,11 @@ private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//
-  override protected def createBackend = new Backend(_)
-  override protected def initialState = State()
-  override protected val stateStoresDependencies =
-    _.addDependencyFromProps(props => albumDetailStoreFactory.get(props.albumId))(store =>
-      _.copy(maybeStoreState = store.state))
+  override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
+    .withStateStoresDependencyFromProps { props =>
+      val store = albumDetailStoreFactory.get(props.albumId)
+      StateStoresDependency(store, _.copy(maybeStoreState = store.state))
+    }
 
   // **************** Private inner types ****************//
   protected case class Props(albumId: Long, router: RouterContext)
