@@ -2,6 +2,7 @@ package flux.react.app.media
 
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
 import flux.stores.StateStore
@@ -13,43 +14,25 @@ import models.media.JsArtist
 import scala.collection.immutable.Seq
 
 private[app] final class AllArtists(implicit pageHeader: uielements.PageHeader,
-                                    allArtistsStore: AllArtistsStore) {
-
-  private val component = ScalaComponent
-    .builder[Props](getClass.getSimpleName)
-    .initialState[State](State(maybeArtists = None))
-    .renderBackend[Backend]
-    .componentWillMount(scope => scope.backend.willMount(scope.state))
-    .componentWillUnmount(scope => scope.backend.willUnmount())
-    .build
+                                    allArtistsStore: AllArtistsStore)
+    extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(router: RouterContext): VdomElement = {
     component(Props(router))
   }
 
+  // **************** Implementation of HydroReactComponent methods ****************//
+  override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
+    .withStateStoresDependency(allArtistsStore, _.copy(maybeArtists = allArtistsStore.state.map(_.artists)))
+
   // **************** Private inner types ****************//
-  private case class Props(router: RouterContext)
-  private case class State(maybeArtists: Option[Seq[JsArtist]])
+  protected case class Props(router: RouterContext)
+  protected case class State(maybeArtists: Option[Seq[JsArtist]] = None)
 
-  private class Backend($ : BackendScope[Props, State]) extends StateStore.Listener {
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
-    def willMount(state: State): Callback = LogExceptionsCallback {
-      allArtistsStore.register(this)
-      $.modState(state => logExceptions(state.copy(maybeArtists = allArtistsStore.state.map(_.artists))))
-        .runNow()
-    }
-
-    def willUnmount(): Callback = LogExceptionsCallback {
-      allArtistsStore.deregister(this)
-    }
-
-    override def onStateUpdate() = {
-      $.modState(state => logExceptions(state.copy(maybeArtists = allArtistsStore.state.map(_.artists))))
-        .runNow()
-    }
-
-    def render(props: Props, state: State): VdomElement = logExceptions {
+    override def render(props: Props, state: State): VdomElement = logExceptions {
       implicit val router = props.router
 
       <.span(
