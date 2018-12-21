@@ -40,6 +40,18 @@ abstract class HydroReactComponent {
         .componentWillUnmount(scope =>
           scope.backend.asInstanceOf[WillUnmount].willUnmount(scope.props, scope.state))
     }
+    if (dummyBackend.isInstanceOf[DidMount]) {
+      step4 = step4
+        .componentDidMount(scope => scope.backend.asInstanceOf[DidMount].didMount(scope.props, scope.state))
+    }
+    if (dummyBackend.isInstanceOf[WillReceiveProps]) {
+      step4 = step4
+        .componentWillReceiveProps(
+          scope =>
+            scope.backend
+              .asInstanceOf[WillReceiveProps]
+              .willReceiveProps(currentProps = scope.currentProps, nextProps = scope.nextProps, scope.state))
+    }
     if (config.stateStoresDependencies.nonEmpty) {
       step4 = step4
         .componentWillMount { scope =>
@@ -104,11 +116,11 @@ abstract class HydroReactComponent {
       })
     }
   }
-  trait WillMount {
-    def willMount(props: Props, state: State): Callback
-  }
-  trait WillUnmount {
-    def willUnmount(props: Props, state: State): Callback
+  trait WillMount { def willMount(props: Props, state: State): Callback }
+  trait WillUnmount { def willUnmount(props: Props, state: State): Callback }
+  trait DidMount { def didMount(props: Props, state: State): Callback }
+  trait WillReceiveProps {
+    def willReceiveProps(currentProps: Props, nextProps: Props, state: State): Callback
   }
 
   case class StateStoresDependency(store: StateStore[_], stateUpdate: State => State)
