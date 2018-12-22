@@ -38,8 +38,8 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
 
       val stopAfterCurrentSong = state.storeState.stopAfterCurrentSong
 
-      <.div(state.storeState.currentPlaylistEntry match {
-        case None => "Empty playlist"
+      state.storeState.currentPlaylistEntry match {
+        case None => <.span()
         case Some(playlistEntry) =>
           <.div(
             ^.className := "music-player-bar",
@@ -100,7 +100,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
               ),
             ),
           )
-      })
+      }
     }
   }
 }
