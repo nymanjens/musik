@@ -1,7 +1,7 @@
 package flux.stores.media
 
 import common.OrderToken
-import flux.action.Action.AddSongsToPlaylist
+import flux.action.Action.{AddSongsToPlaylist, RemoveEntriesFromPlaylist}
 import flux.action.Action.AddSongsToPlaylist.Placement
 import flux.action.Dispatcher
 import flux.stores.AsyncEntityDerivedStateStore
@@ -59,9 +59,40 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
         await(entityAccess.persistModifications(modifications))
       }
 
-    // TODO: case RemoveSongsFromPlaylist =>
-    // val modifications = playlistEntries.toVector.map(EntityModification.createDelete[PlaylistEntry])
-    // entityAccess.persistModifications(modifications)
+    case RemoveEntriesFromPlaylist(playlistEntryIdsToRemove) =>
+      async {
+        val playStatus = await(PlayStatus.get())
+        if (playStatus.isDefined) {
+          val currentEntryId = playStatus.get.currentPlaylistEntryId
+          if (playlistEntryIdsToRemove contains currentEntryId) {
+            val entries = await(PlaylistEntry.getOrderedSeq())
+            val currentIndex = entries.map(_.id).indexOf(currentEntryId)
+            def searchNonRemovedEntry(index: Int, direction: Int): Option[PlaylistEntry] = {
+              if (entries.indices contains index) {
+                if (playlistEntryIdsToRemove contains entries(index).id) {
+                  searchNonRemovedEntry(index + direction, direction)
+                } else {
+                  Some(entries(index))
+                }
+              } else {
+                None
+              }
+            }
+            val maybeNextEntry =
+              searchNonRemovedEntry(currentIndex + 1, direction = +1) orElse
+                searchNonRemovedEntry(currentIndex - 1, direction = -1)
+            await(entityAccess.persistModifications {
+              maybeNextEntry match {
+                case Some(nextEntry) =>
+                  EntityModification.createUpdate(playStatus.get.copy(currentPlaylistEntryId = nextEntry.id))
+                case None => EntityModification.createDelete(playStatus.get)
+              }
+            })
+          }
+        }
+        val modifications = playlistEntryIdsToRemove.toVector.map(EntityModification.Remove[PlaylistEntry])
+        await(entityAccess.persistModifications(modifications))
+      }
   }
 
   // **************** Implementation of base class methods **************** //

@@ -1,6 +1,7 @@
 package flux.react.app.media
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
 import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
@@ -14,9 +15,10 @@ import models.media.JsPlaylistEntry
 import scala.collection.immutable.Seq
 
 private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
+                                  dispatcher: Dispatcher,
                                   playlistStore: PlaylistStore,
-                                  playStatusStore: PlayStatusStore)
-    extends HydroReactComponent {
+                                  playStatusStore: PlayStatusStore,
+) extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(router: RouterContext): VdomElement = {
@@ -42,24 +44,28 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
           case None =>
             <.div("Loading...")
           case Some(entries) =>
-            entries.map { entry =>
-              <.div(
-                ^.key := entry.id,
-                s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
-                " ",
-                <.a(
-                  ^^.classes("btn", "btn-default", "btn-xs"),
-                  ^.onClick --> playCallback(entry),
-                  <.i(^.className := "fa fa-play-circle-o")
+            entries.map {
+              entry =>
+                <.div(
+                  ^.key := entry.id,
+                  s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
+                  " ",
+                  <.a(
+                    ^^.classes("btn", "btn-default", "btn-xs"),
+                    ^.onClick --> LogExceptionsCallback[Unit](
+                      playStatusStore.play(playlistEntryId = entry.id)),
+                    <.i(^.className := "fa fa-play-circle-o")
+                  ),
+                  <.a(
+                    ^^.classes("btn", "btn-default", "btn-xs"),
+                    ^.onClick --> LogExceptionsCallback[Unit](
+                      dispatcher.dispatch(Action.RemoveEntriesFromPlaylist(Seq(entry.id)))),
+                    <.i(^.className := "fa fa-times-circle-o")
+                  )
                 )
-              )
             }.toVdomArray
         }
       )
-    }
-
-    private def playCallback(playlistEntry: JsPlaylistEntry): Callback = LogExceptionsCallback {
-      playStatusStore.play(playlistEntryId = playlistEntry.id)
     }
   }
 }

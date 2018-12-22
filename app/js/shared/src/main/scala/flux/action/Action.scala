@@ -24,6 +24,7 @@ object Action {
       object AtEnd extends Placement
     }
   }
+  case class RemoveEntriesFromPlaylist(playlistEntryIds: Seq[Long]) extends Action
 
   // **************** Other actions **************** //
   case class SetPageLoadingState(isLoading: Boolean) extends Action
