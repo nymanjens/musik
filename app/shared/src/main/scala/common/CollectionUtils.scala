@@ -1,5 +1,6 @@
 package common
 
+import scala.collection.immutable.Seq
 import scala.collection.immutable.ListMap
 
 object CollectionUtils {
@@ -18,4 +19,6 @@ object CollectionUtils {
   def getMostCommonString(strings: Iterable[String]): String = {
     strings.groupBy(identity).mapValues(_.size).toSeq.minBy(-_._2)._1
   }
+
+  def ifThenSeq[V](condition: Boolean, value: V): Seq[V] = if (condition) Seq(value) else Seq()
 }
