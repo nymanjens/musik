@@ -40,7 +40,8 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
     await(upsertPlayStatus(stopAfterCurrentSong = !await(stateFuture).stopAfterCurrentSong))
   }
 
-  def advanceEntriesInPlaylist(step: Int): Future[Unit] = async {
+  /** Returns true if anything changed */
+  def advanceEntriesInPlaylist(step: Int): Future[Boolean] = async {
     val playlistEntries = await(PlaylistEntry.getOrderedSeq())
     val currentSongIndex = {
       for {
@@ -59,6 +60,9 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
     val newSongIndex = currentSongIndex + step
     if (playlistEntries.indices contains newSongIndex) {
       await(upsertPlayStatus(currentPlaylistEntryId = playlistEntries(newSongIndex).id))
+      true
+    } else {
+      false
     }
   }
 
@@ -66,7 +70,12 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
     if (await(stateFuture).stopAfterCurrentSong) {
       await(upsertPlayStatus(hasStarted = false, stopAfterCurrentSong = false))
     }
-    await(advanceEntriesInPlaylist(step = +1))
+    val advanced = await(advanceEntriesInPlaylist(step = +1))
+
+    if (!advanced) {
+      // This is the last song of the playlist
+      await(upsertPlayStatus(hasStarted = false))
+    }
   }
 
   private def upsertPlayStatus(currentPlaylistEntryId: java.lang.Long = null,
