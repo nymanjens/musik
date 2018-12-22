@@ -102,15 +102,22 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
             userId = user.id,
             idOption = Some(playStatus.id)
           )))
-      case None if currentPlaylistEntryId != null =>
-        Seq(
-          EntityModification.createAddWithRandomId(PlayStatus(
-            currentPlaylistEntryId = currentPlaylistEntryId,
-            hasStarted = nonNullBooleanOrElse(hasStarted, fallback = false),
-            stopAfterCurrentSong = nonNullBooleanOrElse(stopAfterCurrentSong, fallback = false),
-            userId = user.id
-          )))
-      case _ => Seq()
+      case None =>
+        val maybeEntryId: Option[Long] =
+          if (currentPlaylistEntryId != null) Some(currentPlaylistEntryId)
+          else await(stateFuture).currentPlaylistEntry.map(_.id)
+        maybeEntryId match {
+          case Some(entryId) =>
+            Seq(
+              EntityModification.createAddWithRandomId(PlayStatus(
+                currentPlaylistEntryId = entryId,
+                hasStarted = nonNullBooleanOrElse(hasStarted, fallback = false),
+                stopAfterCurrentSong = nonNullBooleanOrElse(stopAfterCurrentSong, fallback = false),
+                userId = user.id
+              )))
+          case None => Seq()
+
+        }
     }
     await(entityAccess.persistModifications(modifications))
   }
