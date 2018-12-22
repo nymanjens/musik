@@ -33,10 +33,9 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
             if (index < currentPlaylist.size) Some(currentPlaylist(index)) else None
           placement match {
             case Placement.AfterCurrentSong =>
-              val maybePlayStatus = await(PlayStatus.get())
               val maybeCurrentPlaylistIndex =
                 for {
-                  playStatus <- maybePlayStatus
+                  playStatus <- await(PlayStatus.get())
                   currentPlaylistEntry <- currentPlaylist.find(_.id == playStatus.currentPlaylistEntryId)
                 } yield currentPlaylist.indexOf(currentPlaylistEntry)
 

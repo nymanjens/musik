@@ -5,6 +5,8 @@ import models.access.DbQueryImplicits._
 import models.access.{EntityAccess, ModelField}
 import models.user.User
 
+import scala.async.Async.{async, await}
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class PlayStatus(currentPlaylistEntryId: Long,
@@ -19,6 +21,27 @@ case class PlayStatus(currentPlaylistEntryId: Long,
 object PlayStatus {
   def tupled = (this.apply _).tupled
 
-  def get()(implicit user: User, entityAccess: EntityAccess): Future[Option[PlayStatus]] =
-    entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId === user.id)
+  def get(verifyConsistency: Boolean = true)(implicit user: User,
+                                             entityAccess: EntityAccess): Future[Option[PlayStatus]] = async {
+    val maybePlayStatus =
+      await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId === user.id))
+    if (verifyConsistency) {
+      maybePlayStatus match {
+        case Some(playStatus) =>
+          await(
+            entityAccess
+              .newQuery[PlaylistEntry]()
+              .findOne(ModelField.PlaylistEntry.id === playStatus.currentPlaylistEntryId)) match {
+            case Some(_) => maybePlayStatus
+            case None =>
+              println(
+                s"Warning: Encountered PlayStatus that points to a playlist entry that doesn't exist: $playStatus")
+              None
+          }
+        case None => None
+      }
+    } else {
+      maybePlayStatus
+    }
+  }
 }

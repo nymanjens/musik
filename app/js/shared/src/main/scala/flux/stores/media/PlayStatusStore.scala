@@ -44,17 +44,8 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
   def advanceEntriesInPlaylist(step: Int): Future[Boolean] = async {
     val playlistEntries = await(PlaylistEntry.getOrderedSeq())
     val currentSongIndex = {
-      for {
-        playStatus <- await(PlayStatus.get())
-        index <- {
-          val entryIds = playlistEntries.map(_.id)
-          if (entryIds contains playStatus.currentPlaylistEntryId) {
-            Some(entryIds.indexOf(playStatus.currentPlaylistEntryId))
-          } else {
-            None
-          }
-        }
-      } yield index
+      for (playStatus <- await(PlayStatus.get()))
+        yield playlistEntries.map(_.id).indexOf(playStatus.currentPlaylistEntryId)
     } getOrElse 0
 
     val newSongIndex = currentSongIndex + step
@@ -90,7 +81,7 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
       case null => fallback
       case v    => v
     }
-    val modifications = await(PlayStatus.get()) match {
+    val modifications = await(PlayStatus.get(verifyConsistency = false)) match {
       case Some(playStatus) =>
         Seq(
           EntityModification.createUpdate(PlayStatus(
