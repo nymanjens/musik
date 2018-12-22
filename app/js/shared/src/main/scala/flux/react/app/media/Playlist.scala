@@ -1,5 +1,7 @@
 package flux.react.app.media
 
+import common.CollectionUtils
+import common.CollectionUtils.ifThenSeq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
@@ -28,10 +30,14 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
     .withStateStoresDependency(playlistStore, _.copy(maybeEntries = playlistStore.state.map(_.entries)))
+    .withStateStoresDependency(
+      playStatusStore,
+      _.copy(playStatusStoreState = playStatusStore.state getOrElse PlayStatusStore.State.nullInstance))
 
   // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(router: RouterContext)
-  protected case class State(maybeEntries: Option[Seq[JsPlaylistEntry]] = None)
+  protected case class State(maybeEntries: Option[Seq[JsPlaylistEntry]] = None,
+                             playStatusStoreState: PlayStatusStore.State = PlayStatusStore.State.nullInstance)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
@@ -46,8 +52,10 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
           case Some(entries) =>
             entries.map {
               entry =>
+                val isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)
                 <.div(
                   ^.key := entry.id,
+                  ^^.classes("playlist-entry" +: ifThenSeq(isCurrentSong, "active")),
                   s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
                   " ",
                   <.a(
