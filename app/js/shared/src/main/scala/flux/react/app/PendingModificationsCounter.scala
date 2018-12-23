@@ -1,8 +1,8 @@
 package flux.react.app
 
 import common.LoggingUtils.logExceptions
-import flux.react.common.HydroReactComponent
 import flux.stores.PendingModificationsStore
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

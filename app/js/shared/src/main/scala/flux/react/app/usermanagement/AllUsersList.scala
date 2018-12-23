@@ -3,9 +3,9 @@ package flux.react.app.usermanagement
 import common.I18n
 import common.LoggingUtils.logExceptions
 import flux.react.ReactVdomUtils.<<
-import flux.react.common.HydroReactComponent
 import flux.react.uielements
 import flux.stores.UserStore
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.user.User

@@ -1,9 +1,9 @@
 package flux.react.app
 
 import common.LoggingUtils.logExceptions
-import flux.react.common.HydroReactComponent
 import flux.stores.GlobalMessagesStore
 import flux.stores.GlobalMessagesStore.Message
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

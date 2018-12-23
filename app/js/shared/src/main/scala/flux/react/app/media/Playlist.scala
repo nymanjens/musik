@@ -5,11 +5,11 @@ import common.CollectionUtils.ifThenSeq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
-import flux.react.common.HydroReactComponent
 import flux.react.router.RouterContext
 import flux.react.uielements
 import flux.stores.StateStore
 import flux.stores.media.{PlayStatusStore, PlaylistStore}
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^.{<, _}
 import models.media.JsPlaylistEntry

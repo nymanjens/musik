@@ -4,9 +4,9 @@ import api.ScalaJsApi.UserPrototype
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
-import flux.react.common.HydroReactComponent
 import flux.react.uielements
 import flux.react.uielements.input.bootstrap
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.user.User

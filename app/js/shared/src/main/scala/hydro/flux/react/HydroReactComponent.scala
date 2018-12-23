@@ -1,4 +1,4 @@
-package flux.react.common
+package hydro.flux.react
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.stores.StateStore

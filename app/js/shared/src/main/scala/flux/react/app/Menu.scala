@@ -4,10 +4,10 @@ import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import common.time.Clock
 import flux.react.ReactVdomUtils.^^
-import flux.react.common.HydroReactComponent
 import flux.react.router.{Page, RouterContext}
 import flux.react.uielements
 import flux.stores.media.PlayStatusStore
+import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import jsfacades.Mousetrap
