@@ -1,4 +1,4 @@
-package flux.react.app.usermanagement
+package hydro.flux.react.uielements.sbadmin.usermanagement
 
 import common.I18n
 import common.LoggingUtils.logExceptions
@@ -13,7 +13,7 @@ import models.user.User
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 
-private[app] final class AllUsersList(implicit i18n: I18n, userStore: UserStore) extends HydroReactComponent {
+final class AllUsersList(implicit i18n: I18n, userStore: UserStore) extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(): VdomElement = {

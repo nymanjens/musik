@@ -1,4 +1,4 @@
-package flux.react.app.usermanagement
+package hydro.flux.react.uielements.sbadmin.usermanagement
 
 import common.I18n
 import common.time.Clock
@@ -18,6 +18,6 @@ final class Module(implicit i18n: I18n,
   private implicit lazy val addUserForm = new AddUserForm
   private implicit lazy val allUsersList = new AllUsersList
 
-  implicit lazy val userProfile: UserProfile = new UserProfile
-  implicit lazy val userAdministration: UserAdministration = new UserAdministration
+  lazy val userProfile: UserProfile = new UserProfile
+  lazy val userAdministration: UserAdministration = new UserAdministration
 }

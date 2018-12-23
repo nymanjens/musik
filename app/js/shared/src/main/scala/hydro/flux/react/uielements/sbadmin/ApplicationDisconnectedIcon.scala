@@ -1,4 +1,4 @@
-package flux.react.app
+package hydro.flux.react.uielements.sbadmin
 
 import common.I18n
 import common.LoggingUtils.logExceptions
@@ -7,9 +7,8 @@ import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-private[app] final class ApplicationDisconnectedIcon(
-    implicit applicationIsOnlineStore: ApplicationIsOnlineStore,
-    i18n: I18n)
+final class ApplicationDisconnectedIcon(implicit applicationIsOnlineStore: ApplicationIsOnlineStore,
+                                        i18n: I18n)
     extends HydroReactComponent {
 
   // **************** API ****************//

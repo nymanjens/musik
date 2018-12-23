@@ -6,13 +6,7 @@ import flux.action.Dispatcher
 import flux.react.uielements
 import flux.react.uielements.media.MusicPlayerDiv
 import flux.stores._
-import flux.stores.media.{
-  AlbumDetailStoreFactory,
-  AllArtistsStore,
-  ArtistDetailStoreFactory,
-  PlayStatusStore,
-  PlaylistStore
-}
+import flux.stores.media._
 import models.access.JsEntityAccess
 import models.user.User
 
@@ -36,16 +30,18 @@ final class Module(implicit i18n: I18n,
                    clock: Clock) {
 
   // Configuration of submodules
-  private val userManagementModule = new flux.react.app.usermanagement.Module
+  private val hydroSbadminUielementsModule = new hydro.flux.react.uielements.sbadmin.Module
+  private val userManagementModule = new hydro.flux.react.uielements.sbadmin.usermanagement.Module
   private val mediaModule = new flux.react.app.media.Module
 
+  implicit private lazy val globalMessages = hydroSbadminUielementsModule.globalMessages
+  implicit private lazy val pageLoadingSpinner = hydroSbadminUielementsModule.pageLoadingSpinner
+  implicit private lazy val applicationDisconnectedIcon =
+    hydroSbadminUielementsModule.applicationDisconnectedIcon
+  implicit private lazy val pendingModificationsCounter =
+    hydroSbadminUielementsModule.pendingModificationsCounter
+
   implicit private lazy val menu: Menu = new Menu
-  implicit private lazy val globalMessages: GlobalMessages = new GlobalMessages
-  implicit private lazy val pageLoadingSpinner: PageLoadingSpinner = new PageLoadingSpinner
-  implicit private lazy val applicationDisconnectedIcon: ApplicationDisconnectedIcon =
-    new ApplicationDisconnectedIcon
-  implicit private lazy val pendingModificationsCounter: PendingModificationsCounter =
-    new PendingModificationsCounter
 
   implicit lazy val layout: Layout = new Layout
 

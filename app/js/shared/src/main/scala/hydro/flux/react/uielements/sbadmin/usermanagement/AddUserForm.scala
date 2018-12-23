@@ -1,4 +1,4 @@
-package flux.react.app.usermanagement
+package hydro.flux.react.uielements.sbadmin.usermanagement
 
 import api.ScalaJsApi.UserPrototype
 import common.I18n

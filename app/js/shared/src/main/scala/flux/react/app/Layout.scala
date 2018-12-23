@@ -7,6 +7,7 @@ import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
 import flux.router.{Page, RouterContext}
 import flux.react.uielements
+import hydro.flux.react.uielements.sbadmin.{ApplicationDisconnectedIcon, GlobalMessages, PageLoadingSpinner, PendingModificationsCounter}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.PackageBase.VdomAttr
 import japgolly.scalajs.react.vdom.html_<^._
