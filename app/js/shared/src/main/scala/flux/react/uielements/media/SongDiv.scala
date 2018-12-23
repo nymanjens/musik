@@ -5,7 +5,7 @@ import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.Action.AddSongsToPlaylist.Placement
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
-import flux.react.router.{Page, RouterContext}
+import flux.router.{Page, RouterContext}
 import flux.stores.media.PlaylistStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._

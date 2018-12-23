@@ -5,7 +5,7 @@ import common.I18n
 import common.LoggingUtils.LogExceptionsCallback
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
-import flux.react.router.{Page, RouterContext}
+import flux.router.{Page, RouterContext}
 import flux.react.uielements
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.PackageBase.VdomAttr

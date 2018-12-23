@@ -2,7 +2,7 @@ package flux
 
 import api.ScalaJsApi.GetInitialDataResponse
 import api.ScalaJsApiClient
-import flux.react.router.Page
+import flux.router.Page
 import japgolly.scalajs.react.extra.router.Router
 import models.user.User
 
@@ -48,7 +48,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
 
   // Create other Flux modules
   implicit private val reactAppModule = new flux.react.app.Module
-  implicit private val routerModule = new flux.react.router.Module
+  implicit private val routerModule = new flux.router.Module
 
   val router: Router[Page] = routerModule.router
 }

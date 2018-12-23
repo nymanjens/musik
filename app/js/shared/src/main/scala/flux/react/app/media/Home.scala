@@ -3,7 +3,7 @@ package flux.react.app.media
 import common.I18n
 import common.LoggingUtils.logExceptions
 import flux.action.Dispatcher
-import flux.react.router.RouterContext
+import flux.router.RouterContext
 import flux.react.uielements
 import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._

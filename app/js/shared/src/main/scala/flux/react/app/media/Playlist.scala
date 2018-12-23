@@ -5,7 +5,7 @@ import common.CollectionUtils.ifThenSeq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.{Action, Dispatcher}
 import flux.react.ReactVdomUtils.^^
-import flux.react.router.RouterContext
+import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.StateStore
 import flux.stores.media.{PlayStatusStore, PlaylistStore}

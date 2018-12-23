@@ -1,7 +1,7 @@
 package flux.react.app.media
 
 import common.LoggingUtils.logExceptions
-import flux.react.router.RouterContext
+import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.media.AlbumDetailStoreFactory
 import hydro.flux.react.HydroReactComponent

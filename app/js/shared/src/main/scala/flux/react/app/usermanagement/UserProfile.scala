@@ -1,7 +1,7 @@
 package flux.react.app.usermanagement
 
 import common.I18n
-import flux.react.router.RouterContext
+import flux.router.RouterContext
 import flux.react.uielements
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._

@@ -2,7 +2,7 @@ package flux.react.app.media
 
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.react.router.RouterContext
+import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.StateStore
 import flux.stores.media.AllArtistsStore

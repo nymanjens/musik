@@ -1,7 +1,7 @@
 package common.testing
 
 import common.LoggingUtils.LogExceptionsCallback
-import flux.react.router.{Page, RouterContext}
+import flux.router.{Page, RouterContext}
 import japgolly.scalajs.react.extra.router.Path
 import japgolly.scalajs.react.vdom.html_<^.{VdomTagOf, _}
 import org.scalajs.dom.html

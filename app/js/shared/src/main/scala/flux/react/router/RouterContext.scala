@@ -1,4 +1,4 @@
-package flux.react.router
+package flux.router
 
 import flux.action.{Action, Dispatcher}
 import japgolly.scalajs.react.extra.router.{Path, RouterCtl}

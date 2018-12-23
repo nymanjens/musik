@@ -1,7 +1,7 @@
 package flux.react.uielements.media
 
 import flux.react.ReactVdomUtils.^^
-import flux.react.router.{Page, RouterContext}
+import flux.router.{Page, RouterContext}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsAlbum

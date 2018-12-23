@@ -1,4 +1,4 @@
-package flux.react.router
+package flux.router
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.async.Async.{async, await}
