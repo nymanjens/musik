@@ -2,9 +2,9 @@ package hydro.flux.react.uielements.sbadmin.usermanagement
 
 import common.I18n
 import common.time.Clock
-import flux.action.Dispatcher
 import flux.react.uielements
 import flux.stores.UserStore
+import hydro.flux.action.Dispatcher
 import models.user.User
 
 final class Module(implicit i18n: I18n,

@@ -1,7 +1,8 @@
 package flux.stores
 
-import flux.action.{Action, Dispatcher}
+import flux.action.Action
 import flux.stores.PageLoadingStateStore.State
+import hydro.flux.action.Dispatcher
 
 final class PageLoadingStateStore(implicit dispatcher: Dispatcher) extends StateStore[State] {
   dispatcher.registerPartialSync(dispatcherListener)

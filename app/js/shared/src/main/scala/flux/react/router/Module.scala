@@ -1,7 +1,7 @@
 package flux.router
 
 import common.I18n
-import flux.action.Dispatcher
+import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react.extra.router._
 import models.access.EntityAccess
 

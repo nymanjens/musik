@@ -2,11 +2,11 @@ package flux.react.app
 
 import common.I18n
 import common.time.Clock
-import flux.action.Dispatcher
 import flux.react.uielements
 import flux.react.uielements.media.MusicPlayerDiv
 import flux.stores._
 import flux.stores.media._
+import hydro.flux.action.Dispatcher
 import models.access.JsEntityAccess
 import models.user.User
 

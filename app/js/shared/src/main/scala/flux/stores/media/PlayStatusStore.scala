@@ -1,8 +1,8 @@
 package flux.stores.media
 
-import flux.action.Dispatcher
 import flux.stores.AsyncEntityDerivedStateStore
 import flux.stores.media.PlayStatusStore.State
+import hydro.flux.action.Dispatcher
 import models.access.DbQueryImplicits._
 import models.access.{JsEntityAccess, ModelField}
 import models.media.{JsPlaylistEntry, PlayStatus, PlaylistEntry}

@@ -3,6 +3,7 @@ package flux
 import api.ScalaJsApi.GetInitialDataResponse
 import api.ScalaJsApiClient
 import flux.router.Page
+import hydro.flux.action.Module
 import japgolly.scalajs.react.extra.router.Router
 import models.user.User
 
@@ -24,7 +25,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit val entityModificationPushClientFactory = modelsAccessModule.entityModificationPushClientFactory
 
   // Create and unpack Flux action module
-  private val fluxActionModule = new flux.action.Module
+  private val fluxActionModule = new Module
   implicit private val dispatcher = fluxActionModule.dispatcher
 
   // Create and unpack Flux store module

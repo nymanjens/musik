@@ -2,16 +2,10 @@ package flux.react.app.media
 
 import common.I18n
 import common.time.Clock
-import flux.action.Dispatcher
 import flux.react.uielements
 import flux.react.uielements.media.MusicPlayerDiv
-import flux.stores.media.{
-  AlbumDetailStoreFactory,
-  AllArtistsStore,
-  ArtistDetailStoreFactory,
-  PlayStatusStore,
-  PlaylistStore
-}
+import flux.stores.media.{AlbumDetailStoreFactory, AllArtistsStore, ArtistDetailStoreFactory, PlayStatusStore, PlaylistStore}
+import hydro.flux.action.Dispatcher
 import models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,

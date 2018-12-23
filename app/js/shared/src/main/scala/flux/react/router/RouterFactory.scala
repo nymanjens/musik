@@ -4,7 +4,8 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.async.Async.{async, await}
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.{Action, Dispatcher}
+import flux.action.Action
+import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react.Callback
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._

@@ -2,7 +2,7 @@ package flux
 
 import common.testing.TestObjects
 import common.testing.TestObjects.testUserPrototype
-import flux.action.{Action, Dispatcher}
+import flux.action.Action
 import utest._
 
 import scala.async.Async.{async, await}

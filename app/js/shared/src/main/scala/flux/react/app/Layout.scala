@@ -3,10 +3,11 @@ package flux.react.app
 import common.CollectionUtils.ifThenSeq
 import common.I18n
 import common.LoggingUtils.LogExceptionsCallback
-import flux.action.{Action, Dispatcher}
+import flux.action.Action
 import flux.react.ReactVdomUtils.^^
 import flux.router.{Page, RouterContext}
 import flux.react.uielements
+import hydro.flux.action.Dispatcher
 import hydro.flux.react.uielements.sbadmin.{ApplicationDisconnectedIcon, GlobalMessages, PageLoadingSpinner, PendingModificationsCounter}
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.PackageBase.VdomAttr

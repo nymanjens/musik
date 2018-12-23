@@ -3,10 +3,11 @@ package flux.react.uielements.media
 import scala.collection.immutable.Seq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.Action.AddSongsToPlaylist.Placement
-import flux.action.{Action, Dispatcher}
+import flux.action.Action
 import flux.react.ReactVdomUtils.^^
 import flux.router.{Page, RouterContext}
 import flux.stores.media.PlaylistStore
+import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsSong

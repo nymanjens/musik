@@ -2,9 +2,9 @@ package hydro.flux.react.uielements.sbadmin
 
 import common.I18n
 import common.time.Clock
-import flux.action.Dispatcher
 import flux.react.uielements
 import flux.stores._
+import hydro.flux.action.Dispatcher
 import models.access.JsEntityAccess
 import models.user.User
 

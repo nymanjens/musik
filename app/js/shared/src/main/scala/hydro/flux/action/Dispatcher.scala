@@ -1,6 +1,7 @@
-package flux.action
+package hydro.flux.action
 
 import common.LoggingUtils.logExceptions
+import flux.action.Action
 
 import scala.async.Async.{async, await}
 import scala.collection.immutable.Seq
