@@ -75,7 +75,7 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
           .onPostRender((_, page) =>
             LogExceptionsCallback(async {
               val title = await(page.title)
-              dom.document.title = s"${title} | Playlist Keeper"
+              dom.document.title = s"$title | Playlist Keeper"
             }))
       }
       .renderWith(layout)
