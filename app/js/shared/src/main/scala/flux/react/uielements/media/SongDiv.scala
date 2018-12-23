@@ -1,16 +1,16 @@
 package flux.react.uielements.media
 
-import scala.collection.immutable.Seq
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Actions.AddSongsToPlaylist.Placement
+import common.LoggingUtils.LogExceptionsCallback
 import flux.action.Actions
+import flux.action.Actions.AddSongsToPlaylist.Placement
 import flux.react.ReactVdomUtils.^^
-import flux.router.{Page, RouterContext}
-import flux.stores.media.PlaylistStore
+import flux.router.RouterContext
 import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsSong
+
+import scala.collection.immutable.Seq
 
 final class SongDiv(implicit dispatcher: Dispatcher) {
 

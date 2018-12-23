@@ -3,6 +3,7 @@ package flux
 import common.testing.TestObjects
 import common.testing.TestObjects.testUserPrototype
 import flux.action.Actions
+import hydro.flux.action.StandardActions
 import hydro.flux.action.Action
 import utest._
 
@@ -16,7 +17,7 @@ object DispatcherTest extends TestSuite {
 
   override def tests = TestSuite {
     val dispatcher: Dispatcher.Impl = new Dispatcher.Impl()
-    val testAction = Actions.UpsertUser(testUserPrototype)
+    val testAction = StandardActions.UpsertUser(testUserPrototype)
 
     "dispatches actions to listeners, including Done action" - async {
       val dispatchedActions: mutable.Buffer[Action] = mutable.Buffer()
@@ -27,7 +28,7 @@ object DispatcherTest extends TestSuite {
 
       await(dispatcher.dispatch(testAction))
 
-      dispatchedActions ==> mutable.Buffer(testAction, Actions.Done(testAction))
+      dispatchedActions ==> mutable.Buffer(testAction, StandardActions.Done(testAction))
     }
 
     "does not allow dispatching during the sync part of a callback" - async {

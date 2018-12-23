@@ -4,6 +4,7 @@ import api.ScalaJsApi.UserPrototype
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.action.Actions
+import hydro.flux.action.StandardActions
 import flux.react.uielements
 import flux.react.uielements.input.bootstrap
 import hydro.flux.action.Dispatcher
@@ -109,7 +110,7 @@ private[usermanagement] final class AddUserForm(implicit user: User, i18n: I18n,
 
           maybeUserPrototype match {
             case Some(userPrototype) =>
-              dispatcher.dispatch(Actions.UpsertUser(userPrototype))
+              dispatcher.dispatch(StandardActions.UpsertUser(userPrototype))
 
               // Clear form
               loginNameRef().setValue("")

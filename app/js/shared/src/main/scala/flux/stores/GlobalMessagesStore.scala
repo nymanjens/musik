@@ -6,10 +6,10 @@ import common.LoggingUtils.logExceptions
 import common.time.Clock
 import common.time.JavaTimeImplicits._
 import common.{I18n, Unique}
-import flux.action.Actions
 import flux.action.Actions._
 import flux.stores.GlobalMessagesStore.Message
-import hydro.flux.action.{Action, Dispatcher}
+import hydro.flux.action.StandardActions._
+import hydro.flux.action.{Action, Dispatcher, StandardActions}
 import models.access.EntityAccess
 
 import scala.concurrent.duration._
@@ -32,7 +32,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
     case action if getCompletionMessage.isDefinedAt(action) =>
       setState(Message(string = i18n("app.sending-data-to-server"), messageType = Message.Type.Working))
 
-    case Actions.Done(action) =>
+    case StandardActions.Done(action) =>
       getCompletionMessage.lift.apply(action) match {
         case Some(message) =>
           setState(Message(string = message, messageType = Message.Type.Success))
@@ -40,7 +40,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
         case None =>
       }
 
-    case Actions.Failed(action) =>
+    case StandardActions.Failed(action) =>
       getCompletionMessage.lift.apply(action) match {
         case Some(message) =>
           setState(
@@ -49,7 +49,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
         case None =>
       }
 
-    case Actions.SetPageLoadingState( /* isLoading = */ false) =>
+    case StandardActions.SetPageLoadingState( /* isLoading = */ false) =>
       if (state.isDefined && state.get.age > java.time.Duration.ofSeconds(3)) {
         setState(None)
       }
