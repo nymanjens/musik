@@ -1,6 +1,6 @@
 package flux.stores
 
-import flux.action.Action
+import flux.action.{Action, Actions}
 import flux.stores.PageLoadingStateStore.State
 import hydro.flux.action.Dispatcher
 
@@ -14,7 +14,7 @@ final class PageLoadingStateStore(implicit dispatcher: Dispatcher) extends State
 
   // **************** Private dispatcher methods ****************//
   private def dispatcherListener: PartialFunction[Action, Unit] = {
-    case Action.SetPageLoadingState(isLoading) =>
+    case Actions.SetPageLoadingState(isLoading) =>
       setState(State(isLoading = isLoading))
   }
 

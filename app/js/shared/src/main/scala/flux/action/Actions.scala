@@ -2,15 +2,15 @@ package flux.action
 
 import scala.collection.immutable.Seq
 import api.ScalaJsApi.UserPrototype
-import flux.action.Action.AddSongsToPlaylist.Placement
+import flux.action.Actions.AddSongsToPlaylist.Placement
 import models.media.Song
 
 import scala.async.Async.async
 import scala.concurrent.Future
 
-sealed trait Action
+trait Action
 
-object Action {
+object Actions {
 
   // **************** User-related actions **************** //
   case class UpsertUser(userPrototype: UserPrototype) extends Action

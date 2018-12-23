@@ -3,7 +3,7 @@ package flux.react.app.media
 import common.CollectionUtils
 import common.CollectionUtils.ifThenSeq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Action
+import flux.action.Actions
 import flux.react.ReactVdomUtils.^^
 import flux.router.RouterContext
 import flux.react.uielements
@@ -68,7 +68,7 @@ private[app] final class Playlist(implicit pageHeader: uielements.PageHeader,
                   <.a(
                     ^^.classes("btn", "btn-default", "btn-xs"),
                     ^.onClick --> LogExceptionsCallback[Unit](
-                      dispatcher.dispatch(Action.RemoveEntriesFromPlaylist(Seq(entry.id)))),
+                      dispatcher.dispatch(Actions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
                     <.i(^.className := "fa fa-times-circle-o")
                   )
                 )

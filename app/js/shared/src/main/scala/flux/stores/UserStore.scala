@@ -1,7 +1,7 @@
 package flux.stores
 
 import api.ScalaJsApiClient
-import flux.action.Action.UpsertUser
+import flux.action.Actions.UpsertUser
 import flux.stores.UserStore.State
 import hydro.flux.action.Dispatcher
 import models.access.JsEntityAccess

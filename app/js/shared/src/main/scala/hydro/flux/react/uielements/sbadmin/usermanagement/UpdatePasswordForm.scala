@@ -3,7 +3,7 @@ package hydro.flux.react.uielements.sbadmin.usermanagement
 import api.ScalaJsApi.UserPrototype
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Action
+import flux.action.Actions
 import flux.react.uielements
 import flux.react.uielements.input.bootstrap
 import hydro.flux.action.Dispatcher
@@ -101,7 +101,7 @@ private[usermanagement] final class UpdatePasswordForm(implicit user: User,
           maybeNewPassword match {
             case Some(newPassword) =>
               dispatcher.dispatch(
-                Action.UpsertUser(UserPrototype.create(id = user.id, plainTextPassword = newPassword)))
+                Actions.UpsertUser(UserPrototype.create(id = user.id, plainTextPassword = newPassword)))
 
               // Clear form
               passwordRef().setValue("")

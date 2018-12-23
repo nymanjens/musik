@@ -3,7 +3,7 @@ package hydro.flux.react.uielements.sbadmin.usermanagement
 import api.ScalaJsApi.UserPrototype
 import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Action
+import flux.action.Actions
 import flux.react.uielements
 import flux.react.uielements.input.bootstrap
 import hydro.flux.action.Dispatcher
@@ -109,7 +109,7 @@ private[usermanagement] final class AddUserForm(implicit user: User, i18n: I18n,
 
           maybeUserPrototype match {
             case Some(userPrototype) =>
-              dispatcher.dispatch(Action.UpsertUser(userPrototype))
+              dispatcher.dispatch(Actions.UpsertUser(userPrototype))
 
               // Clear form
               loginNameRef().setValue("")

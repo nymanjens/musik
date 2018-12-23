@@ -2,8 +2,8 @@ package flux.react.uielements.media
 
 import scala.collection.immutable.Seq
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import flux.action.Action.AddSongsToPlaylist.Placement
-import flux.action.Action
+import flux.action.Actions.AddSongsToPlaylist.Placement
+import flux.action.Actions
 import flux.react.ReactVdomUtils.^^
 import flux.router.{Page, RouterContext}
 import flux.stores.media.PlaylistStore
@@ -36,7 +36,7 @@ final class SongDiv(implicit dispatcher: Dispatcher) {
 
   // **************** Private methods ****************//
   private def addToPlaylistCallback(song: JsSong, placement: Placement): Callback = LogExceptionsCallback {
-    dispatcher.dispatch(Action.AddSongsToPlaylist(songIds = Seq(song.id), placement = placement))
+    dispatcher.dispatch(Actions.AddSongsToPlaylist(songIds = Seq(song.id), placement = placement))
   }
 
   // **************** Private inner types ****************//

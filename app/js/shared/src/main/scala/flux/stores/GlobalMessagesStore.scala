@@ -6,8 +6,8 @@ import common.LoggingUtils.logExceptions
 import common.time.Clock
 import common.time.JavaTimeImplicits._
 import common.{I18n, Unique}
-import flux.action.Action._
-import flux.action.Action
+import flux.action.{Action, Actions}
+import flux.action.Actions._
 import flux.stores.GlobalMessagesStore.Message
 import hydro.flux.action.Dispatcher
 import models.access.EntityAccess
@@ -32,7 +32,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
     case action if getCompletionMessage.isDefinedAt(action) =>
       setState(Message(string = i18n("app.sending-data-to-server"), messageType = Message.Type.Working))
 
-    case Action.Done(action) =>
+    case Actions.Done(action) =>
       getCompletionMessage.lift.apply(action) match {
         case Some(message) =>
           setState(Message(string = message, messageType = Message.Type.Success))
@@ -40,7 +40,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
         case None =>
       }
 
-    case Action.Failed(action) =>
+    case Actions.Failed(action) =>
       getCompletionMessage.lift.apply(action) match {
         case Some(message) =>
           setState(
@@ -49,7 +49,7 @@ final class GlobalMessagesStore(implicit i18n: I18n,
         case None =>
       }
 
-    case Action.SetPageLoadingState( /* isLoading = */ false) =>
+    case Actions.SetPageLoadingState( /* isLoading = */ false) =>
       if (state.isDefined && state.get.age > java.time.Duration.ofSeconds(3)) {
         setState(None)
       }

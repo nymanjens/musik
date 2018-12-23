@@ -1,8 +1,8 @@
 package flux.stores.media
 
 import common.OrderToken
-import flux.action.Action.{AddSongsToPlaylist, RemoveEntriesFromPlaylist}
-import flux.action.Action.AddSongsToPlaylist.Placement
+import flux.action.Actions.{AddSongsToPlaylist, RemoveEntriesFromPlaylist}
+import flux.action.Actions.AddSongsToPlaylist.Placement
 import flux.stores.AsyncEntityDerivedStateStore
 import flux.stores.media.PlaylistStore.State
 import hydro.flux.action.Dispatcher

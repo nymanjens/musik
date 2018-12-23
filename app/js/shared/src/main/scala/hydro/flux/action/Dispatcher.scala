@@ -2,6 +2,7 @@ package hydro.flux.action
 
 import common.LoggingUtils.logExceptions
 import flux.action.Action
+import flux.action.Actions
 
 import scala.async.Async.{async, await}
 import scala.collection.immutable.Seq
@@ -47,8 +48,8 @@ object Dispatcher {
 
       invokeCallbacks(action)
         .transformWith {
-          case Success(_) => invokeCallbacks(Action.Done(action))
-          case Failure(e) => invokeCallbacks(Action.Failed(action)).map(_ => throw e)
+          case Success(_) => invokeCallbacks(Actions.Done(action))
+          case Failure(e) => invokeCallbacks(Actions.Failed(action)).map(_ => throw e)
         }
     }
 

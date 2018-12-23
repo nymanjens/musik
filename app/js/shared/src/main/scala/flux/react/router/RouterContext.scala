@@ -1,6 +1,6 @@
 package flux.router
 
-import flux.action.Action
+import flux.action.Actions
 import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react.extra.router.{Path, RouterCtl}
 import japgolly.scalajs.react.vdom.html_<^._
@@ -56,7 +56,7 @@ object RouterContext {
     }
 
     private def startRender(setAction: => Callback): Unit = {
-      dispatcher.dispatch(Action.SetPageLoadingState(isLoading = true))
+      dispatcher.dispatch(Actions.SetPageLoadingState(isLoading = true))
       js.timers.setTimeout(0)(setAction.runNow())
     }
   }
