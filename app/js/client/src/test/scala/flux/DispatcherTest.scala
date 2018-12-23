@@ -2,8 +2,8 @@ package flux
 
 import common.testing.TestObjects
 import common.testing.TestObjects.testUserPrototype
-import flux.action.Action
 import flux.action.Actions
+import hydro.flux.action.Action
 import utest._
 
 import scala.async.Async.{async, await}

@@ -3,12 +3,11 @@ package flux.action
 import scala.collection.immutable.Seq
 import api.ScalaJsApi.UserPrototype
 import flux.action.Actions.AddSongsToPlaylist.Placement
+import hydro.flux.action.Action
 import models.media.Song
 
 import scala.async.Async.async
 import scala.concurrent.Future
-
-trait Action
 
 object Actions {
 
