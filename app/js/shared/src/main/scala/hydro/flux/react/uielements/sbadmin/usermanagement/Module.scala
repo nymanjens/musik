@@ -3,8 +3,8 @@ package hydro.flux.react.uielements.sbadmin.usermanagement
 import common.I18n
 import common.time.Clock
 import flux.react.uielements
-import flux.stores.UserStore
 import hydro.flux.action.Dispatcher
+import hydro.stores.UserStore
 import models.user.User
 
 final class Module(implicit i18n: I18n,

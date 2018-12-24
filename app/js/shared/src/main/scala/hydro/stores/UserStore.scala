@@ -1,9 +1,10 @@
-package flux.stores
+package hydro.stores
 
 import api.ScalaJsApiClient
 import hydro.flux.action.StandardActions.UpsertUser
-import flux.stores.UserStore.State
+import hydro.stores.UserStore.State
 import hydro.flux.action.Dispatcher
+import hydro.flux.action.StandardActions.UpsertUser
 import models.access.JsEntityAccess
 import models.modification.{EntityModification, EntityType}
 import models.user.User

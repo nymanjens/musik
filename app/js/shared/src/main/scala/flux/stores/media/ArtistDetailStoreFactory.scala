@@ -1,8 +1,9 @@
 package flux.stores.media
 
 import models.access.DbQueryImplicits._
-import flux.stores.{AsyncEntityDerivedStateStore, StoreFactory}
+import hydro.stores.StoreFactory
 import flux.stores.media.ArtistDetailStoreFactory.State
+import hydro.stores.{AsyncEntityDerivedStateStore, StoreFactory}
 import models.access.{JsEntityAccess, ModelField}
 import models.media._
 import models.modification.{EntityModification, EntityType}

@@ -1,8 +1,8 @@
 package hydro.flux.react.uielements.sbadmin
 
 import common.LoggingUtils.logExceptions
-import flux.stores.PageLoadingStateStore
 import hydro.flux.react.HydroReactComponent
+import hydro.stores.PageLoadingStateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

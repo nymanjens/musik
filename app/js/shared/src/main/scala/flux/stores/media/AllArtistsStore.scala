@@ -1,7 +1,7 @@
 package flux.stores.media
 
-import flux.stores.AsyncEntityDerivedStateStore
 import flux.stores.media.AllArtistsStore.State
+import hydro.stores.AsyncEntityDerivedStateStore
 import models.access.DbQuery.Sorting
 import models.access.{JsEntityAccess, ModelField}
 import models.media._

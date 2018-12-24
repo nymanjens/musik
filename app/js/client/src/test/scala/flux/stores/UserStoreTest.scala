@@ -4,7 +4,7 @@ import api.ScalaJsApi.UserPrototype
 import common.testing.Awaiter
 import common.testing.TestObjects._
 import flux.action.Actions
-import hydro.flux.action.StandardActions
+import hydro.stores.UserStore
 import models.modification.EntityModification
 import utest._
 
@@ -25,10 +25,10 @@ object UserStoreTest extends TestSuite {
 
     val store: UserStore = new UserStore()
 
-    "Listens to StandardActions.UpsertUser" - async {
+    "Listens to Actions.UpsertUser" - async {
       val userPrototype = UserPrototype.create(id = 19283L)
 
-      await(fakeDispatcher.dispatch(StandardActions.UpsertUser(userPrototype)))
+      await(fakeDispatcher.dispatch(Actions.UpsertUser(userPrototype)))
 
       fakeScalaJsApiClient.allUpsertedUserPrototypes ==> Seq(userPrototype)
     }

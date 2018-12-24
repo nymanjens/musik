@@ -1,8 +1,8 @@
-package flux.stores
+package hydro.stores
 
 import scala.collection.mutable
 
-private[stores] abstract class StoreFactory {
+abstract class StoreFactory {
 
   private val cache: mutable.Map[Input, Store] = mutable.Map()
 

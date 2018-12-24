@@ -4,9 +4,9 @@ import common.I18n
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
 import flux.router.RouterContext
 import flux.react.uielements
-import flux.stores.StateStore
 import flux.stores.media.AllArtistsStore
 import hydro.flux.react.HydroReactComponent
+import hydro.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsArtist

@@ -8,7 +8,7 @@ import hydro.flux.action.StandardActions
 import flux.react.ReactVdomUtils.^^
 import flux.router.RouterContext
 import flux.react.uielements
-import flux.stores.StateStore
+import hydro.stores.StateStore
 import flux.stores.media.{PlayStatusStore, PlaylistStore}
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
