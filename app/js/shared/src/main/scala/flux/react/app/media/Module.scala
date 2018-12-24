@@ -1,5 +1,6 @@
 package flux.react.app.media
 
+import hydro.flux.react.uielements.PageHeader
 import common.I18n
 import common.time.Clock
 import flux.react.uielements
@@ -16,7 +17,7 @@ final class Module(implicit i18n: I18n,
                    dispatcher: Dispatcher,
                    clock: Clock,
                    entityAccess: JsEntityAccess,
-                   pageHeader: uielements.PageHeader,
+                   pageHeader: PageHeader,
                    songDiv: uielements.media.SongDiv,
                    musicPlayerDiv: MusicPlayerDiv,
                    playlistStore: PlaylistStore,

@@ -10,6 +10,7 @@ import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.media.PlayStatusStore
 import hydro.flux.react.HydroReactComponent
+import hydro.flux.react.uielements.input.TextInput
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import jsfacades.Mousetrap
@@ -39,7 +40,7 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
       with WillMount
       with DidMount
       with WillReceiveProps {
-    val queryInputRef = uielements.input.TextInput.ref()
+    val queryInputRef = TextInput.ref()
 
     override def willMount(props: Props, state: State): Callback = configureKeyboardShortcuts(props.router)
 

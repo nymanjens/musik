@@ -1,5 +1,6 @@
 package flux.react.app.media
 
+import hydro.flux.react.uielements.PageHeader
 import common.I18n
 import common.LoggingUtils.logExceptions
 import flux.router.RouterContext
@@ -12,7 +13,7 @@ import models.access.EntityAccess
 
 private[app] final class Home(implicit i18n: I18n,
                               entityAccess: EntityAccess,
-                              pageHeader: uielements.PageHeader,
+                              pageHeader: PageHeader,
                               dispatcher: Dispatcher)
     extends HydroReactComponent.Stateless {
 

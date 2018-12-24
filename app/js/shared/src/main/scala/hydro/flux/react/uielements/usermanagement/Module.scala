@@ -1,9 +1,9 @@
-package hydro.flux.react.uielements.sbadmin.usermanagement
+package hydro.flux.react.uielements.usermanagement
 
 import common.I18n
 import common.time.Clock
-import flux.react.uielements
 import hydro.flux.action.Dispatcher
+import hydro.flux.react.uielements.PageHeader
 import hydro.flux.stores.UserStore
 import models.user.User
 
@@ -12,7 +12,7 @@ final class Module(implicit i18n: I18n,
                    dispatcher: Dispatcher,
                    clock: Clock,
                    userStore: UserStore,
-                   pageHeader: uielements.PageHeader) {
+                   pageHeader: PageHeader) {
 
   private implicit lazy val updatePasswordForm = new UpdatePasswordForm
   private implicit lazy val addUserForm = new AddUserForm

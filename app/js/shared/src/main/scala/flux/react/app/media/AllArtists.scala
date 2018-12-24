@@ -1,5 +1,6 @@
 package flux.react.app.media
 
+import hydro.flux.react.uielements.PageHeader
 import common.I18n
 import common.LoggingUtils.LogExceptionsCallback
 import common.LoggingUtils.logExceptions
@@ -14,7 +15,7 @@ import models.media.JsArtist
 
 import scala.collection.immutable.Seq
 
-private[app] final class AllArtists(implicit pageHeader: uielements.PageHeader,
+private[app] final class AllArtists(implicit pageHeader: PageHeader,
                                     allArtistsStore: AllArtistsStore)
     extends HydroReactComponent {
 

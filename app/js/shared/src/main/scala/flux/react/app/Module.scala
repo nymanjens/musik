@@ -1,5 +1,6 @@
 package flux.react.app
 
+import hydro.flux.react.uielements.PageHeader
 import common.I18n
 import common.time.Clock
 import flux.react.uielements
@@ -16,7 +17,7 @@ import models.user.User
 final class Module(implicit i18n: I18n,
                    user: User,
                    entityAccess: JsEntityAccess,
-                   pageHeader: uielements.PageHeader,
+                   pageHeader: PageHeader,
                    songDiv: uielements.media.SongDiv,
                    musicPlayerDiv: MusicPlayerDiv,
                    globalMessagesStore: GlobalMessagesStore,
@@ -33,16 +34,16 @@ final class Module(implicit i18n: I18n,
                    clock: Clock) {
 
   // Configuration of submodules
-  private val hydroSbadminUielementsModule = new hydro.flux.react.uielements.sbadmin.Module
-  private val userManagementModule = new hydro.flux.react.uielements.sbadmin.usermanagement.Module
+  private val hydroUielementsModule = new hydro.flux.react.uielements.Module
+  private val userManagementModule = new hydro.flux.react.uielements.usermanagement.Module
   private val mediaModule = new flux.react.app.media.Module
 
-  implicit private lazy val globalMessages = hydroSbadminUielementsModule.globalMessages
-  implicit private lazy val pageLoadingSpinner = hydroSbadminUielementsModule.pageLoadingSpinner
+  implicit private lazy val globalMessages = hydroUielementsModule.globalMessages
+  implicit private lazy val pageLoadingSpinner = hydroUielementsModule.pageLoadingSpinner
   implicit private lazy val applicationDisconnectedIcon =
-    hydroSbadminUielementsModule.applicationDisconnectedIcon
+    hydroUielementsModule.applicationDisconnectedIcon
   implicit private lazy val pendingModificationsCounter =
-    hydroSbadminUielementsModule.pendingModificationsCounter
+    hydroUielementsModule.pendingModificationsCounter
 
   implicit private lazy val menu: Menu = new Menu
 

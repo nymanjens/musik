@@ -1,15 +1,13 @@
-package hydro.flux.react.uielements.sbadmin.usermanagement
+package hydro.flux.react.uielements.usermanagement
 
 import common.I18n
 import flux.react.uielements
 import flux.router.RouterContext
+import hydro.flux.react.uielements.PageHeader
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-final class UserAdministration(implicit i18n: I18n,
-                               pageHeader: uielements.PageHeader,
-                               allUsersList: AllUsersList,
-                               addUserForm: AddUserForm) {
+final class UserProfile(implicit i18n: I18n, updatePasswordForm: UpdatePasswordForm, pageHeader: PageHeader) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
@@ -17,8 +15,10 @@ final class UserAdministration(implicit i18n: I18n,
       implicit val router = props.router
       <.span(
         pageHeader(router.currentPage),
-        <.div(^.className := "row", allUsersList()),
-        <.div(^.className := "row", addUserForm())
+        <.div(
+          ^.className := "row",
+          updatePasswordForm()
+        )
       )
     })
     .build

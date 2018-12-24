@@ -5,6 +5,7 @@ import flux.react.uielements.media.MusicPlayerDiv
 import flux.react.uielements.media.SongDiv
 import flux.stores.media.PlayStatusStore
 import hydro.flux.action.Dispatcher
+import hydro.flux.react.uielements.PageHeader
 import models.access.EntityAccess
 
 final class Module(implicit i18n: I18n,

@@ -1,5 +1,6 @@
 package flux.react.app.media
 
+import hydro.flux.react.uielements.PageHeader
 import common.LoggingUtils.logExceptions
 import flux.router.RouterContext
 import flux.react.uielements
@@ -8,7 +9,7 @@ import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
-private[app] final class AlbumDetail(implicit pageHeader: uielements.PageHeader,
+private[app] final class AlbumDetail(implicit pageHeader: PageHeader,
                                      songDiv: uielements.media.SongDiv,
                                      albumDetailStoreFactory: AlbumDetailStoreFactory)
     extends HydroReactComponent {
