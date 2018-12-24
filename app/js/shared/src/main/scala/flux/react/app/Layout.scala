@@ -6,10 +6,14 @@ import common.LoggingUtils.LogExceptionsCallback
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import flux.react.ReactVdomUtils.^^
-import flux.router.{Page, RouterContext}
+import flux.router.Page
+import flux.router.RouterContext
 import flux.react.uielements
 import hydro.flux.action.Dispatcher
-import hydro.flux.react.uielements.sbadmin.{ApplicationDisconnectedIcon, GlobalMessages, PageLoadingSpinner, PendingModificationsCounter}
+import hydro.flux.react.uielements.sbadmin.ApplicationDisconnectedIcon
+import hydro.flux.react.uielements.sbadmin.GlobalMessages
+import hydro.flux.react.uielements.sbadmin.PageLoadingSpinner
+import hydro.flux.react.uielements.sbadmin.PendingModificationsCounter
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.PackageBase.VdomAttr
 import japgolly.scalajs.react.vdom.html_<^._

@@ -7,9 +7,12 @@ import com.google.inject._
 import common.PlayI18n
 import common.time.Clock
 import models.Entity
-import models.access.{DbQuery, JvmEntityAccess}
-import models.modification.{EntityModification, EntityType}
-import models.user.{User, Users}
+import models.access.DbQuery
+import models.access.JvmEntityAccess
+import models.modification.EntityModification
+import models.modification.EntityType
+import models.user.User
+import models.user.Users
 
 import scala.collection.immutable.Seq
 

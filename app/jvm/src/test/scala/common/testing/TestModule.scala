@@ -6,7 +6,8 @@ import common._
 import common.time._
 import models.ModelsModule
 import models.access.JvmEntityAccess
-import models.user.{User, Users}
+import models.user.User
+import models.user.Users
 
 final class TestModule extends AbstractModule {
 

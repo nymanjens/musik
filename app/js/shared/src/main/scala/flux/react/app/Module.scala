@@ -7,7 +7,9 @@ import flux.react.uielements.media.MusicPlayerDiv
 import flux.stores._
 import flux.stores.media._
 import hydro.flux.action.Dispatcher
-import hydro.flux.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
+import hydro.flux.stores.ApplicationIsOnlineStore
+import hydro.flux.stores.PageLoadingStateStore
+import hydro.flux.stores.UserStore
 import models.access.JsEntityAccess
 import models.user.User
 

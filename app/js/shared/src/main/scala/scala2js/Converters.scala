@@ -1,21 +1,27 @@
 package scala2js
 
 import scala.concurrent.duration._
-import java.time.{LocalDate, LocalTime}
+import java.time.LocalDate
+import java.time.LocalTime
 
 import common.GuavaReplacement.ImmutableBiMap
 import common.OrderToken
 import common.time.LocalDateTime
 import models._
 import models.access.ModelField
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.modification._
 import models.user.User
 
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import scala2js.Scala2Js.{Converter, MapConverter}
+import scala2js.Scala2Js.Converter
+import scala2js.Scala2Js.MapConverter
 
 import scala.concurrent.duration.FiniteDuration
 

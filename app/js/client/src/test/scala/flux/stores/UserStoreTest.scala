@@ -8,7 +8,8 @@ import hydro.flux.stores.UserStore
 import models.modification.EntityModification
 import utest._
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.duration._
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

@@ -2,19 +2,26 @@ package flux.stores.media
 
 import common.OrderToken
 import flux.action.Actions
-import flux.action.Actions.{AddSongsToPlaylist, RemoveEntriesFromPlaylist}
+import flux.action.Actions.AddSongsToPlaylist
+import flux.action.Actions.RemoveEntriesFromPlaylist
 import flux.action.Actions
 import flux.action.Actions.AddSongsToPlaylist.Placement
 import flux.stores.media.PlaylistStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import models.access.DbQueryImplicits._
-import models.access.{JsEntityAccess, ModelField}
-import models.media.{JsPlaylistEntry, PlayStatus, PlaylistEntry, Song}
-import models.modification.{EntityModification, EntityType}
+import models.access.JsEntityAccess
+import models.access.ModelField
+import models.media.JsPlaylistEntry
+import models.media.PlayStatus
+import models.media.PlaylistEntry
+import models.media.Song
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

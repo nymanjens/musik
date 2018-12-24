@@ -1,6 +1,7 @@
 package controllers.helpers.media
 
-import com.google.inject.{Guice, Inject}
+import com.google.inject.Guice
+import com.google.inject.Inject
 import common.testing.JvmTestObjects._
 import common.testing.TestObjects._
 import common.testing._

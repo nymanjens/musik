@@ -1,14 +1,25 @@
 package common.testing
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 
 import scala.concurrent.duration._
 import java.time.Instant
 import java.time.Month._
 
-import api.ScalaJsApi.{GetInitialDataResponse, UpdateToken, UserPrototype}
+import api.ScalaJsApi.GetInitialDataResponse
+import api.ScalaJsApi.UpdateToken
+import api.ScalaJsApi.UserPrototype
 import common.OrderToken
-import common.time.{LocalDateTime, LocalDateTimes}
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import common.time.LocalDateTime
+import common.time.LocalDateTimes
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.modification.EntityModification
 import models.user.User
 

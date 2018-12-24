@@ -4,7 +4,11 @@ import common.I18n
 import common.time.Clock
 import flux.react.uielements
 import flux.react.uielements.media.MusicPlayerDiv
-import flux.stores.media.{AlbumDetailStoreFactory, AllArtistsStore, ArtistDetailStoreFactory, PlayStatusStore, PlaylistStore}
+import flux.stores.media.AlbumDetailStoreFactory
+import flux.stores.media.AllArtistsStore
+import flux.stores.media.ArtistDetailStoreFactory
+import flux.stores.media.PlayStatusStore
+import flux.stores.media.PlaylistStore
 import hydro.flux.action.Dispatcher
 import models.access.JsEntityAccess
 

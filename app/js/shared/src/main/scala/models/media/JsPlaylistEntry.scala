@@ -4,7 +4,8 @@ import common.OrderToken
 import models.access.EntityAccess
 import models.media
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 

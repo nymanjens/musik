@@ -5,10 +5,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import common.OrderToken
 import models.Entity
 import models.access.DbQueryImplicits._
-import models.access.{EntityAccess, ModelField}
+import models.access.EntityAccess
+import models.access.ModelField
 import models.user.User
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.concurrent.Future
 
 case class PlaylistEntry(songId: Long, orderToken: OrderToken, userId: Long, idOption: Option[Long] = None)

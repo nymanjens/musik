@@ -4,12 +4,19 @@ import java.nio.ByteBuffer
 import java.time.Instant
 
 import api.Picklers._
-import boopickle.Default.{Pickle, Unpickle}
-import common.{OrderToken, Tags}
+import boopickle.Default.Pickle
+import boopickle.Default.Unpickle
+import common.OrderToken
+import common.Tags
 import common.time.LocalDateTime
 import models.Entity
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
-import models.modification.{EntityModification, EntityModificationEntity}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
+import models.modification.EntityModification
+import models.modification.EntityModificationEntity
 import models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import models.slick.SlickUtils.localDateTimeToSqlDateMapper
 import models.slick.SlickUtils.instantToSqlTimestampMapper

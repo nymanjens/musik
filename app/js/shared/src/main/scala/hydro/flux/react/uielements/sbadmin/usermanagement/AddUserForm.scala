@@ -2,7 +2,8 @@ package hydro.flux.react.uielements.sbadmin.usermanagement
 
 import api.ScalaJsApi.UserPrototype
 import common.I18n
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.LogExceptionsCallback
+import common.LoggingUtils.logExceptions
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import flux.react.uielements

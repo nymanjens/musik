@@ -6,8 +6,11 @@ import common.I18n
 import common.time.Clock
 import flux.stores.media._
 import hydro.flux.action.Dispatcher
-import hydro.flux.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
-import models.access.{EntityModificationPushClientFactory, JsEntityAccess}
+import hydro.flux.stores.ApplicationIsOnlineStore
+import hydro.flux.stores.PageLoadingStateStore
+import hydro.flux.stores.UserStore
+import models.access.EntityModificationPushClientFactory
+import models.access.JsEntityAccess
 import models.user.User
 
 final class Module(implicit i18n: I18n,

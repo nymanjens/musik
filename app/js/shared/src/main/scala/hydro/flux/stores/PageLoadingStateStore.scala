@@ -3,7 +3,8 @@ package hydro.flux.stores
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import hydro.flux.stores.PageLoadingStateStore.State
-import hydro.flux.action.{Action, Dispatcher}
+import hydro.flux.action.Action
+import hydro.flux.action.Dispatcher
 import hydro.flux.stores.PageLoadingStateStore.State
 
 final class PageLoadingStateStore(implicit dispatcher: Dispatcher) extends StateStore[State] {

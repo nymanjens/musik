@@ -3,9 +3,12 @@ package flux.router
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import hydro.flux.action.Dispatcher
-import japgolly.scalajs.react.extra.router.{Path, RouterCtl}
+import japgolly.scalajs.react.extra.router.Path
+import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.html_<^._
-import japgolly.scalajs.react.{Callback, CallbackOption, ReactMouseEvent}
+import japgolly.scalajs.react.Callback
+import japgolly.scalajs.react.CallbackOption
+import japgolly.scalajs.react.ReactMouseEvent
 import org.scalajs.dom.html
 
 import scala.scalajs.js

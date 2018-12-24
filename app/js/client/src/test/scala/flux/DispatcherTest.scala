@@ -7,7 +7,8 @@ import hydro.flux.action.StandardActions
 import hydro.flux.action.Action
 import utest._
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.mutable
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

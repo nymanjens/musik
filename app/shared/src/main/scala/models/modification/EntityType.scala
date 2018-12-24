@@ -2,7 +2,11 @@ package models.modification
 
 import common.ScalaUtils
 import models.Entity
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.user.User
 
 import scala.collection.immutable.Seq

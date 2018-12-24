@@ -1,6 +1,7 @@
 package flux.react.uielements.media
 
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.LogExceptionsCallback
+import common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react.Ref.ToScalaComponent
 import japgolly.scalajs.react._
@@ -8,7 +9,8 @@ import japgolly.scalajs.react.component.Scala.MountedImpure
 import japgolly.scalajs.react.internal.Box
 import japgolly.scalajs.react.vdom.html_<^._
 import org.scalajs.dom.raw.HTMLAudioElement
-import org.scalajs.dom.{console, html}
+import org.scalajs.dom.console
+import org.scalajs.dom.html
 
 private[media] object RawMusicPlayer extends HydroReactComponent.Stateless {
 

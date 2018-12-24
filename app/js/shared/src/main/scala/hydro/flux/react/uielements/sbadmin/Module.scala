@@ -5,7 +5,9 @@ import common.time.Clock
 import flux.react.uielements
 import flux.stores._
 import hydro.flux.action.Dispatcher
-import hydro.flux.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
+import hydro.flux.stores.ApplicationIsOnlineStore
+import hydro.flux.stores.PageLoadingStateStore
+import hydro.flux.stores.UserStore
 import models.access.JsEntityAccess
 import models.user.User
 

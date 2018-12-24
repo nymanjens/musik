@@ -6,10 +6,17 @@ import common.RelativePaths
 import common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import models.Entity
-import models.access.{JvmEntityAccess, ModelField}
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
-import models.modification.{EntityModification, EntityType}
-import models.user.{User, Users}
+import models.access.JvmEntityAccess
+import models.access.ModelField
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
+import models.modification.EntityModification
+import models.modification.EntityType
+import models.user.User
+import models.user.Users
 
 import scala.collection.immutable.Seq
 

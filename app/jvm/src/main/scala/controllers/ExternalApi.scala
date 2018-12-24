@@ -6,11 +6,19 @@ import com.google.inject.Inject
 import common.RelativePaths
 import common.RelativePaths.joinPaths
 import common.time.Clock
-import controllers.helpers.media.{AlbumParser, ArtistAssignerFactory, MediaScanner, StoredMediaSyncer}
+import controllers.helpers.media.AlbumParser
+import controllers.helpers.media.ArtistAssignerFactory
+import controllers.helpers.media.MediaScanner
+import controllers.helpers.media.StoredMediaSyncer
 import models.access.JvmEntityAccess
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.slick.SlickUtils.dbRun
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global

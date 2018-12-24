@@ -3,12 +3,15 @@ package flux.stores.media
 import flux.stores.media.AllArtistsStore.State
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import models.access.DbQuery.Sorting
-import models.access.{JsEntityAccess, ModelField}
+import models.access.JsEntityAccess
+import models.access.ModelField
 import models.media._
-import models.modification.{EntityModification, EntityType}
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

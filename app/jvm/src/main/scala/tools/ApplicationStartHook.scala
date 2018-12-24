@@ -1,15 +1,22 @@
 package tools
 
-import java.nio.file.{Path, Paths}
+import java.nio.file.Path
+import java.nio.file.Paths
 
 import com.google.inject.Inject
 import common.time.Clock
-import common.{OrderToken, ResourceFiles}
+import common.OrderToken
+import common.ResourceFiles
 import models.access.JvmEntityAccess
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.modification.EntityModification
 import models.user.Users
-import play.api.{Application, Mode}
+import play.api.Application
+import play.api.Mode
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq

@@ -1,6 +1,7 @@
 package controllers.helpers.media
 
-import com.google.common.base.{CharMatcher, Splitter}
+import com.google.common.base.CharMatcher
+import com.google.common.base.Splitter
 import com.google.inject.Inject
 import common.CollectionUtils.getMostCommonStringIgnoringCase
 import common.GuavaReplacement.Iterables.getOnlyElement

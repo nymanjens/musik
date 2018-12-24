@@ -1,9 +1,11 @@
 package flux.router
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import common.I18n
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.LogExceptionsCallback
+import common.LoggingUtils.logExceptions
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import hydro.flux.action.Dispatcher
@@ -73,7 +75,8 @@ private[router] final class RouterFactory(implicit reactAppModule: flux.react.ap
         // Fallback
         ).notFound(redirectToPage(Page.Root)(Redirect.Replace))
           .onPostRender((_, _) =>
-            LogExceptionsCallback(dispatcher.dispatch(StandardActions.SetPageLoadingState(isLoading = false))))
+            LogExceptionsCallback(
+              dispatcher.dispatch(StandardActions.SetPageLoadingState(isLoading = false))))
           .onPostRender((_, page) =>
             LogExceptionsCallback(async {
               val title = await(page.title)

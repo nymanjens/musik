@@ -1,7 +1,8 @@
 package flux.react.uielements
 
 import common.I18n
-import flux.react.uielements.media.{MusicPlayerDiv, SongDiv}
+import flux.react.uielements.media.MusicPlayerDiv
+import flux.react.uielements.media.SongDiv
 import flux.stores.media.PlayStatusStore
 import hydro.flux.action.Dispatcher
 import models.access.EntityAccess

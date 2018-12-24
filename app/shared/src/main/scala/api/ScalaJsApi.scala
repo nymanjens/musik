@@ -3,7 +3,8 @@ package api
 import api.Picklers._
 import api.ScalaJsApi._
 import models.Entity
-import models.modification.{EntityModification, EntityType}
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 
 import scala.collection.immutable.Seq

@@ -1,6 +1,7 @@
 package controllers
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.Files
+import java.nio.file.Paths
 
 import akka.stream.scaladsl.StreamConverters
 import api.Picklers._
@@ -9,7 +10,8 @@ import com.google.inject.Inject
 import common.time.Clock
 import controllers.helpers.AuthenticatedAction
 import models.access.JvmEntityAccess
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 import play.utils.UriEncoding
 

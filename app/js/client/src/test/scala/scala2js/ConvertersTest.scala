@@ -6,8 +6,13 @@ import scala.concurrent.duration._
 import common.testing.TestObjects._
 import common.time.LocalDateTime
 import models.access.ModelField
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
-import models.modification.{EntityModification, EntityType}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 import utest._
 

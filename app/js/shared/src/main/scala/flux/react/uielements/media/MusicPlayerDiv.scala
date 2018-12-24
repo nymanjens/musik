@@ -1,8 +1,10 @@
 package flux.react.uielements.media
 
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.LogExceptionsCallback
+import common.LoggingUtils.logExceptions
 import flux.react.ReactVdomUtils.^^
-import flux.router.{Page, RouterContext}
+import flux.router.Page
+import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.media.PlayStatusStore
 import hydro.flux.react.HydroReactComponent

@@ -4,7 +4,8 @@ import com.google.inject.Inject
 import common.CollectionUtils.getMostCommonString
 import common.GuavaReplacement.Splitter
 import common.RelativePaths
-import controllers.helpers.media.AlbumParser.{ParsedAlbum, ParsedSong}
+import controllers.helpers.media.AlbumParser.ParsedAlbum
+import controllers.helpers.media.AlbumParser.ParsedSong
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
 

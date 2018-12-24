@@ -1,6 +1,7 @@
 package api
 
-import java.time.{LocalDate, LocalTime}
+import java.time.LocalDate
+import java.time.LocalTime
 
 import api.PicklableDbQuery.FieldWithValue
 import boopickle.Default._
@@ -8,9 +9,14 @@ import common.OrderToken
 import common.time.LocalDateTime
 import models.Entity
 import models.access.ModelField
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
 import models.modification.EntityType._
-import models.modification.{EntityModification, EntityType}
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 
 object Picklers {

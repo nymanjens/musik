@@ -2,18 +2,21 @@ package flux.react.app.media
 
 import common.CollectionUtils
 import common.CollectionUtils.ifThenSeq
-import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
+import common.LoggingUtils.LogExceptionsCallback
+import common.LoggingUtils.logExceptions
 import flux.action.Actions
 import hydro.flux.action.StandardActions
 import flux.react.ReactVdomUtils.^^
 import flux.router.RouterContext
 import flux.react.uielements
 import hydro.flux.stores.StateStore
-import flux.stores.media.{PlayStatusStore, PlaylistStore}
+import flux.stores.media.PlayStatusStore
+import flux.stores.media.PlaylistStore
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.html_<^.{<, _}
+import japgolly.scalajs.react.vdom.html_<^.<
+import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsPlaylistEntry
 
 import scala.collection.immutable.Seq

@@ -1,22 +1,28 @@
 package controllers.helpers.media
 
 import java.io.IOException
-import java.nio.file.{Files, Path, Paths}
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
-import controllers.helpers.media.MediaScanner.{AddedAndRemovedMedia, MediaFile}
+import controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
+import controllers.helpers.media.MediaScanner.MediaFile
 import models.access.JvmEntityAccess
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.{ListMap, Seq}
+import scala.collection.immutable.ListMap
+import scala.collection.immutable.Seq
 import org.jaudiotagger.audio.AudioFileIO
-import org.jaudiotagger.tag.{FieldKey, TagException}
+import org.jaudiotagger.tag.FieldKey
+import org.jaudiotagger.tag.TagException
 import org.jaudiotagger.audio.exceptions._
 
 import scala.collection.immutable.Seq
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration._
 
 final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configuration) {
   private val supportedExtensions: Seq[String] = Seq("mp3", "wav", "ogg", "opus", "flac", "wma", "mp4", "m4a")

@@ -6,10 +6,12 @@ import hydro.flux.stores.UserStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.action.StandardActions.UpsertUser
 import models.access.JsEntityAccess
-import models.modification.{EntityModification, EntityType}
+import models.modification.EntityModification
+import models.modification.EntityType
 import models.user.User
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue

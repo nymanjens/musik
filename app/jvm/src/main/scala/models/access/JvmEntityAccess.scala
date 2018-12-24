@@ -9,11 +9,18 @@ import com.google.inject._
 import common.publisher.TriggerablePublisher
 import common.time.Clock
 import models.Entity
-import models.media.{Album, Artist, Song, PlaylistEntry, PlayStatus}
-import models.modification.{EntityModification, EntityModificationEntity, EntityType}
+import models.media.Album
+import models.media.Artist
+import models.media.Song
+import models.media.PlaylistEntry
+import models.media.PlayStatus
+import models.modification.EntityModification
+import models.modification.EntityModificationEntity
+import models.modification.EntityType
 import models.slick.SlickUtils.dbApi._
 import models.slick.SlickUtils.dbRun
-import models.slick.{SlickEntityManager, SlickEntityTableDef}
+import models.slick.SlickEntityManager
+import models.slick.SlickEntityTableDef
 import models.user.User
 import net.jcip.annotations.GuardedBy
 import org.reactivestreams.Publisher
