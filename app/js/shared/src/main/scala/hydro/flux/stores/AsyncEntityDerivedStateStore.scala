@@ -1,4 +1,4 @@
-package hydro.stores
+package hydro.flux.stores
 
 import common.LoggingUtils.{logExceptions, logFailure}
 import models.access.JsEntityAccess

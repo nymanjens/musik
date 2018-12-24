@@ -6,7 +6,7 @@ import flux.router.RouterContext
 import flux.react.uielements
 import flux.stores.media.AllArtistsStore
 import hydro.flux.react.HydroReactComponent
-import hydro.stores.StateStore
+import hydro.flux.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import models.media.JsArtist

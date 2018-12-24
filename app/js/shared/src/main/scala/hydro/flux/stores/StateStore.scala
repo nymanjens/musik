@@ -1,4 +1,4 @@
-package hydro.stores
+package hydro.flux.stores
 
 import scala.collection.immutable.Seq
 

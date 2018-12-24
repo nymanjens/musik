@@ -1,7 +1,7 @@
 package flux.stores
 
 import flux.stores.PendingModificationsStore.State
-import hydro.stores.StateStore
+import hydro.flux.stores.StateStore
 import models.access.JsEntityAccess
 import models.modification.{EntityModification, EntityType}
 

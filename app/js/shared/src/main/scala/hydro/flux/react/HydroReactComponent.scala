@@ -1,7 +1,7 @@
 package hydro.flux.react
 
 import common.LoggingUtils.{LogExceptionsCallback, logExceptions}
-import hydro.stores.StateStore
+import hydro.flux.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.builder.Builder
 import japgolly.scalajs.react.vdom.html_<^._

@@ -1,10 +1,10 @@
-package hydro.stores
+package hydro.flux.stores
 
 import flux.action.Actions
 import hydro.flux.action.StandardActions
-import hydro.stores.PageLoadingStateStore.State
+import hydro.flux.stores.PageLoadingStateStore.State
 import hydro.flux.action.{Action, Dispatcher}
-import hydro.stores.PageLoadingStateStore.State
+import hydro.flux.stores.PageLoadingStateStore.State
 
 final class PageLoadingStateStore(implicit dispatcher: Dispatcher) extends StateStore[State] {
   dispatcher.registerPartialSync(dispatcherListener)

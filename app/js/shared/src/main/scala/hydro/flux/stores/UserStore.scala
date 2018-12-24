@@ -1,8 +1,8 @@
-package hydro.stores
+package hydro.flux.stores
 
 import api.ScalaJsApiClient
 import hydro.flux.action.StandardActions.UpsertUser
-import hydro.stores.UserStore.State
+import hydro.flux.stores.UserStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.action.StandardActions.UpsertUser
 import models.access.JsEntityAccess

@@ -6,7 +6,7 @@ import common.I18n
 import common.time.Clock
 import flux.stores.media._
 import hydro.flux.action.Dispatcher
-import hydro.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
+import hydro.flux.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
 import models.access.{EntityModificationPushClientFactory, JsEntityAccess}
 import models.user.User
 

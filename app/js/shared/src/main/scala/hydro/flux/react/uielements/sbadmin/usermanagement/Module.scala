@@ -4,7 +4,7 @@ import common.I18n
 import common.time.Clock
 import flux.react.uielements
 import hydro.flux.action.Dispatcher
-import hydro.stores.UserStore
+import hydro.flux.stores.UserStore
 import models.user.User
 
 final class Module(implicit i18n: I18n,
