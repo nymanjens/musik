@@ -2,12 +2,9 @@ package hydro.flux.react.uielements
 
 import common.I18n
 import common.time.Clock
-import flux.react.uielements
 import flux.stores._
 import hydro.flux.action.Dispatcher
-import hydro.flux.stores.ApplicationIsOnlineStore
-import hydro.flux.stores.PageLoadingStateStore
-import hydro.flux.stores.UserStore
+import hydro.flux.stores.{ApplicationIsOnlineStore, PageLoadingStateStore, UserStore}
 import models.access.JsEntityAccess
 import models.user.User
 
@@ -26,4 +23,5 @@ final class Module(implicit i18n: I18n,
   lazy val pageLoadingSpinner: PageLoadingSpinner = new PageLoadingSpinner
   lazy val applicationDisconnectedIcon: ApplicationDisconnectedIcon = new ApplicationDisconnectedIcon
   lazy val pendingModificationsCounter: PendingModificationsCounter = new PendingModificationsCounter
+  lazy val pageHeader = new PageHeader
 }
