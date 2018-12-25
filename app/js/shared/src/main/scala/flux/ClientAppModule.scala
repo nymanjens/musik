@@ -41,22 +41,6 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit private val albumDetailStoreFactory = fluxStoresModule.albumDetailStoreFactory
   implicit private val artistDetailStoreFactory = fluxStoresModule.artistDetailStoreFactory
 
-  // Create and unpack Flux Hydro react modules
-  private lazy val hydroUielementsModule = new hydro.flux.react.uielements.Module
-  implicit private lazy val pageHeader = hydroUielementsModule.pageHeader
-  implicit private lazy val globalMessages = hydroUielementsModule.globalMessages
-  implicit private lazy val pageLoadingSpinner = hydroUielementsModule.pageLoadingSpinner
-  implicit private lazy val applicationDisconnectedIcon = hydroUielementsModule.applicationDisconnectedIcon
-  implicit private lazy val pendingModificationsCounter = hydroUielementsModule.pendingModificationsCounter
-  private lazy val hydroUsermanagementModule = new hydro.flux.react.uielements.usermanagement.Module
-  implicit private lazy val userProfile = hydroUsermanagementModule.userProfile
-  implicit private lazy val userAdministration = hydroUsermanagementModule.userAdministration
-
-  // Create and unpack React UI elements module
-  private val fluxUielementsModule = new flux.react.uielements.Module
-  implicit private val songDiv = fluxUielementsModule.songDiv
-  implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
-
   // Create other Flux modules
   implicit private val reactAppModule = new flux.react.app.Module
   implicit private val routerModule = new flux.router.Module

@@ -1,10 +1,7 @@
 package flux.react.app
 
-import hydro.flux.react.uielements.PageHeader
 import common.I18n
 import common.time.Clock
-import flux.react.uielements
-import flux.react.uielements.media.MusicPlayerDiv
 import flux.stores._
 import flux.stores.media._
 import hydro.flux.action.Dispatcher
@@ -17,9 +14,6 @@ import models.user.User
 final class Module(implicit i18n: I18n,
                    user: User,
                    entityAccess: JsEntityAccess,
-                   pageHeader: PageHeader,
-                   songDiv: uielements.media.SongDiv,
-                   musicPlayerDiv: MusicPlayerDiv,
                    globalMessagesStore: GlobalMessagesStore,
                    pageLoadingStateStore: PageLoadingStateStore,
                    pendingModificationsStore: PendingModificationsStore,
@@ -35,15 +29,18 @@ final class Module(implicit i18n: I18n,
 
   // Configuration of submodules
   private val hydroUielementsModule = new hydro.flux.react.uielements.Module
-  private val userManagementModule = new hydro.flux.react.uielements.usermanagement.Module
-  private val mediaModule = new flux.react.app.media.Module
-
+  implicit private lazy val pageHeader = hydroUielementsModule.pageHeader
   implicit private lazy val globalMessages = hydroUielementsModule.globalMessages
   implicit private lazy val pageLoadingSpinner = hydroUielementsModule.pageLoadingSpinner
-  implicit private lazy val applicationDisconnectedIcon =
-    hydroUielementsModule.applicationDisconnectedIcon
-  implicit private lazy val pendingModificationsCounter =
-    hydroUielementsModule.pendingModificationsCounter
+  implicit private lazy val applicationDisconnectedIcon = hydroUielementsModule.applicationDisconnectedIcon
+  implicit private lazy val pendingModificationsCounter = hydroUielementsModule.pendingModificationsCounter
+
+  private val fluxUielementsModule = new flux.react.uielements.Module
+  implicit private val songDiv = fluxUielementsModule.songDiv
+  implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
+
+  private val userManagementModule = new hydro.flux.react.uielements.usermanagement.Module
+  private val mediaModule = new flux.react.app.media.Module
 
   implicit private lazy val menu: Menu = new Menu
 
