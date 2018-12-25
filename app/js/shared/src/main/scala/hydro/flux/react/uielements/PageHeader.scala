@@ -16,6 +16,8 @@ final class PageHeader(implicit i18n: I18n, entityAccess: EntityAccess) {
         <.i(^.className := props.iconClass),
         " ",
         props.title,
+        " ",
+        children
       )
     }
     .build
@@ -23,8 +25,13 @@ final class PageHeader(implicit i18n: I18n, entityAccess: EntityAccess) {
 
   // **************** API ****************//
   def apply(page: Page, title: String = null): VdomElement = {
+    withExtension(page, title)()
+  }
+
+  def withExtension(page: Page, title: String = null)(children: VdomNode*)(
+      implicit i18n: I18n): VdomElement = {
     def newComponent(title: String): VdomElement =
-      component(Props(title = title, iconClass = page.iconClass))()
+      component(Props(title = title, iconClass = page.iconClass))(children: _*)
     if (title != null) {
       newComponent(title = title)
     } else {
