@@ -7,17 +7,17 @@ import app.api.PicklableDbQuery.FieldWithValue
 import boopickle.Default._
 import common.OrderToken
 import common.time.LocalDateTime
-import models.Entity
-import models.access.ModelField
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
-import models.modification.EntityType._
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
+import app.models.Entity
+import app.models.access.ModelField
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
+import app.models.modification.EntityType._
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
 
 object Picklers {
 

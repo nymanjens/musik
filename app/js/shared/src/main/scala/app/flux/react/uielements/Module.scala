@@ -5,7 +5,7 @@ import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.react.uielements.media.SongDiv
 import app.flux.stores.media.PlayStatusStore
 import hydro.flux.action.Dispatcher
-import models.access.EntityAccess
+import app.models.access.EntityAccess
 
 final class Module(implicit i18n: I18n,
                    entityAccess: EntityAccess,

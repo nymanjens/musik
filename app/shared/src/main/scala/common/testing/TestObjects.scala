@@ -1,9 +1,9 @@
 package common.testing
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
 
 import scala.concurrent.duration._
 import java.time.Instant
@@ -15,13 +15,13 @@ import app.api.ScalaJsApi.UserPrototype
 import common.OrderToken
 import common.time.LocalDateTime
 import common.time.LocalDateTimes
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
-import models.modification.EntityModification
-import models.user.User
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
+import app.models.modification.EntityModification
+import app.models.user.User
 
 import scala.collection.immutable.Seq
 

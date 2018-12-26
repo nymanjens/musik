@@ -5,10 +5,10 @@ import com.google.inject.Inject
 import common.testing.JvmTestObjects._
 import common.testing.TestObjects._
 import common.testing._
-import models.access.JvmEntityAccess
-import models.media.Artist
-import models.modification.EntityModification
-import models.user.User
+import app.models.access.JvmEntityAccess
+import app.models.media.Artist
+import app.models.modification.EntityModification
+import app.models.user.User
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import play.api.test.WithApplication

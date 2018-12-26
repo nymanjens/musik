@@ -4,10 +4,10 @@ import app.api.ScalaJsApiModule
 import com.google.inject._
 import common._
 import common.time._
-import models.ModelsModule
-import models.access.JvmEntityAccess
-import models.user.User
-import models.user.Users
+import app.models.ModelsModule
+import app.models.access.JvmEntityAccess
+import app.models.user.User
+import app.models.user.Users
 
 final class TestModule extends AbstractModule {
 

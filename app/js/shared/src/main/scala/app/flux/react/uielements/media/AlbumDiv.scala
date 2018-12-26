@@ -5,7 +5,7 @@ import app.flux.router.Page
 import app.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.JsAlbum
+import app.models.media.JsAlbum
 
 object AlbumDiv {
 

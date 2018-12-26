@@ -11,7 +11,7 @@ import hydro.flux.react.HydroReactComponent
 import hydro.flux.stores.StateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.JsArtist
+import app.models.media.JsArtist
 
 import scala.collection.immutable.Seq
 

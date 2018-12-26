@@ -1,22 +1,22 @@
 package controllers.helpers.media
 
-import models.access.DbQueryImplicits._
+import app.models.access.DbQueryImplicits._
 import com.google.inject.Inject
 import common.RelativePaths
 import common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
-import models.Entity
-import models.access.JvmEntityAccess
-import models.access.ModelField
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
-import models.user.Users
+import app.models.Entity
+import app.models.access.JvmEntityAccess
+import app.models.access.ModelField
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
+import app.models.user.Users
 
 import scala.collection.immutable.Seq
 

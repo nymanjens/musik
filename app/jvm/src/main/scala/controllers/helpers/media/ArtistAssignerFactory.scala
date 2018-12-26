@@ -8,9 +8,9 @@ import common.GuavaReplacement.Iterables.getOnlyElement
 import common.ScalaUtils.visibleForTesting
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import controllers.helpers.media.MediaScanner.MediaFile
-import models.access.JvmEntityAccess
-import models.media.Artist
-import models.slick.SlickUtils.dbRun
+import app.models.access.JvmEntityAccess
+import app.models.media.Artist
+import app.models.slick.SlickUtils.dbRun
 
 import scala.collection.immutable.Seq
 

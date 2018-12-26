@@ -2,9 +2,9 @@ package app.flux.stores
 
 import app.flux.stores.PendingModificationsStore.State
 import hydro.flux.stores.StateStore
-import models.access.JsEntityAccess
-import models.modification.EntityModification
-import models.modification.EntityType
+import app.models.access.JsEntityAccess
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable

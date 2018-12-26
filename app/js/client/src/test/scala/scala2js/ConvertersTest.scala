@@ -5,15 +5,15 @@ import java.time.Month.MARCH
 import scala.concurrent.duration._
 import common.testing.TestObjects._
 import common.time.LocalDateTime
-import models.access.ModelField
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
+import app.models.access.ModelField
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
 import utest._
 
 import scala.collection.immutable.Seq

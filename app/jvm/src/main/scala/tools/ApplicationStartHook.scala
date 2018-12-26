@@ -7,14 +7,14 @@ import com.google.inject.Inject
 import common.time.Clock
 import common.OrderToken
 import common.ResourceFiles
-import models.access.JvmEntityAccess
-import models.media.Album
-import models.media.Artist
-import models.media.Song
-import models.media.PlaylistEntry
-import models.media.PlayStatus
-import models.modification.EntityModification
-import models.user.Users
+import app.models.access.JvmEntityAccess
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
+import app.models.modification.EntityModification
+import app.models.user.Users
 import play.api.Application
 import play.api.Mode
 

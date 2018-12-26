@@ -11,7 +11,7 @@ import app.flux.stores.media.ArtistDetailStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
 import hydro.flux.action.Dispatcher
-import models.access.JsEntityAccess
+import app.models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,
                    dispatcher: Dispatcher,

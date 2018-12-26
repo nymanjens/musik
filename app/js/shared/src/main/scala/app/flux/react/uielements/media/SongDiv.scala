@@ -8,7 +8,7 @@ import app.flux.router.RouterContext
 import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.JsSong
+import app.models.media.JsSong
 
 import scala.collection.immutable.Seq
 

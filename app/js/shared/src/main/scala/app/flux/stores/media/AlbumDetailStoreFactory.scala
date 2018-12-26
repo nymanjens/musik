@@ -4,13 +4,13 @@ import app.flux.stores.media.AlbumDetailStoreFactory.State
 import hydro.flux.stores.StoreFactory
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
-import models.access.DbQueryImplicits._
-import models.access.JsEntityAccess
-import models.access.ModelField
-import models.media._
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
+import app.models.access.DbQueryImplicits._
+import app.models.access.JsEntityAccess
+import app.models.access.ModelField
+import app.models.media._
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
 
 import scala.async.Async.async
 import scala.async.Async.await

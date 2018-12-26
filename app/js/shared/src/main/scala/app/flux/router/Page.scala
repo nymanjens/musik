@@ -2,8 +2,8 @@ package app.flux.router
 
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import common.I18n
-import models.access.EntityAccess
-import models.media.Artist
+import app.models.access.EntityAccess
+import app.models.media.Artist
 
 import scala.concurrent.Future
 
@@ -34,12 +34,12 @@ object Page {
 
   case class Artist(artistId: Long) extends Page {
     override def title(implicit i18n: I18n, entityAccess: EntityAccess) =
-      entityAccess.newQuery[models.media.Artist]().findById(artistId).map(_.name)
+      entityAccess.newQuery[app.models.media.Artist]().findById(artistId).map(_.name)
     override def iconClass = "fa fa-user fa-fw"
   }
   case class Album(albumId: Long) extends Page {
     override def title(implicit i18n: I18n, entityAccess: EntityAccess) =
-      entityAccess.newQuery[models.media.Album]().findById(albumId).map(_.title)
+      entityAccess.newQuery[app.models.media.Album]().findById(albumId).map(_.title)
     override def iconClass = "glyphicon glyphicon-cd"
   }
 }

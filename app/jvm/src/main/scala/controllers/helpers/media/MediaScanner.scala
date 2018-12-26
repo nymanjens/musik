@@ -10,7 +10,7 @@ import com.google.inject.Inject
 import common.GuavaReplacement.Splitter
 import controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
 import controllers.helpers.media.MediaScanner.MediaFile
-import models.access.JvmEntityAccess
+import app.models.access.JvmEntityAccess
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.ListMap

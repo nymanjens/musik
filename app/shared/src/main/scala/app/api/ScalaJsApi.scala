@@ -2,10 +2,10 @@ package app.api
 
 import app.api.Picklers._
 import app.api.ScalaJsApi._
-import models.Entity
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
+import app.models.Entity
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
 
 import scala.collection.immutable.Seq
 

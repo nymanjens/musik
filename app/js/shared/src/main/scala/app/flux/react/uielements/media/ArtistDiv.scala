@@ -6,7 +6,7 @@ import app.flux.router.Page
 import app.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.JsArtist
+import app.models.media.JsArtist
 
 object ArtistDiv {
 

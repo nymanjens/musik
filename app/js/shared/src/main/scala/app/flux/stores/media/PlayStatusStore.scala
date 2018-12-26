@@ -3,15 +3,15 @@ package app.flux.stores.media
 import app.flux.stores.media.PlayStatusStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
-import models.access.DbQueryImplicits._
-import models.access.JsEntityAccess
-import models.access.ModelField
-import models.media.JsPlaylistEntry
-import models.media.PlayStatus
-import models.media.PlaylistEntry
-import models.modification.EntityModification
-import models.modification.EntityType
-import models.user.User
+import app.models.access.DbQueryImplicits._
+import app.models.access.JsEntityAccess
+import app.models.access.ModelField
+import app.models.media.JsPlaylistEntry
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.modification.EntityModification
+import app.models.modification.EntityType
+import app.models.user.User
 
 import scala.async.Async.async
 import scala.async.Async.await

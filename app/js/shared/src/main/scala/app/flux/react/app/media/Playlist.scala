@@ -18,7 +18,7 @@ import hydro.flux.react.uielements.PageHeader
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^.<
 import japgolly.scalajs.react.vdom.html_<^._
-import models.media.JsPlaylistEntry
+import app.models.media.JsPlaylistEntry
 
 import scala.collection.immutable.Seq
 
