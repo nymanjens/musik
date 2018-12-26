@@ -3,7 +3,7 @@ package controllers.helpers.media
 import app.models.access.DbQueryImplicits._
 import com.google.inject.Inject
 import common.RelativePaths
-import common.time.Clock
+import hydro.common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import app.models.Entity
 import app.models.access.JvmEntityAccess

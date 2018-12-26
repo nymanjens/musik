@@ -4,7 +4,7 @@ import java.time.Month.MARCH
 
 import scala.concurrent.duration._
 import common.testing.TestObjects._
-import common.time.LocalDateTime
+import hydro.common.time.LocalDateTime
 import app.models.access.ModelField
 import app.models.media.Album
 import app.models.media.Artist

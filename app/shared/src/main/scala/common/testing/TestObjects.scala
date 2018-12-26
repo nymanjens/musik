@@ -13,8 +13,8 @@ import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApi.UpdateToken
 import app.api.ScalaJsApi.UserPrototype
 import common.OrderToken
-import common.time.LocalDateTime
-import common.time.LocalDateTimes
+import hydro.common.time.LocalDateTime
+import hydro.common.time.LocalDateTimes
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song

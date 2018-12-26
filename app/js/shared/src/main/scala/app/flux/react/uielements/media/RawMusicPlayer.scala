@@ -1,7 +1,7 @@
 package app.flux.react.uielements.media
 
-import common.LoggingUtils.LogExceptionsCallback
-import common.LoggingUtils.logExceptions
+import hydro.common.LoggingUtils.LogExceptionsCallback
+import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react.Ref.ToScalaComponent
 import japgolly.scalajs.react._

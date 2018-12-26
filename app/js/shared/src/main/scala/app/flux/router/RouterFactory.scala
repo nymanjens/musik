@@ -4,8 +4,8 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.async.Async.async
 import scala.async.Async.await
 import common.I18n
-import common.LoggingUtils.LogExceptionsCallback
-import common.LoggingUtils.logExceptions
+import hydro.common.LoggingUtils.LogExceptionsCallback
+import hydro.common.LoggingUtils.logExceptions
 import app.flux.action.Actions
 import hydro.flux.action.StandardActions
 import hydro.flux.action.Dispatcher

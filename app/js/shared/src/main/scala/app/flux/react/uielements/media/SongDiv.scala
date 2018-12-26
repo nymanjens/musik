@@ -1,6 +1,6 @@
 package app.flux.react.uielements.media
 
-import common.LoggingUtils.LogExceptionsCallback
+import hydro.common.LoggingUtils.LogExceptionsCallback
 import app.flux.action.Actions
 import app.flux.action.Actions.AddSongsToPlaylist.Placement
 import app.flux.react.ReactVdomUtils.^^

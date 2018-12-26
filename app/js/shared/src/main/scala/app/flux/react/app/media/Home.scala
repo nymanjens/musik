@@ -2,7 +2,7 @@ package app.flux.react.app.media
 
 import hydro.flux.react.uielements.PageHeader
 import common.I18n
-import common.LoggingUtils.logExceptions
+import hydro.common.LoggingUtils.logExceptions
 import app.flux.router.RouterContext
 import app.flux.react.uielements
 import hydro.flux.action.Dispatcher

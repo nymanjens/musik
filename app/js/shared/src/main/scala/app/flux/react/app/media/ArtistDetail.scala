@@ -1,7 +1,7 @@
 package app.flux.react.app.media
 
 import hydro.flux.react.uielements.PageHeader
-import common.LoggingUtils.logExceptions
+import hydro.common.LoggingUtils.logExceptions
 import app.flux.router.RouterContext
 import app.flux.react.uielements
 import app.flux.stores.media.ArtistDetailStoreFactory
