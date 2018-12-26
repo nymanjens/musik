@@ -16,12 +16,13 @@ import app.models.media.PlaylistEntry
 import app.models.media.PlayStatus
 import app.models.modification._
 import app.models.user.User
+import hydro.scala2js.Scala2Js
 
 import scala.collection.immutable.Seq
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import app.scala2js.Scala2Js.Converter
-import app.scala2js.Scala2Js.MapConverter
+import hydro.scala2js.Scala2Js.Converter
+import hydro.scala2js.Scala2Js.MapConverter
 
 import scala.concurrent.duration.FiniteDuration
 

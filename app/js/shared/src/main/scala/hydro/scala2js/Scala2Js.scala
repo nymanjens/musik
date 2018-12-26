@@ -1,6 +1,7 @@
-package app.scala2js
+package hydro.scala2js
 
 import app.models.access.ModelField
+import app.scala2js.Converters
 
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
@@ -19,7 +20,7 @@ object Scala2Js {
 
     // **************** Protected helper methods **************** //
     protected final def getRequiredValueFromDict[V](dict: js.Dictionary[js.Any])(
-        field: ModelField[V, _]): V = {
+      field: ModelField[V, _]): V = {
       require(dict.contains(field.name), s"Key ${field.name} is missing from ${js.JSON.stringify(dict)}")
       Scala2Js.toScala[V](dict(field.name))(Converters.fromModelField(field))
     }
