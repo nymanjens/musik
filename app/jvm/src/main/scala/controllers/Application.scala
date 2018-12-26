@@ -4,8 +4,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 import akka.stream.scaladsl.StreamConverters
-import api.Picklers._
-import api.ScalaJsApiServerFactory
+import app.api.Picklers._
+import app.api.ScalaJsApiServerFactory
 import com.google.inject.Inject
 import common.time.Clock
 import controllers.helpers.AuthenticatedAction
