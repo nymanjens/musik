@@ -13,8 +13,8 @@ import app.models.modification.EntityType._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import org.scalajs.dom.console
-import scala2js.Converters._
-import scala2js.Scala2Js
+import app.scala2js.Converters._
+import app.scala2js.Scala2Js
 
 import scala.async.Async.async
 import scala.async.Async.await

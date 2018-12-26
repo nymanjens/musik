@@ -1,4 +1,4 @@
-package scala2js
+package app.scala2js
 
 import java.time.Month.MARCH
 
@@ -18,7 +18,7 @@ import utest._
 
 import scala.collection.immutable.Seq
 import scala.scalajs.js
-import scala2js.Converters._
+import app.scala2js.Converters._
 
 import scala.concurrent.duration.FiniteDuration
 
