@@ -13,7 +13,7 @@ import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.uielements.input.TextInput
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import jsfacades.Mousetrap
+import hydro.jsfacades.Mousetrap
 import app.models.access.EntityAccess
 import app.models.user.User
 
