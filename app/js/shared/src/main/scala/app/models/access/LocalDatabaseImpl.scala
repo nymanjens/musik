@@ -13,7 +13,7 @@ import app.models.modification.EntityType._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import org.scalajs.dom.console
-import app.scala2js.Converters._
+import hydro.scala2js.StandardConverters._
 import hydro.scala2js.Scala2Js
 
 import scala.async.Async.async

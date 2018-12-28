@@ -1,33 +1,23 @@
-package app.scala2js
+package hydro.scala2js
 
-import scala.concurrent.duration._
-import java.time.LocalDate
-import java.time.LocalTime
+import java.time.{LocalDate, LocalTime}
 
+import app.models._
+import app.models.access.ModelField
+import app.models.media._
+import app.models.modification._
+import app.models.user.User
 import common.GuavaReplacement.ImmutableBiMap
 import common.OrderToken
 import hydro.common.time.LocalDateTime
-import app.models._
-import app.models.access.ModelField
-import app.models.media.Album
-import app.models.media.Artist
-import app.models.media.Song
-import app.models.media.PlaylistEntry
-import app.models.media.PlayStatus
-import app.models.modification._
-import app.models.user.User
-import hydro.scala2js.Scala2Js
+import hydro.scala2js.Scala2Js.{Converter, MapConverter}
 
 import scala.collection.immutable.Seq
+import scala.concurrent.duration.{FiniteDuration, _}
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
-import hydro.scala2js.Scala2Js.Converter
-import hydro.scala2js.Scala2Js.MapConverter
 
-import scala.collection.mutable
-import scala.concurrent.duration.FiniteDuration
-
-object Converters {
+object StandardConverters {
 
   // **************** Convertor generators **************** //
   implicit def fromEntityType[E <: Entity: EntityType]: MapConverter[E] = {

@@ -18,7 +18,7 @@ import utest._
 
 import scala.collection.immutable.Seq
 import scala.scalajs.js
-import app.scala2js.Converters._
+import hydro.scala2js.StandardConverters._
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -27,8 +27,8 @@ object ConvertersTest extends TestSuite {
 
   override def tests = TestSuite {
     "fromModelField" - {
-      Converters.fromModelField(ModelField.User.loginName) ==> Converters.StringConverter
-      Converters.fromModelField(ModelField.id[User]) ==> Converters.LongConverter
+      StandardConverters.fromModelField(ModelField.User.loginName) ==> StandardConverters.StringConverter
+      StandardConverters.fromModelField(ModelField.id[User]) ==> StandardConverters.LongConverter
     }
     "LongConverter" - {
       "to JS and back" - {
