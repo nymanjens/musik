@@ -241,9 +241,8 @@ object Converters {
   }
 
   // **************** Entity converters **************** //
-  private[scala2js] final class EntityConverter[E <: Entity: EntityType](
-      allFieldsWithoutId: Seq[ModelField[_, E]] = Seq(),
-      toScalaWithoutId: EntityConverter.DictWrapper[E] => E)
+  final class EntityConverter[E <: Entity: EntityType](allFieldsWithoutId: Seq[ModelField[_, E]] = Seq(),
+                                                       toScalaWithoutId: EntityConverter.DictWrapper[E] => E)
       extends MapConverter[E] {
     override def toJs(entity: E) = {
       val result = js.Dictionary[js.Any]()
@@ -272,9 +271,9 @@ object Converters {
   }
   object EntityConverter {
     final class DictWrapper[E <: Entity: EntityType](val dict: js.Dictionary[js.Any]) {
-      def getRequired[V: Converter](field: ModelField[V, E]) = {
+      def getRequired[V](field: ModelField[V, E]): V = {
         require(dict.contains(field.name), s"Key ${field.name} is missing from ${js.JSON.stringify(dict)}")
-        Scala2Js.toScala[V](dict(field.name))
+        Scala2Js.toScala[V](dict(field.name))(fromModelField(field))
       }
     }
   }
