@@ -1,38 +1,29 @@
 package hydro.scala2js
 
-import java.time.{LocalDate, LocalTime}
+import java.time.LocalDate
+import java.time.LocalTime
 
 import app.models._
 import app.models.access.ModelField
-import app.models.media._
 import app.models.modification._
-import app.models.user.User
+import app.scala2js.AppConverters
+import app.scala2js.AppConverters.EntityTypeConverter
+import app.scala2js.AppConverters.fromEntityType
 import common.GuavaReplacement.ImmutableBiMap
 import common.OrderToken
 import hydro.common.time.LocalDateTime
-import hydro.scala2js.Scala2Js.{Converter, MapConverter}
+import hydro.scala2js.Scala2Js.Converter
+import hydro.scala2js.Scala2Js.MapConverter
 
 import scala.collection.immutable.Seq
-import scala.concurrent.duration.{FiniteDuration, _}
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.duration._
 import scala.scalajs.js
 import scala.scalajs.js.JSConverters._
 
 object StandardConverters {
 
   // **************** Convertor generators **************** //
-  implicit def fromEntityType[E <: Entity: EntityType]: MapConverter[E] = {
-    val entityType: EntityType[E] = implicitly[EntityType[E]]
-    val converter: MapConverter[_ <: Entity] = entityType match {
-      case EntityType.UserType          => UserConverter
-      case EntityType.SongType          => SongConverter
-      case EntityType.AlbumType         => AlbumConverter
-      case EntityType.ArtistType        => ArtistConverter
-      case EntityType.PlaylistEntryType => PlaylistEntryConverter
-      case EntityType.PlayStatusType    => PlayStatusConverter
-    }
-    converter.asInstanceOf[MapConverter[E]]
-  }
-
   def fromModelField[V](modelField: ModelField[V, _]): Converter[V] = {
     def fromType[V2: Converter](fieldType: ModelField.FieldType[V2]): Converter[V2] = implicitly
     val result = modelField.fieldType match {
@@ -47,8 +38,8 @@ object StandardConverters {
       case ModelField.FieldType.MaybeLocalDateTimeType =>
         fromType(ModelField.FieldType.MaybeLocalDateTimeType)
       case ModelField.FieldType.FiniteDurationType => fromType(ModelField.FieldType.FiniteDurationType)
-      case ModelField.FieldType.StringSeqType     => fromType(ModelField.FieldType.StringSeqType)
-      case ModelField.FieldType.OrderTokenType    => fromType(ModelField.FieldType.OrderTokenType)
+      case ModelField.FieldType.StringSeqType      => fromType(ModelField.FieldType.StringSeqType)
+      case ModelField.FieldType.OrderTokenType     => fromType(ModelField.FieldType.OrderTokenType)
     }
     result.asInstanceOf[Converter[V]]
   }
@@ -171,15 +162,6 @@ object StandardConverters {
     }
   }
 
-  implicit val EntityTypeConverter: Converter[EntityType.any] =
-    enumConverter(
-      EntityType.UserType,
-      EntityType.SongType,
-      EntityType.AlbumType,
-      EntityType.ArtistType,
-      EntityType.PlaylistEntryType,
-      EntityType.PlayStatusType)
-
   implicit object EntityModificationConverter extends Converter[EntityModification] {
     private val addNumber: Int = 1
     private val updateNumber: Int = 2
@@ -195,12 +177,12 @@ object StandardConverters {
             result.push(addNumber)
             result.push(
               Scala2Js.toJs(entity.asInstanceOf[E])(
-                fromEntityType(modification.entityType.asInstanceOf[EntityType[E]])))
+                AppConverters.fromEntityType(modification.entityType.asInstanceOf[EntityType[E]])))
           case EntityModification.Update(entity) =>
             result.push(updateNumber)
             result.push(
               Scala2Js.toJs(entity.asInstanceOf[E])(
-                fromEntityType(modification.entityType.asInstanceOf[EntityType[E]])))
+                AppConverters.fromEntityType(modification.entityType.asInstanceOf[EntityType[E]])))
           case EntityModification.Remove(entityId) =>
             result.push(removeNumber)
             result.push(Scala2Js.toJs(entityId))
@@ -267,91 +249,4 @@ object StandardConverters {
       }
     }
   }
-
-  implicit val UserConverter: EntityConverter[User] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.User.loginName,
-      ModelField.User.passwordHash,
-      ModelField.User.name,
-      ModelField.User.isAdmin,
-    ),
-    toScalaWithoutId = dict =>
-      User(
-        loginName = dict.getRequired(ModelField.User.loginName),
-        passwordHash = dict.getRequired(ModelField.User.passwordHash),
-        name = dict.getRequired(ModelField.User.name),
-        isAdmin = dict.getRequired(ModelField.User.isAdmin)
-    )
-  )
-
-  implicit val SongConverter: EntityConverter[Song] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.Song.filename,
-      ModelField.Song.title,
-      ModelField.Song.albumId,
-      ModelField.Song.artistId,
-      ModelField.Song.trackNumber,
-      ModelField.Song.duration,
-      ModelField.Song.disc,
-    ),
-    toScalaWithoutId = dict =>
-      Song(
-        filename = dict.getRequired(ModelField.Song.filename),
-        title = dict.getRequired(ModelField.Song.title),
-        albumId = dict.getRequired(ModelField.Song.albumId),
-        artistId = dict.getRequired(ModelField.Song.artistId),
-        trackNumber = dict.getRequired(ModelField.Song.trackNumber),
-        duration = dict.getRequired(ModelField.Song.duration),
-        disc = dict.getRequired(ModelField.Song.disc)
-    )
-  )
-  implicit val AlbumConverter: EntityConverter[Album] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.Album.relativePath,
-      ModelField.Album.title,
-      ModelField.Album.artistId,
-      ModelField.Album.year,
-    ),
-    toScalaWithoutId = dict =>
-      Album(
-        relativePath = dict.getRequired(ModelField.Album.relativePath),
-        title = dict.getRequired(ModelField.Album.title),
-        artistId = dict.getRequired(ModelField.Album.artistId),
-        year = dict.getRequired(ModelField.Album.year)
-    )
-  )
-  implicit val ArtistConverter: EntityConverter[Artist] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.Artist.name,
-    ),
-    toScalaWithoutId = dict => Artist(name = dict.getRequired(ModelField.Artist.name))
-  )
-  implicit val PlaylistEntryConverter: EntityConverter[PlaylistEntry] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.PlaylistEntry.songId,
-      ModelField.PlaylistEntry.orderToken,
-      ModelField.PlaylistEntry.userId,
-    ),
-    toScalaWithoutId = dict =>
-      PlaylistEntry(
-        songId = dict.getRequired(ModelField.PlaylistEntry.songId),
-        orderToken = dict.getRequired(ModelField.PlaylistEntry.orderToken),
-        userId = dict.getRequired(ModelField.PlaylistEntry.userId)
-    )
-  )
-  implicit val PlayStatusConverter: EntityConverter[PlayStatus] = new EntityConverter(
-    allFieldsWithoutId = Seq(
-      ModelField.PlayStatus.currentPlaylistEntryId,
-      ModelField.PlayStatus.hasStarted,
-      ModelField.PlayStatus.stopAfterCurrentSong,
-      ModelField.PlayStatus.userId,
-    ),
-    toScalaWithoutId = dict =>
-      PlayStatus(
-        currentPlaylistEntryId = dict.getRequired(ModelField.PlayStatus.currentPlaylistEntryId),
-        hasStarted = dict.getRequired(ModelField.PlayStatus.hasStarted),
-        stopAfterCurrentSong = dict.getRequired(ModelField.PlayStatus.stopAfterCurrentSong),
-        userId = dict.getRequired(ModelField.PlayStatus.userId)
-    )
-  )
 }
