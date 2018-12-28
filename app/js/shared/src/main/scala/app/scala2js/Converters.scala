@@ -24,6 +24,7 @@ import scala.scalajs.js.JSConverters._
 import hydro.scala2js.Scala2Js.Converter
 import hydro.scala2js.Scala2Js.MapConverter
 
+import scala.collection.mutable
 import scala.concurrent.duration.FiniteDuration
 
 object Converters {
@@ -240,8 +241,11 @@ object Converters {
   }
 
   // **************** Entity converters **************** //
-  private[scala2js] abstract class EntityConverter[E <: Entity: EntityType] extends MapConverter[E] {
-    override final def toJs(entity: E) = {
+  private[scala2js] final class EntityConverter[E <: Entity: EntityType](
+      allFieldsWithoutId: Seq[ModelField[_, E]] = Seq(),
+      toScalaWithoutId: EntityConverter.DictWrapper[E] => E)
+      extends MapConverter[E] {
+    override def toJs(entity: E) = {
       val result = js.Dictionary[js.Any]()
 
       def addField[V](field: ModelField[V, E]): Unit = {
@@ -256,8 +260,8 @@ object Converters {
       result
     }
 
-    override final def toScala(dict: js.Dictionary[js.Any]) = {
-      val entityWithoutId = toScalaWithoutId(dict)
+    override def toScala(dict: js.Dictionary[js.Any]) = {
+      val entityWithoutId = toScalaWithoutId(new EntityConverter.DictWrapper(dict))
       val idOption = dict.get(ModelField.id[E].name).map(Scala2Js.toScala[Long])
       if (idOption.isDefined) {
         Entity.withId(idOption.get, entityWithoutId)
@@ -265,138 +269,100 @@ object Converters {
         entityWithoutId
       }
     }
-
-    protected def allFieldsWithoutId: Seq[ModelField[_, E]]
-    protected def toScalaWithoutId(dict: js.Dictionary[js.Any]): E
+  }
+  object EntityConverter {
+    final class DictWrapper[E <: Entity: EntityType](val dict: js.Dictionary[js.Any]) {
+      def getRequired[V: Converter](field: ModelField[V, E]) = {
+        require(dict.contains(field.name), s"Key ${field.name} is missing from ${js.JSON.stringify(dict)}")
+        Scala2Js.toScala[V](dict(field.name))
+      }
+    }
   }
 
-  implicit object UserConverter extends EntityConverter[User] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.User.loginName,
-        ModelField.User.passwordHash,
-        ModelField.User.name,
-        ModelField.User.isAdmin
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, User]) =
-        getRequiredValueFromDict(dict)(field)
-
+  implicit val UserConverter: EntityConverter[User] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.User.loginName,
+      ModelField.User.passwordHash,
+      ModelField.User.name,
+      ModelField.User.isAdmin,
+    ),
+    toScalaWithoutId = dict =>
       User(
-        loginName = getRequired(ModelField.User.loginName),
-        passwordHash = getRequired(ModelField.User.passwordHash),
-        name = getRequired(ModelField.User.name),
-        isAdmin = getRequired(ModelField.User.isAdmin)
-      )
-    }
-  }
+        loginName = dict.getRequired(ModelField.User.loginName),
+        passwordHash = dict.getRequired(ModelField.User.passwordHash),
+        name = dict.getRequired(ModelField.User.name),
+        isAdmin = dict.getRequired(ModelField.User.isAdmin)
+    )
+  )
 
-  implicit object SongConverter extends EntityConverter[Song] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.Song.filename,
-        ModelField.Song.title,
-        ModelField.Song.albumId,
-        ModelField.Song.artistId,
-        ModelField.Song.trackNumber,
-        ModelField.Song.duration,
-        ModelField.Song.disc
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, Song]) =
-        getRequiredValueFromDict(dict)(field)
-
+  implicit val SongConverter: EntityConverter[Song] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.Song.filename,
+      ModelField.Song.title,
+      ModelField.Song.albumId,
+      ModelField.Song.artistId,
+      ModelField.Song.trackNumber,
+      ModelField.Song.duration,
+      ModelField.Song.disc,
+    ),
+    toScalaWithoutId = dict =>
       Song(
-        filename = getRequired(ModelField.Song.filename),
-        title = getRequired(ModelField.Song.title),
-        albumId = getRequired(ModelField.Song.albumId),
-        artistId = getRequired(ModelField.Song.artistId),
-        trackNumber = getRequired(ModelField.Song.trackNumber),
-        duration = getRequired(ModelField.Song.duration),
-        disc = getRequired(ModelField.Song.disc)
-      )
-    }
-  }
-
-  implicit object AlbumConverter extends EntityConverter[Album] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.Album.relativePath,
-        ModelField.Album.title,
-        ModelField.Album.artistId,
-        ModelField.Album.year
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, Album]) =
-        getRequiredValueFromDict(dict)(field)
-
+        filename = dict.getRequired(ModelField.Song.filename),
+        title = dict.getRequired(ModelField.Song.title),
+        albumId = dict.getRequired(ModelField.Song.albumId),
+        artistId = dict.getRequired(ModelField.Song.artistId),
+        trackNumber = dict.getRequired(ModelField.Song.trackNumber),
+        duration = dict.getRequired(ModelField.Song.duration),
+        disc = dict.getRequired(ModelField.Song.disc)
+    )
+  )
+  implicit val AlbumConverter: EntityConverter[Album] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.Album.relativePath,
+      ModelField.Album.title,
+      ModelField.Album.artistId,
+      ModelField.Album.year,
+    ),
+    toScalaWithoutId = dict =>
       Album(
-        relativePath = getRequired(ModelField.Album.relativePath),
-        title = getRequired(ModelField.Album.title),
-        artistId = getRequired(ModelField.Album.artistId),
-        year = getRequired(ModelField.Album.year)
-      )
-    }
-  }
-
-  implicit object ArtistConverter extends EntityConverter[Artist] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.Artist.name
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, Artist]) =
-        getRequiredValueFromDict(dict)(field)
-
-      Artist(
-        name = getRequired(ModelField.Artist.name)
-      )
-    }
-  }
-
-  implicit object PlaylistEntryConverter extends EntityConverter[PlaylistEntry] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.PlaylistEntry.songId,
-        ModelField.PlaylistEntry.orderToken,
-        ModelField.PlaylistEntry.userId
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, PlaylistEntry]) =
-        getRequiredValueFromDict(dict)(field)
-
+        relativePath = dict.getRequired(ModelField.Album.relativePath),
+        title = dict.getRequired(ModelField.Album.title),
+        artistId = dict.getRequired(ModelField.Album.artistId),
+        year = dict.getRequired(ModelField.Album.year)
+    )
+  )
+  implicit val ArtistConverter: EntityConverter[Artist] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.Artist.name,
+    ),
+    toScalaWithoutId = dict => Artist(name = dict.getRequired(ModelField.Artist.name))
+  )
+  implicit val PlaylistEntryConverter: EntityConverter[PlaylistEntry] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.PlaylistEntry.songId,
+      ModelField.PlaylistEntry.orderToken,
+      ModelField.PlaylistEntry.userId,
+    ),
+    toScalaWithoutId = dict =>
       PlaylistEntry(
-        songId = getRequired(ModelField.PlaylistEntry.songId),
-        orderToken = getRequired(ModelField.PlaylistEntry.orderToken),
-        userId = getRequired(ModelField.PlaylistEntry.userId)
-      )
-    }
-  }
-
-  implicit object PlayStatusConverter extends EntityConverter[PlayStatus] {
-    override def allFieldsWithoutId =
-      Seq(
-        ModelField.PlayStatus.currentPlaylistEntryId,
-        ModelField.PlayStatus.hasStarted,
-        ModelField.PlayStatus.stopAfterCurrentSong,
-        ModelField.PlayStatus.userId
-      )
-
-    override def toScalaWithoutId(dict: js.Dictionary[js.Any]) = {
-      def getRequired[T](field: ModelField[T, PlayStatus]) =
-        getRequiredValueFromDict(dict)(field)
-
+        songId = dict.getRequired(ModelField.PlaylistEntry.songId),
+        orderToken = dict.getRequired(ModelField.PlaylistEntry.orderToken),
+        userId = dict.getRequired(ModelField.PlaylistEntry.userId)
+    )
+  )
+  implicit val PlayStatusConverter: EntityConverter[PlayStatus] = new EntityConverter(
+    allFieldsWithoutId = Seq(
+      ModelField.PlayStatus.currentPlaylistEntryId,
+      ModelField.PlayStatus.hasStarted,
+      ModelField.PlayStatus.stopAfterCurrentSong,
+      ModelField.PlayStatus.userId,
+    ),
+    toScalaWithoutId = dict =>
       PlayStatus(
-        currentPlaylistEntryId = getRequired(ModelField.PlayStatus.currentPlaylistEntryId),
-        hasStarted = getRequired(ModelField.PlayStatus.hasStarted),
-        stopAfterCurrentSong = getRequired(ModelField.PlayStatus.stopAfterCurrentSong),
-        userId = getRequired(ModelField.PlayStatus.userId)
-      )
-    }
-  }
+        currentPlaylistEntryId = dict.getRequired(ModelField.PlayStatus.currentPlaylistEntryId),
+        hasStarted = dict.getRequired(ModelField.PlayStatus.hasStarted),
+        stopAfterCurrentSong = dict.getRequired(ModelField.PlayStatus.stopAfterCurrentSong),
+        userId = dict.getRequired(ModelField.PlayStatus.userId)
+    )
+  )
 }
