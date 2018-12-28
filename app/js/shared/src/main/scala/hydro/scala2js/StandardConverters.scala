@@ -47,8 +47,8 @@ object StandardConverters {
       case ModelField.FieldType.MaybeLocalDateTimeType =>
         fromType(ModelField.FieldType.MaybeLocalDateTimeType)
       case ModelField.FieldType.FiniteDurationType => fromType(ModelField.FieldType.FiniteDurationType)
-      case ModelField.FieldType.StringSeqType      => fromType(ModelField.FieldType.StringSeqType)
-      case ModelField.FieldType.OrderTokenType     => fromType(ModelField.FieldType.OrderTokenType)
+      case ModelField.FieldType.StringSeqType     => fromType(ModelField.FieldType.StringSeqType)
+      case ModelField.FieldType.OrderTokenType    => fromType(ModelField.FieldType.OrderTokenType)
     }
     result.asInstanceOf[Converter[V]]
   }
