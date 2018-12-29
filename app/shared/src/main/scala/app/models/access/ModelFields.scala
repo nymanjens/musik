@@ -9,6 +9,7 @@ import hydro.models.access.ModelField.toBiMapWithUniqueValues
 import app.models.modification.EntityType
 import app.models.modification.EntityType._
 import app.models.user.User
+import hydro.models.access.ModelField
 
 import scala.concurrent.duration.FiniteDuration
 
