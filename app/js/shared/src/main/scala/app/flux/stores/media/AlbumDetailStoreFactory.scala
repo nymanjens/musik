@@ -6,6 +6,7 @@ import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
 import app.models.access.DbQueryImplicits._
 import hydro.models.access.JsEntityAccess
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.media._
 import app.models.modification.EntityModification
@@ -33,7 +34,7 @@ final class AlbumDetailStoreFactory(implicit entityAccess: JsEntityAccess, user:
     override protected def calculateState(): Future[State] = async {
       val album = await(JsAlbum.fromEntityId(albumId))
       val songs =
-        await(entityAccess.newQuery[Song]().filter(ModelField.Song.albumId === albumId).data())
+        await(entityAccess.newQuery[Song]().filter(ModelFields.Song.albumId === albumId).data())
           .sortBy(_.trackNumber)
 
       State(

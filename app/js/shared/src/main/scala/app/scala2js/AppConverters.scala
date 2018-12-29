@@ -1,6 +1,7 @@
 package app.scala2js
 
 import app.models._
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.media._
 import app.models.modification._
@@ -41,88 +42,88 @@ object AppConverters {
   // **************** Entity converters **************** //
   implicit val UserConverter: EntityConverter[User] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.User.loginName,
-      ModelField.User.passwordHash,
-      ModelField.User.name,
-      ModelField.User.isAdmin,
+      ModelFields.User.loginName,
+      ModelFields.User.passwordHash,
+      ModelFields.User.name,
+      ModelFields.User.isAdmin,
     ),
     toScalaWithoutId = dict =>
       User(
-        loginName = dict.getRequired(ModelField.User.loginName),
-        passwordHash = dict.getRequired(ModelField.User.passwordHash),
-        name = dict.getRequired(ModelField.User.name),
-        isAdmin = dict.getRequired(ModelField.User.isAdmin)
+        loginName = dict.getRequired(ModelFields.User.loginName),
+        passwordHash = dict.getRequired(ModelFields.User.passwordHash),
+        name = dict.getRequired(ModelFields.User.name),
+        isAdmin = dict.getRequired(ModelFields.User.isAdmin)
     )
   )
 
   implicit val SongConverter: EntityConverter[Song] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.Song.filename,
-      ModelField.Song.title,
-      ModelField.Song.albumId,
-      ModelField.Song.artistId,
-      ModelField.Song.trackNumber,
-      ModelField.Song.duration,
-      ModelField.Song.disc,
+      ModelFields.Song.filename,
+      ModelFields.Song.title,
+      ModelFields.Song.albumId,
+      ModelFields.Song.artistId,
+      ModelFields.Song.trackNumber,
+      ModelFields.Song.duration,
+      ModelFields.Song.disc,
     ),
     toScalaWithoutId = dict =>
       Song(
-        filename = dict.getRequired(ModelField.Song.filename),
-        title = dict.getRequired(ModelField.Song.title),
-        albumId = dict.getRequired(ModelField.Song.albumId),
-        artistId = dict.getRequired(ModelField.Song.artistId),
-        trackNumber = dict.getRequired(ModelField.Song.trackNumber),
-        duration = dict.getRequired(ModelField.Song.duration),
-        disc = dict.getRequired(ModelField.Song.disc)
+        filename = dict.getRequired(ModelFields.Song.filename),
+        title = dict.getRequired(ModelFields.Song.title),
+        albumId = dict.getRequired(ModelFields.Song.albumId),
+        artistId = dict.getRequired(ModelFields.Song.artistId),
+        trackNumber = dict.getRequired(ModelFields.Song.trackNumber),
+        duration = dict.getRequired(ModelFields.Song.duration),
+        disc = dict.getRequired(ModelFields.Song.disc)
     )
   )
   implicit val AlbumConverter: EntityConverter[Album] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.Album.relativePath,
-      ModelField.Album.title,
-      ModelField.Album.artistId,
-      ModelField.Album.year,
+      ModelFields.Album.relativePath,
+      ModelFields.Album.title,
+      ModelFields.Album.artistId,
+      ModelFields.Album.year,
     ),
     toScalaWithoutId = dict =>
       Album(
-        relativePath = dict.getRequired(ModelField.Album.relativePath),
-        title = dict.getRequired(ModelField.Album.title),
-        artistId = dict.getRequired(ModelField.Album.artistId),
-        year = dict.getRequired(ModelField.Album.year)
+        relativePath = dict.getRequired(ModelFields.Album.relativePath),
+        title = dict.getRequired(ModelFields.Album.title),
+        artistId = dict.getRequired(ModelFields.Album.artistId),
+        year = dict.getRequired(ModelFields.Album.year)
     )
   )
   implicit val ArtistConverter: EntityConverter[Artist] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.Artist.name,
+      ModelFields.Artist.name,
     ),
-    toScalaWithoutId = dict => Artist(name = dict.getRequired(ModelField.Artist.name))
+    toScalaWithoutId = dict => Artist(name = dict.getRequired(ModelFields.Artist.name))
   )
   implicit val PlaylistEntryConverter: EntityConverter[PlaylistEntry] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.PlaylistEntry.songId,
-      ModelField.PlaylistEntry.orderToken,
-      ModelField.PlaylistEntry.userId,
+      ModelFields.PlaylistEntry.songId,
+      ModelFields.PlaylistEntry.orderToken,
+      ModelFields.PlaylistEntry.userId,
     ),
     toScalaWithoutId = dict =>
       PlaylistEntry(
-        songId = dict.getRequired(ModelField.PlaylistEntry.songId),
-        orderToken = dict.getRequired(ModelField.PlaylistEntry.orderToken),
-        userId = dict.getRequired(ModelField.PlaylistEntry.userId)
+        songId = dict.getRequired(ModelFields.PlaylistEntry.songId),
+        orderToken = dict.getRequired(ModelFields.PlaylistEntry.orderToken),
+        userId = dict.getRequired(ModelFields.PlaylistEntry.userId)
     )
   )
   implicit val PlayStatusConverter: EntityConverter[PlayStatus] = new EntityConverter(
     allFieldsWithoutId = Seq(
-      ModelField.PlayStatus.currentPlaylistEntryId,
-      ModelField.PlayStatus.hasStarted,
-      ModelField.PlayStatus.stopAfterCurrentSong,
-      ModelField.PlayStatus.userId,
+      ModelFields.PlayStatus.currentPlaylistEntryId,
+      ModelFields.PlayStatus.hasStarted,
+      ModelFields.PlayStatus.stopAfterCurrentSong,
+      ModelFields.PlayStatus.userId,
     ),
     toScalaWithoutId = dict =>
       PlayStatus(
-        currentPlaylistEntryId = dict.getRequired(ModelField.PlayStatus.currentPlaylistEntryId),
-        hasStarted = dict.getRequired(ModelField.PlayStatus.hasStarted),
-        stopAfterCurrentSong = dict.getRequired(ModelField.PlayStatus.stopAfterCurrentSong),
-        userId = dict.getRequired(ModelField.PlayStatus.userId)
+        currentPlaylistEntryId = dict.getRequired(ModelFields.PlayStatus.currentPlaylistEntryId),
+        hasStarted = dict.getRequired(ModelFields.PlayStatus.hasStarted),
+        stopAfterCurrentSong = dict.getRequired(ModelFields.PlayStatus.stopAfterCurrentSong),
+        userId = dict.getRequired(ModelFields.PlayStatus.userId)
     )
   )
 }

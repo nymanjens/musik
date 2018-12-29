@@ -6,6 +6,7 @@ import app.common.OrderToken
 import app.models.Entity
 import app.models.access.DbQueryImplicits._
 import app.models.access.EntityAccess
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.user.User
 
@@ -22,7 +23,7 @@ object PlaylistEntry {
   def tupled = (this.apply _).tupled
 
   def getOrderedSeq()(implicit user: User, entityAccess: EntityAccess): Future[Seq[PlaylistEntry]] = async {
-    await(entityAccess.newQuery[PlaylistEntry]().filter(ModelField.PlaylistEntry.userId === user.id).data())
+    await(entityAccess.newQuery[PlaylistEntry]().filter(ModelFields.PlaylistEntry.userId === user.id).data())
       .sortWith(lt = (e1, e2) => {
         e1.orderToken compare e2.orderToken match {
           case 0 => e1.id < e2.id

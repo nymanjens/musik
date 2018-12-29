@@ -6,6 +6,7 @@ import app.flux.stores.media.ArtistDetailStoreFactory.State
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
 import hydro.models.access.JsEntityAccess
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.media._
 import app.models.modification.EntityModification
@@ -33,15 +34,15 @@ final class ArtistDetailStoreFactory(implicit entityAccess: JsEntityAccess, user
     override protected def calculateState(): Future[State] = async {
       val artist = await(JsArtist.fromEntityId(artistId))
       val albums =
-        await(entityAccess.newQuery[Album]().filter(ModelField.Album.artistId === Some(artistId)).data())
+        await(entityAccess.newQuery[Album]().filter(ModelFields.Album.artistId === Some(artistId)).data())
           .sortBy(album => (album.year, album.title.toLowerCase))
       val albumIds = albums.map(_.id)
       val songsWithoutAlbum =
         await(
           entityAccess
             .newQuery[Song]()
-            .filter(ModelField.Song.artistId === Some(artistId))
-            .filter(ModelField.Song.albumId isNoneOf albumIds)
+            .filter(ModelFields.Song.artistId === Some(artistId))
+            .filter(ModelFields.Song.albumId isNoneOf albumIds)
             .data())
           .sortWith((a, b) => (a.title compareToIgnoreCase b.title) < 0)
 

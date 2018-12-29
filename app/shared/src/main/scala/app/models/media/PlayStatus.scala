@@ -3,6 +3,7 @@ package app.models.media
 import app.models.Entity
 import app.models.access.DbQueryImplicits._
 import app.models.access.EntityAccess
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.user.User
 
@@ -26,14 +27,14 @@ object PlayStatus {
   def get(verifyConsistency: Boolean = true)(implicit user: User,
                                              entityAccess: EntityAccess): Future[Option[PlayStatus]] = async {
     val maybePlayStatus =
-      await(entityAccess.newQuery[PlayStatus]().findOne(ModelField.PlayStatus.userId === user.id))
+      await(entityAccess.newQuery[PlayStatus]().findOne(ModelFields.PlayStatus.userId === user.id))
     if (verifyConsistency) {
       maybePlayStatus match {
         case Some(playStatus) =>
           await(
             entityAccess
               .newQuery[PlaylistEntry]()
-              .findOne(ModelField.PlaylistEntry.id === playStatus.currentPlaylistEntryId)) match {
+              .findOne(ModelFields.PlaylistEntry.id === playStatus.currentPlaylistEntryId)) match {
             case Some(_) => maybePlayStatus
             case None =>
               println(

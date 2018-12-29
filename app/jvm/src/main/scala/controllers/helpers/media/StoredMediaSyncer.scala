@@ -7,6 +7,7 @@ import hydro.common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import app.models.Entity
 import app.models.access.JvmEntityAccess
+import app.models.access.ModelFields
 import app.models.access.ModelField
 import app.models.media.Album
 import app.models.media.Artist
@@ -56,7 +57,7 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
 
     for (album <- affectedAlbums) {
       val songChildren =
-        entityAccess.newQuerySync[Song]().filter(ModelField.Song.albumId === album.id).data()
+        entityAccess.newQuerySync[Song]().filter(ModelFields.Song.albumId === album.id).data()
       if (songChildren.isEmpty) {
         entityAccess.persistEntityModifications(EntityModification.createDelete(album))
       }
@@ -64,9 +65,9 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
 
     for (artistId <- affectedArtistIds) {
       val albumChildren =
-        entityAccess.newQuerySync[Album]().filter(ModelField.Album.artistId === Some(artistId)).data()
+        entityAccess.newQuerySync[Album]().filter(ModelFields.Album.artistId === Some(artistId)).data()
       val songChildren =
-        entityAccess.newQuerySync[Song]().filter(ModelField.Song.artistId === Some(artistId)).data()
+        entityAccess.newQuerySync[Song]().filter(ModelFields.Song.artistId === Some(artistId)).data()
       if (albumChildren.isEmpty && songChildren.isEmpty) {
         entityAccess.persistEntityModifications(EntityModification.Remove[Artist](artistId))
       }
@@ -77,14 +78,14 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
     val album = maybeFetchAlbum(RelativePaths.getFolderPath(relativePath)).get
     entityAccess
       .newQuerySync[Song]()
-      .filter(ModelField.Song.albumId === album.id)
-      .findOne(ModelField.Song.filename === RelativePaths.getFilename(relativePath))
+      .filter(ModelFields.Song.albumId === album.id)
+      .findOne(ModelFields.Song.filename === RelativePaths.getFilename(relativePath))
       .get
   }
 
   private def fetchAlbum(id: Long): Album = entityAccess.newQuerySync[Album]().findById(id)
   private def maybeFetchAlbum(relativePath: String): Option[Album] = {
-    entityAccess.newQuerySync[Album]().findOne(ModelField.Album.relativePath === relativePath)
+    entityAccess.newQuerySync[Album]().findOne(ModelFields.Album.relativePath === relativePath)
   }
 
   private def fetchOrAddAlbum(album: ParsedAlbum)(implicit user: User): Album = {
@@ -99,7 +100,7 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
 
   private def fetchOrAddArtist(canonicalArtistName: String)(implicit user: User): Artist = fetchOrAddEntity(
     fetchExistingEntity =
-      () => entityAccess.newQuerySync[Artist]().findOne(ModelField.Artist.name === canonicalArtistName),
+      () => entityAccess.newQuerySync[Artist]().findOne(ModelFields.Artist.name === canonicalArtistName),
     entityWithoutId = Artist(name = canonicalArtistName)
   )
 

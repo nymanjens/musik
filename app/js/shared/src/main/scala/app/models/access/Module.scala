@@ -42,8 +42,8 @@ final class Module(implicit user: User,
 object Module {
   val secondaryIndexFunction: SecondaryIndexFunction = SecondaryIndexFunction({
     case UserType          => Seq()
-    case SongType          => Seq(ModelField.Song.albumId, ModelField.Album.artistId)
-    case AlbumType         => Seq(ModelField.Album.artistId)
+    case SongType          => Seq(ModelFields.Song.albumId, ModelFields.Album.artistId)
+    case AlbumType         => Seq(ModelFields.Album.artistId)
     case ArtistType        => Seq()
     case PlaylistEntryType => Seq()
     case PlayStatusType    => Seq()
