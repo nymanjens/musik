@@ -10,7 +10,6 @@ import app.models.access.LocalDatabaseImpl.Singleton
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.LokiQuery
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.WriteOperation
-import app.models.modification.EntityType._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import org.scalajs.dom.console
