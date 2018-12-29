@@ -7,7 +7,7 @@ import app.flux.action.Actions
 import hydro.flux.action.StandardActions
 import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.router.Page
-import app.flux.router.RouterContext
+import hydro.flux.router.RouterContext
 import app.flux.react.uielements
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.uielements.ApplicationDisconnectedIcon

@@ -4,7 +4,7 @@ import hydro.common.LoggingUtils.LogExceptionsCallback
 import app.flux.action.Actions
 import app.flux.action.Actions.AddSongsToPlaylist.Placement
 import hydro.flux.react.ReactVdomUtils.^^
-import app.flux.router.RouterContext
+import hydro.flux.router.RouterContext
 import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
