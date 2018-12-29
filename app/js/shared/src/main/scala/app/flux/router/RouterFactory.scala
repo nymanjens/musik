@@ -32,9 +32,6 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
     RouterConfigDsl[Page]
       .buildConfig { dsl =>
         import dsl._
-        val codeString: RouteB[String] = string("[a-zA-Z0-9_-]+")
-        val returnToPath: RouteB[Option[String]] = ("?returnto=" ~ string(".+")).option
-        val query: RouteB[String] = "?q=" ~ string(".+")
 
         def staticRuleFromPage(page: Page, renderer: RouterContext => VdomElement): dsl.Rule = {
           val path = RouterFactory.pathPrefix + page.getClass.getSimpleName.toLowerCase
