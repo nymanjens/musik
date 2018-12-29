@@ -1,6 +1,6 @@
 package app.models.media
 
-import app.models.Entity
+import hydro.models.Entity
 
 case class Artist(name: String, idOption: Option[Long] = None) extends Entity {
 

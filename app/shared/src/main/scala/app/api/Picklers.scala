@@ -6,7 +6,7 @@ import java.time.LocalTime
 import boopickle.Default._
 import app.common.OrderToken
 import hydro.common.time.LocalDateTime
-import app.models.Entity
+import hydro.models.Entity
 import app.models.access.ModelFields
 import hydro.models.access.ModelField
 import app.models.media.Album
@@ -17,7 +17,7 @@ import app.models.media.PlayStatus
 import app.models.modification.EntityType._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
-import app.models.Entity
+import hydro.models.Entity
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import app.models.modification.EntityType._

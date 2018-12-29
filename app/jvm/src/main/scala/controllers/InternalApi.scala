@@ -11,7 +11,7 @@ import app.api.ScalaJsApiServerFactory
 import app.api.UpdateTokens.toInstant
 import app.api.UpdateTokens.toUpdateToken
 import app.common.publisher.Publishers
-import app.models.Entity
+import hydro.models.Entity
 import app.models.access.JvmEntityAccess
 import app.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity

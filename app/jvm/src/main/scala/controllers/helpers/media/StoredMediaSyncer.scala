@@ -5,7 +5,7 @@ import com.google.inject.Inject
 import app.common.RelativePaths
 import hydro.common.time.Clock
 import controllers.helpers.media.AlbumParser.ParsedAlbum
-import app.models.Entity
+import hydro.models.Entity
 import app.models.access.JvmEntityAccess
 import app.models.access.ModelFields
 import hydro.models.access.ModelField

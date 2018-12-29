@@ -1,6 +1,6 @@
 package app.models.media
 
-import app.models.Entity
+import hydro.models.Entity
 
 import scala.concurrent.duration.FiniteDuration
 

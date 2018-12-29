@@ -2,7 +2,7 @@ package app.models.access
 
 import app.common.GuavaReplacement.ImmutableBiMap
 import app.common.OrderToken
-import app.models.Entity
+import hydro.models.Entity
 import hydro.models.access.ModelField.IdModelField
 import app.models.media._
 import hydro.models.access.ModelField.toBiMapWithUniqueValues

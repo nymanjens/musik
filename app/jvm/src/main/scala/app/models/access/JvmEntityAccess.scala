@@ -8,7 +8,7 @@ import app.api.UpdateTokens.toUpdateToken
 import com.google.inject._
 import app.common.publisher.TriggerablePublisher
 import hydro.common.time.Clock
-import app.models.Entity
+import hydro.models.Entity
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
