@@ -5,7 +5,8 @@ import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.common.time.Clock
 import hydro.flux.react.ReactVdomUtils.^^
-import app.flux.router.Page
+import app.flux.router.AppPages
+import hydro.flux.router.Page
 import hydro.flux.router.RouterContext
 import app.flux.react.uielements
 import app.flux.stores.media.PlayStatusStore
@@ -108,9 +109,9 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
         //    ))
         //),
         <.li(
-          menuItem("<u>H</u>ome", Page.Home),
-          menuItem("<u>P</u>laylist", Page.Playlist),
-          menuItem("<u>A</u>rtists", Page.Artists)
+          menuItem("<u>H</u>ome", AppPages.Home),
+          menuItem("<u>P</u>laylist", AppPages.Playlist),
+          menuItem("<u>A</u>rtists", AppPages.Artists)
         )
       )
     }
@@ -134,9 +135,9 @@ private[app] final class Menu(implicit entityAccess: EntityAccess,
         })
 
       bindGlobal("shift+alt+f", () => queryInputRef().focus())
-      bindGlobalToPage("shift+alt+h", Page.Home)
-      bindGlobalToPage("shift+alt+p", Page.Playlist)
-      bindGlobalToPage("shift+alt+a", Page.Artists)
+      bindGlobalToPage("shift+alt+h", AppPages.Home)
+      bindGlobalToPage("shift+alt+p", AppPages.Playlist)
+      bindGlobalToPage("shift+alt+a", AppPages.Artists)
 
       bind("space", () => playStatusStore.togglePlay())
       bind("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))

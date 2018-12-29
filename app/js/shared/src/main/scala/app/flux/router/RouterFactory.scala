@@ -1,23 +1,23 @@
 package app.flux.router
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.async.Async.async
-import scala.async.Async.await
+import app.models.access.EntityAccess
 import common.I18n
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
-import app.flux.action.Actions
-import hydro.flux.action.StandardActions
 import hydro.flux.action.Dispatcher
-import japgolly.scalajs.react.Callback
+import hydro.flux.action.StandardActions
+import hydro.flux.router.Page
+import hydro.flux.router.RouterContext
+import hydro.flux.router.StandardPages
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._
-import app.models.access.EntityAccess
-import hydro.flux.router.RouterContext
 import org.scalajs.dom
 
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.reflect.ClassTag
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 private[router] final class RouterFactory(implicit reactAppModule: app.flux.react.app.Module,
                                           dispatcher: Dispatcher,
@@ -49,29 +49,29 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
         // wrap/connect components to the circuit
         (emptyRule
 
-          | staticRoute(RouterFactory.pathPrefix, Page.Root)
-            ~> redirectToPage(Page.Home)(Redirect.Replace)
+          | staticRoute(RouterFactory.pathPrefix, StandardPages.Root)
+            ~> redirectToPage(AppPages.Home)(Redirect.Replace)
 
-          | staticRuleFromPage(Page.UserProfile, reactAppModule.userProfile.apply)
+          | staticRuleFromPage(StandardPages.UserProfile, reactAppModule.userProfile.apply)
 
-          | staticRuleFromPage(Page.UserAdministration, reactAppModule.userAdministration.apply)
+          | staticRuleFromPage(StandardPages.UserAdministration, reactAppModule.userAdministration.apply)
 
-          | staticRuleFromPage(Page.Home, reactAppModule.home.apply)
+          | staticRuleFromPage(AppPages.Home, reactAppModule.home.apply)
 
-          | staticRuleFromPage(Page.Playlist, reactAppModule.playlist.apply)
+          | staticRuleFromPage(AppPages.Playlist, reactAppModule.playlist.apply)
 
-          | staticRuleFromPage(Page.Artists, reactAppModule.allArtists.apply)
+          | staticRuleFromPage(AppPages.Artists, reactAppModule.allArtists.apply)
 
-          | dynamicRuleFromPage(_ / long.caseClass[Page.Artist]) { (page, ctl) =>
+          | dynamicRuleFromPage(_ / long.caseClass[AppPages.Artist]) { (page, ctl) =>
             reactAppModule.artistDetail(page.artistId, ctl)
           }
 
-          | dynamicRuleFromPage(_ / long.caseClass[Page.Album]) { (page, ctl) =>
+          | dynamicRuleFromPage(_ / long.caseClass[AppPages.Album]) { (page, ctl) =>
             reactAppModule.albumDetail(page.albumId, ctl)
           }
 
         // Fallback
-        ).notFound(redirectToPage(Page.Root)(Redirect.Replace))
+        ).notFound(redirectToPage(StandardPages.Root)(Redirect.Replace))
           .onPostRender((_, _) =>
             LogExceptionsCallback(
               dispatcher.dispatch(StandardActions.SetPageLoadingState(isLoading = false))))

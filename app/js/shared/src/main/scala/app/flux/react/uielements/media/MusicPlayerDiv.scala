@@ -3,7 +3,8 @@ package app.flux.react.uielements.media
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.ReactVdomUtils.^^
-import app.flux.router.Page
+import app.flux.router.AppPages
+import hydro.flux.router.Page
 import hydro.flux.router.RouterContext
 import app.flux.react.uielements
 import app.flux.stores.media.PlayStatusStore
@@ -54,12 +55,12 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
                   playlistEntry.song.title,
                 ),
                 ^^.ifThen(playlistEntry.song.artist) { artist =>
-                  router.anchorWithHrefTo(Page.Artist(artist.id))(
+                  router.anchorWithHrefTo(AppPages.Artist(artist.id))(
                     ^.className := "artist",
                     artist.name,
                   )
                 },
-                router.anchorWithHrefTo(Page.Album(playlistEntry.song.album.id))(
+                router.anchorWithHrefTo(AppPages.Album(playlistEntry.song.album.id))(
                   ^.className := "album",
                   playlistEntry.song.album.title,
                 ),

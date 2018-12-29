@@ -2,7 +2,8 @@ package app.flux.react.uielements.media
 
 import common.I18n
 import hydro.flux.react.ReactVdomUtils.^^
-import app.flux.router.Page
+import app.flux.router.AppPages
+import hydro.flux.router.Page
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
@@ -15,7 +16,7 @@ object ArtistDiv {
     .renderP((_, props) => {
       implicit val router = props.router
       <.div(
-        router.anchorWithHrefTo(Page.Artist(props.artist.id))(
+        router.anchorWithHrefTo(AppPages.Artist(props.artist.id))(
           ^^.classes("btn", "btn-default", "btn-xl"),
           ^.role := "button",
           " ",
