@@ -5,7 +5,8 @@ import app.models.access.ModelField
 import app.models.media._
 import app.models.modification._
 import app.models.user.User
-import hydro.scala2js.Scala2Js.{Converter, MapConverter}
+import hydro.scala2js.Scala2Js.Converter
+import hydro.scala2js.Scala2Js.MapConverter
 import hydro.scala2js.StandardConverters
 import hydro.scala2js.StandardConverters.EntityConverter
 

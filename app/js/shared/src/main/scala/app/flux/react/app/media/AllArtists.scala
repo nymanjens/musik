@@ -15,8 +15,7 @@ import app.models.media.JsArtist
 
 import scala.collection.immutable.Seq
 
-private[app] final class AllArtists(implicit pageHeader: PageHeader,
-                                    allArtistsStore: AllArtistsStore)
+private[app] final class AllArtists(implicit pageHeader: PageHeader, allArtistsStore: AllArtistsStore)
     extends HydroReactComponent {
 
   // **************** API ****************//
