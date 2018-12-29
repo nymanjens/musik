@@ -1,11 +1,11 @@
 package app.flux.stores.media
 
 import common.OrderToken
-import app.flux.action.Actions
-import app.flux.action.Actions.AddSongsToPlaylist
-import app.flux.action.Actions.RemoveEntriesFromPlaylist
-import app.flux.action.Actions
-import app.flux.action.Actions.AddSongsToPlaylist.Placement
+import app.flux.action.AppActions
+import app.flux.action.AppActions.AddSongsToPlaylist
+import app.flux.action.AppActions.RemoveEntriesFromPlaylist
+import app.flux.action.AppActions
+import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import app.flux.stores.media.PlaylistStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore

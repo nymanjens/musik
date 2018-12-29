@@ -1,8 +1,8 @@
 package app.flux.react.uielements.media
 
 import hydro.common.LoggingUtils.LogExceptionsCallback
-import app.flux.action.Actions
-import app.flux.action.Actions.AddSongsToPlaylist.Placement
+import app.flux.action.AppActions
+import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.router.RouterContext
 import hydro.flux.action.Dispatcher
@@ -36,7 +36,7 @@ final class SongDiv(implicit dispatcher: Dispatcher) {
 
   // **************** Private methods ****************//
   private def addToPlaylistCallback(song: JsSong, placement: Placement): Callback = LogExceptionsCallback {
-    dispatcher.dispatch(Actions.AddSongsToPlaylist(songIds = Seq(song.id), placement = placement))
+    dispatcher.dispatch(AppActions.AddSongsToPlaylist(songIds = Seq(song.id), placement = placement))
   }
 
   // **************** Private inner types ****************//

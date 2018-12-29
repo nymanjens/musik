@@ -4,7 +4,7 @@ import common.CollectionUtils
 import common.CollectionUtils.ifThenSeq
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
-import app.flux.action.Actions
+import app.flux.action.AppActions
 import hydro.flux.action.StandardActions
 import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.router.RouterContext
@@ -73,7 +73,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                   <.a(
                     ^^.classes("btn", "btn-default", "btn-xs"),
                     ^.onClick --> LogExceptionsCallback[Unit](
-                      dispatcher.dispatch(Actions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
+                      dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
                     <.i(^.className := "fa fa-times-circle-o")
                   )
                 )

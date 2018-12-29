@@ -1,11 +1,11 @@
 package app.flux.action
 
-import app.flux.action.Actions.AddSongsToPlaylist.Placement
+import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import hydro.flux.action.Action
 
 import scala.collection.immutable.Seq
 
-object Actions {
+object AppActions {
 
   // **************** Media-related actions **************** //
   case class AddSongsToPlaylist(songIds: Seq[Long], placement: Placement) extends Action
