@@ -1,7 +1,7 @@
 package common.testing
 
 import hydro.flux.action.Dispatcher
-import app.models.access.EntityModificationPushClientFactory
+import hydro.models.access.EntityModificationPushClientFactory
 
 class TestModule {
 

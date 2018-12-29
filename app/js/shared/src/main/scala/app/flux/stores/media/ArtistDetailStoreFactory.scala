@@ -5,7 +5,7 @@ import hydro.flux.stores.StoreFactory
 import app.flux.stores.media.ArtistDetailStoreFactory.State
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
-import app.models.access.JsEntityAccess
+import hydro.models.access.JsEntityAccess
 import app.models.access.ModelField
 import app.models.media._
 import app.models.modification.EntityModification

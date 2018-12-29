@@ -2,7 +2,7 @@ package app.models.access
 
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
-import app.models.access.LocalDatabaseImpl.SecondaryIndexFunction
+import hydro.models.access.LocalDatabaseImpl.SecondaryIndexFunction
 import app.models.modification.EntityType.AlbumType
 import app.models.modification.EntityType.ArtistType
 import app.models.modification.EntityType.PlayStatusType
@@ -10,6 +10,12 @@ import app.models.modification.EntityType.PlaylistEntryType
 import app.models.modification.EntityType.SongType
 import app.models.modification.EntityType.UserType
 import app.models.user.User
+import hydro.models.access.EntityModificationPushClientFactory
+import hydro.models.access.HybridRemoteDatabaseProxy
+import hydro.models.access.JsEntityAccess
+import hydro.models.access.JsEntityAccessImpl
+import hydro.models.access.LocalDatabaseImpl
+import hydro.models.access.LocalDatabaseImpl.SecondaryIndexFunction
 
 import scala.collection.immutable.Seq
 
