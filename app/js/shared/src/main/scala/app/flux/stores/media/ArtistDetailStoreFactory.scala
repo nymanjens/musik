@@ -1,13 +1,13 @@
 package app.flux.stores.media
 
-import app.models.access.DbQueryImplicits._
+import hydro.models.access.DbQueryImplicits._
 import hydro.flux.stores.StoreFactory
 import app.flux.stores.media.ArtistDetailStoreFactory.State
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
 import hydro.models.access.JsEntityAccess
 import app.models.access.ModelFields
-import app.models.access.ModelField
+import hydro.models.access.ModelField
 import app.models.media._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType

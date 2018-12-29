@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 import app.common.testing.TestObjects._
 import hydro.common.time.LocalDateTime
 import app.models.access.ModelFields
-import app.models.access.ModelField
+import hydro.models.access.ModelField
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song

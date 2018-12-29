@@ -15,7 +15,7 @@ import hydro.flux.react.uielements.input.TextInput
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 import hydro.jsfacades.Mousetrap
-import app.models.access.EntityAccess
+import hydro.models.access.EntityAccess
 import app.models.user.User
 
 private[app] final class Menu(implicit entityAccess: EntityAccess,

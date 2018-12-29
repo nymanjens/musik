@@ -3,9 +3,9 @@ package app.models.access
 import app.common.GuavaReplacement.ImmutableBiMap
 import app.common.OrderToken
 import app.models.Entity
-import app.models.access.ModelField.IdModelField
+import hydro.models.access.ModelField.IdModelField
 import app.models.media._
-import app.models.access.ModelField.toBiMapWithUniqueValues
+import hydro.models.access.ModelField.toBiMapWithUniqueValues
 import app.models.modification.EntityType
 import app.models.modification.EntityType._
 import app.models.user.User

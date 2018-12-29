@@ -3,10 +3,10 @@ package app.flux.stores.media
 import app.flux.stores.media.PlayStatusStore.State
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
-import app.models.access.DbQueryImplicits._
+import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.JsEntityAccess
 import app.models.access.ModelFields
-import app.models.access.ModelField
+import hydro.models.access.ModelField
 import app.models.media.JsPlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry

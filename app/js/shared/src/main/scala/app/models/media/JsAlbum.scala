@@ -1,6 +1,6 @@
 package app.models.media
 
-import app.models.access.EntityAccess
+import hydro.models.access.EntityAccess
 import app.models.media
 
 import scala.async.Async.async

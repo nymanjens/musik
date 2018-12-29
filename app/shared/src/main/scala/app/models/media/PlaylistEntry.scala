@@ -4,10 +4,10 @@ import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import app.common.OrderToken
 import app.models.Entity
-import app.models.access.DbQueryImplicits._
-import app.models.access.EntityAccess
+import hydro.models.access.DbQueryImplicits._
+import hydro.models.access.EntityAccess
 import app.models.access.ModelFields
-import app.models.access.ModelField
+import hydro.models.access.ModelField
 import app.models.user.User
 
 import scala.async.Async.async
