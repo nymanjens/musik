@@ -1,7 +1,7 @@
 package app.flux.react.app.media
 
-import common.CollectionUtils
-import common.CollectionUtils.ifThenSeq
+import app.common.CollectionUtils
+import app.common.CollectionUtils.ifThenSeq
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import app.flux.action.AppActions

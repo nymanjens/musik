@@ -7,7 +7,7 @@ import java.nio.file.Paths
 
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
-import common.GuavaReplacement.Splitter
+import app.common.GuavaReplacement.Splitter
 import controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
 import controllers.helpers.media.MediaScanner.MediaFile
 import app.models.access.JvmEntityAccess

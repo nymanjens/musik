@@ -1,7 +1,7 @@
 package app.flux.router
 
 import app.models.access.EntityAccess
-import common.I18n
+import app.common.I18n
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.action.Dispatcher

@@ -5,8 +5,8 @@ import java.nio.file.Paths
 
 import com.google.inject.Inject
 import hydro.common.time.Clock
-import common.OrderToken
-import common.ResourceFiles
+import app.common.OrderToken
+import app.common.ResourceFiles
 import app.models.access.JvmEntityAccess
 import app.models.media.Album
 import app.models.media.Artist

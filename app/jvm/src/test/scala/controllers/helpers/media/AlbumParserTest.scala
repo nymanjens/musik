@@ -2,9 +2,9 @@ package controllers.helpers.media
 
 import com.google.inject.Guice
 import com.google.inject.Inject
-import common.GuavaReplacement.Iterables.getOnlyElement
-import common.testing.JvmTestObjects.mediaFile
-import common.testing._
+import app.common.GuavaReplacement.Iterables.getOnlyElement
+import app.common.testing.JvmTestObjects.mediaFile
+import app.common.testing._
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import controllers.helpers.media.AlbumParser.ParsedSong
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner

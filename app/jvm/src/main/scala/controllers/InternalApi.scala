@@ -14,7 +14,7 @@ import app.api.ScalaJsApiRequest
 import app.api.ScalaJsApiServerFactory
 import boopickle.Default._
 import com.google.inject.Inject
-import common.publisher.Publishers
+import app.common.publisher.Publishers
 import hydro.common.time.Clock
 import controllers.helpers.AuthenticatedAction
 import app.models.Entity

@@ -2,8 +2,8 @@ package controllers.helpers.media
 
 import com.google.inject.Guice
 import com.google.inject.Inject
-import common.testing.TestObjects._
-import common.testing._
+import app.common.testing.TestObjects._
+import app.common.testing._
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import controllers.helpers.media.AlbumParser.ParsedSong
 import app.models.access.JvmEntityAccess

@@ -2,7 +2,7 @@ package app.models.media
 
 import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
-import common.OrderToken
+import app.common.OrderToken
 import app.models.Entity
 import app.models.access.DbQueryImplicits._
 import app.models.access.EntityAccess

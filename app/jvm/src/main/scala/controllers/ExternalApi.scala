@@ -3,8 +3,8 @@ package controllers
 import java.nio.file.Paths
 
 import com.google.inject.Inject
-import common.RelativePaths
-import common.RelativePaths.joinPaths
+import app.common.RelativePaths
+import app.common.RelativePaths.joinPaths
 import hydro.common.time.Clock
 import controllers.helpers.media.AlbumParser
 import controllers.helpers.media.ArtistAssignerFactory

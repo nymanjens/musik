@@ -1,6 +1,6 @@
 package app.models.media
 
-import common.RelativePaths
+import app.common.RelativePaths
 import app.models.access.EntityAccess
 import app.models.media
 

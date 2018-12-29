@@ -1,7 +1,7 @@
 package app.flux.react.app.media
 
 import hydro.flux.react.uielements.PageHeader
-import common.I18n
+import app.common.I18n
 import hydro.common.time.Clock
 import app.flux.react.uielements
 import app.flux.react.uielements.media.MusicPlayerDiv

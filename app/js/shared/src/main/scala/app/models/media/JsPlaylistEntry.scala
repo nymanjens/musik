@@ -1,6 +1,6 @@
 package app.models.media
 
-import common.OrderToken
+import app.common.OrderToken
 import app.models.access.EntityAccess
 import app.models.media
 

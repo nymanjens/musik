@@ -1,6 +1,6 @@
 package app.flux.react.uielements
 
-import common.I18n
+import app.common.I18n
 import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.react.uielements.media.SongDiv
 import app.flux.stores.media.PlayStatusStore

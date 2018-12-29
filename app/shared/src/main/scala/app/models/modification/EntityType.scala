@@ -1,6 +1,6 @@
 package app.models.modification
 
-import common.ScalaUtils
+import app.common.ScalaUtils
 import app.models.Entity
 import app.models.media.Album
 import app.models.media.Artist

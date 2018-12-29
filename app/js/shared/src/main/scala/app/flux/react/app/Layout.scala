@@ -1,7 +1,7 @@
 package app.flux.react.app
 
-import common.CollectionUtils.ifThenSeq
-import common.I18n
+import app.common.CollectionUtils.ifThenSeq
+import app.common.I18n
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import app.flux.action.AppActions
 import hydro.flux.action.StandardActions
