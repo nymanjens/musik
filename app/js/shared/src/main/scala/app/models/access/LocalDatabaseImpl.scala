@@ -6,9 +6,9 @@ import hydro.jsfacades.LokiJs.FilterFactory.Operation
 import app.models.Entity
 import app.models.access.LocalDatabaseImpl.ModificationWithId
 import app.models.access.LocalDatabaseImpl.Singleton
-import app.models.access.webworker.LocalDatabaseWebWorkerApi
-import app.models.access.webworker.LocalDatabaseWebWorkerApi.LokiQuery
-import app.models.access.webworker.LocalDatabaseWebWorkerApi.WriteOperation
+import hydro.models.access.webworker.LocalDatabaseWebWorkerApi
+import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.LokiQuery
+import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.WriteOperation
 import app.models.modification.EntityType._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
@@ -209,7 +209,7 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
 object LocalDatabaseImpl {
 
   def create()(implicit webWorker: LocalDatabaseWebWorkerApi): Future[LocalDatabase] = async {
-    await(webWorker.create(dbName = "musik-db", inMemory = false))
+    await(webWorker.create(dbName = "hydro-db", inMemory = false))
     new LocalDatabaseImpl()
   }
 
@@ -219,7 +219,7 @@ object LocalDatabaseImpl {
   }
 
   def createInMemoryForTests()(implicit webWorker: LocalDatabaseWebWorkerApi): Future[LocalDatabase] = async {
-    await(webWorker.create(dbName = "musik-db", inMemory = true))
+    await(webWorker.create(dbName = "hydro-db", inMemory = true))
     new LocalDatabaseImpl()
   }
 
