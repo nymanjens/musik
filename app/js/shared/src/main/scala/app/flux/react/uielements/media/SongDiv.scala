@@ -3,7 +3,7 @@ package app.flux.react.uielements.media
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import app.flux.action.Actions
 import app.flux.action.Actions.AddSongsToPlaylist.Placement
-import app.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.router.RouterContext
 import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._

@@ -2,7 +2,7 @@ package app.flux.react.uielements.media
 
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
-import app.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.router.Page
 import app.flux.router.RouterContext
 import app.flux.react.uielements
