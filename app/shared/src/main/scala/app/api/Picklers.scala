@@ -22,6 +22,7 @@ import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import app.models.modification.EntityType._
 import app.models.user.User
+import boopickle.Default
 import boopickle.Default._
 import hydro.api.StandardPicklers
 import scala.collection.immutable.Seq
@@ -46,30 +47,6 @@ object Picklers extends StandardPicklers {
         isAdmin = state.unpickle[Boolean],
         idOption = state.unpickle[Option[Long]]
       )
-    }
-  }
-
-  implicit object EntityTypePickler extends Pickler[EntityType.any] {
-    override def pickle(entityType: EntityType.any)(implicit state: PickleState): Unit = logExceptions {
-      val intValue: Int = entityType match {
-        case UserType          => 1
-        case SongType          => 2
-        case AlbumType         => 3
-        case ArtistType        => 4
-        case PlaylistEntryType => 5
-        case PlayStatusType    => 6
-      }
-      state.pickle(intValue)
-    }
-    override def unpickle(implicit state: UnpickleState): EntityType.any = logExceptions {
-      state.unpickle[Int] match {
-        case 1 => UserType
-        case 2 => SongType
-        case 3 => AlbumType
-        case 4 => ArtistType
-        case 5 => PlaylistEntryType
-        case 6 => PlayStatusType
-      }
     }
   }
 
