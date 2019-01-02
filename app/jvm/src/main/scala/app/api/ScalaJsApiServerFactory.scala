@@ -11,6 +11,18 @@ import hydro.models.access.DbQuery
 import app.models.access.JvmEntityAccess
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.user.User
 import app.models.user.Users
 import hydro.api.PicklableDbQuery
@@ -47,7 +59,7 @@ final class ScalaJsApiServerFactory @Inject()(implicit clock: Clock,
     override def persistEntityModifications(modifications: Seq[EntityModification]): Unit = {
       // check permissions
       for (modification <- modifications) {
-        if (modification.entityType != EntityType.PlayStatusType) {
+        if (modification.entityType != PlayStatus.Type) {
           require(
             !modification.isInstanceOf[EntityModification.Update[_]],
             "Update modifications are not allowed by remote clients " +
@@ -55,7 +67,7 @@ final class ScalaJsApiServerFactory @Inject()(implicit clock: Clock,
           )
         }
         require(
-          modification.entityType != EntityType.UserType,
+          modification.entityType != User.Type,
           "Please modify users by calling upsertUser() instead")
       }
 

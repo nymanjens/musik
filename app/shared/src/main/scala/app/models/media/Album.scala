@@ -1,5 +1,6 @@
 package app.models.media
 
+import app.models.modification.EntityType
 import hydro.models.Entity
 
 case class Album(relativePath: String,
@@ -10,4 +11,9 @@ case class Album(relativePath: String,
     extends Entity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
+}
+object Album {
+  implicit val Type: EntityType[Album] = EntityType()
+
+  def tupled = (this.apply _).tupled
 }

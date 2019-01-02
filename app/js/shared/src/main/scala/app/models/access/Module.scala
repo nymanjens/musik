@@ -3,12 +3,12 @@ package app.models.access
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
 import hydro.models.access.LocalDatabaseImpl.SecondaryIndexFunction
-import app.models.modification.EntityType.AlbumType
-import app.models.modification.EntityType.ArtistType
-import app.models.modification.EntityType.PlayStatusType
-import app.models.modification.EntityType.PlaylistEntryType
-import app.models.modification.EntityType.SongType
-import app.models.modification.EntityType.UserType
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Song
+
 import app.models.user.User
 import hydro.models.access.EntityModificationPushClientFactory
 import hydro.models.access.HybridRemoteDatabaseProxy
@@ -41,11 +41,11 @@ final class Module(implicit user: User,
 }
 object Module {
   val secondaryIndexFunction: SecondaryIndexFunction = SecondaryIndexFunction({
-    case UserType          => Seq()
-    case SongType          => Seq(ModelFields.Song.albumId, ModelFields.Album.artistId)
-    case AlbumType         => Seq(ModelFields.Album.artistId)
-    case ArtistType        => Seq()
-    case PlaylistEntryType => Seq()
-    case PlayStatusType    => Seq()
+    case User.Type          => Seq()
+    case Song.Type          => Seq(ModelFields.Song.albumId, ModelFields.Album.artistId)
+    case Album.Type         => Seq(ModelFields.Album.artistId)
+    case Artist.Type        => Seq()
+    case PlaylistEntry.Type => Seq()
+    case PlayStatus.Type    => Seq()
   })
 }

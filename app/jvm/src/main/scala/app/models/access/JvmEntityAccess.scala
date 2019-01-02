@@ -17,6 +17,18 @@ import app.models.media.PlayStatus
 import app.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.slick.SlickUtils.dbApi._
 import app.models.slick.SlickUtils.dbRun
 import app.models.slick.SlickEntityManager
@@ -112,12 +124,12 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   private def getEntityTableDef(entityType: EntityType.any): SlickEntityTableDef[entityType.get] = {
     val tableDef = entityType match {
-      case EntityType.UserType          => implicitly[SlickEntityTableDef[User]]
-      case EntityType.SongType          => implicitly[SlickEntityTableDef[Song]]
-      case EntityType.AlbumType         => implicitly[SlickEntityTableDef[Album]]
-      case EntityType.ArtistType        => implicitly[SlickEntityTableDef[Artist]]
-      case EntityType.PlaylistEntryType => implicitly[SlickEntityTableDef[PlaylistEntry]]
-      case EntityType.PlayStatusType    => implicitly[SlickEntityTableDef[PlayStatus]]
+      case User.Type          => implicitly[SlickEntityTableDef[User]]
+      case Song.Type          => implicitly[SlickEntityTableDef[Song]]
+      case Album.Type         => implicitly[SlickEntityTableDef[Album]]
+      case Artist.Type        => implicitly[SlickEntityTableDef[Artist]]
+      case PlaylistEntry.Type => implicitly[SlickEntityTableDef[PlaylistEntry]]
+      case PlayStatus.Type    => implicitly[SlickEntityTableDef[PlayStatus]]
     }
     tableDef.asInstanceOf[SlickEntityTableDef[entityType.get]]
   }

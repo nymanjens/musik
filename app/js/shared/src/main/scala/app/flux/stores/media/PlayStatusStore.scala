@@ -12,6 +12,18 @@ import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.user.User
 
 import scala.async.Async.async
@@ -139,8 +151,8 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
 
   override protected def modificationImpactsState(entityModification: EntityModification,
                                                   state: State): Boolean =
-    entityModification.entityType == EntityType.PlayStatusType ||
-      entityModification.entityType == EntityType.PlaylistEntryType
+    entityModification.entityType == PlayStatus.Type ||
+      entityModification.entityType == PlaylistEntry.Type
 
   object EntityAccessListener extends JsEntityAccess.Listener {
     override def modificationsAddedOrPendingStateChanged(modifications: Seq[EntityModification]): Unit =

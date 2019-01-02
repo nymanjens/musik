@@ -1,17 +1,16 @@
 package app.models.media
 
-import scala.collection.immutable.Seq
-import scala.concurrent.ExecutionContext.Implicits.global
 import app.common.OrderToken
+import app.models.access.ModelFields
+import app.models.modification.EntityType
+import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
-import app.models.access.ModelFields
-import hydro.models.access.ModelField
-import app.models.user.User
 
-import scala.async.Async.async
-import scala.async.Async.await
+import scala.async.Async.{async, await}
+import scala.collection.immutable.Seq
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 case class PlaylistEntry(songId: Long, orderToken: OrderToken, userId: Long, idOption: Option[Long] = None)
@@ -20,6 +19,8 @@ case class PlaylistEntry(songId: Long, orderToken: OrderToken, userId: Long, idO
   override def withId(id: Long) = copy(idOption = Some(id))
 }
 object PlaylistEntry {
+  implicit val Type: EntityType[PlaylistEntry] = EntityType()
+
   def tupled = (this.apply _).tupled
 
   def getOrderedSeq()(implicit user: User, entityAccess: EntityAccess): Future[Seq[PlaylistEntry]] = async {

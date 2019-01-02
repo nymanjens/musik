@@ -11,6 +11,18 @@ import hydro.models.access.ModelField
 import app.models.media._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.user.User
 
 import scala.async.Async.async
@@ -45,9 +57,9 @@ final class AlbumDetailStoreFactory(implicit entityAccess: JsEntityAccess, user:
 
     override protected def modificationImpactsState(entityModification: EntityModification,
                                                     state: State): Boolean =
-      entityModification.entityType == EntityType.ArtistType ||
-        entityModification.entityType == EntityType.AlbumType ||
-        entityModification.entityType == EntityType.SongType
+      entityModification.entityType == Artist.Type ||
+        entityModification.entityType == Album.Type ||
+        entityModification.entityType == Song.Type
   }
 
   override def createNew(input: Input): Store = new Store(input)

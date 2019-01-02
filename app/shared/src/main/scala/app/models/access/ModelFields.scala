@@ -7,7 +7,31 @@ import hydro.models.access.ModelField.IdModelField
 import app.models.media._
 import hydro.models.access.ModelField.toBiMapWithUniqueValues
 import app.models.modification.EntityType
-import app.models.modification.EntityType._
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.user.User
 import hydro.models.access.ModelField
 
@@ -16,12 +40,12 @@ import scala.concurrent.duration.FiniteDuration
 object ModelFields {
   // **************** Methods **************** //
   def id[E <: Entity](implicit entityType: EntityType[E]): ModelField[Long, E] = entityType match {
-    case UserType          => User.id.asInstanceOf[ModelField[Long, E]]
-    case SongType          => Song.id.asInstanceOf[ModelField[Long, E]]
-    case AlbumType         => Album.id.asInstanceOf[ModelField[Long, E]]
-    case ArtistType        => Artist.id.asInstanceOf[ModelField[Long, E]]
-    case PlaylistEntryType => PlaylistEntry.id.asInstanceOf[ModelField[Long, E]]
-    case PlayStatusType    => PlayStatus.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.user.User.Type          => User.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.media.Song.Type          => Song.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.media.Album.Type         => Album.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.media.Artist.Type        => Artist.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.media.PlaylistEntry.Type => PlaylistEntry.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.media.PlayStatus.Type    => PlayStatus.id.asInstanceOf[ModelField[Long, E]]
   }
 
   // **************** Enumeration of all fields **************** //

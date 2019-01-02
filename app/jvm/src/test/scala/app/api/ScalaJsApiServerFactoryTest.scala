@@ -17,6 +17,18 @@ import hydro.models.access.ModelField
 import app.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.slick.SlickUtils.dbRun
 import app.models.user.User
 import org.junit.runner._
@@ -55,9 +67,9 @@ class ScalaJsApiServerFactoryTest extends HookedSpecification {
     fakeClock.setNowInstant(testInstant)
     TestUtils.persist(testUser)
 
-    val response = serverFactory.create().getAllEntities(Seq(EntityType.UserType))
+    val response = serverFactory.create().getAllEntities(Seq(User.Type))
 
-    response.entities(EntityType.UserType) mustEqual Seq(testUser)
+    response.entities(User.Type) mustEqual Seq(testUser)
     response.nextUpdateToken mustEqual toUpdateToken(testInstant)
   }
 

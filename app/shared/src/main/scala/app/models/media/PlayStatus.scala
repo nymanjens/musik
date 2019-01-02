@@ -1,14 +1,13 @@
 package app.models.media
 
+import app.models.access.ModelFields
+import app.models.modification.EntityType
+import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
-import app.models.access.ModelFields
-import hydro.models.access.ModelField
-import app.models.user.User
 
-import scala.async.Async.async
-import scala.async.Async.await
+import scala.async.Async.{async, await}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -22,6 +21,8 @@ case class PlayStatus(currentPlaylistEntryId: Long,
   override def withId(id: Long) = copy(idOption = Some(id))
 }
 object PlayStatus {
+  implicit val Type: EntityType[PlayStatus] = EntityType()
+
   def tupled = (this.apply _).tupled
 
   def get(verifyConsistency: Boolean = true)(implicit user: User,

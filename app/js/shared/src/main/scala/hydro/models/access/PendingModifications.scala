@@ -4,6 +4,18 @@ import app.common.GuavaReplacement.ImmutableSetMultimap
 import hydro.models.Entity
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 
 import scala.collection.immutable.Seq
 import hydro.scala2js.StandardConverters._

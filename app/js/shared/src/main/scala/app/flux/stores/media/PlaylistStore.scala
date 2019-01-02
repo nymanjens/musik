@@ -19,6 +19,18 @@ import app.models.media.PlaylistEntry
 import app.models.media.Song
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 import app.models.user.User
 
 import scala.async.Async.async
@@ -113,7 +125,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
 
   override protected def modificationImpactsState(entityModification: EntityModification,
                                                   state: State): Boolean =
-    entityModification.entityType == EntityType.PlaylistEntryType
+    entityModification.entityType == PlaylistEntry.Type
 }
 object PlaylistStore {
   case class State(entries: Seq[JsPlaylistEntry])

@@ -5,6 +5,18 @@ import hydro.flux.stores.StateStore
 import hydro.models.access.JsEntityAccess
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
+import app.models.media.Song
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Artist
+import app.models.media.Album
+import app.models.user.User
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable
@@ -48,7 +60,7 @@ final class PendingModificationsStore(implicit jsEntityAccess: JsEntityAccess) e
       var nonTransactionEditCount = 0
 
       for (modification <- modifications) modification.entityType match {
-        case EntityType.UserType => nonTransactionEditCount += 1
+        case User.Type => nonTransactionEditCount += 1
         case _                   => nonTransactionEditCount += 1
       }
 

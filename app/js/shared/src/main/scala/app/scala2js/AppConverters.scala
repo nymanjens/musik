@@ -20,12 +20,12 @@ object AppConverters {
   implicit def fromEntityType[E <: Entity: EntityType]: MapConverter[E] = {
     val entityType: EntityType[E] = implicitly[EntityType[E]]
     val converter: MapConverter[_ <: Entity] = entityType match {
-      case EntityType.UserType          => UserConverter
-      case EntityType.SongType          => SongConverter
-      case EntityType.AlbumType         => AlbumConverter
-      case EntityType.ArtistType        => ArtistConverter
-      case EntityType.PlaylistEntryType => PlaylistEntryConverter
-      case EntityType.PlayStatusType    => PlayStatusConverter
+      case User.Type          => UserConverter
+      case Song.Type          => SongConverter
+      case Album.Type         => AlbumConverter
+      case Artist.Type        => ArtistConverter
+      case PlaylistEntry.Type => PlaylistEntryConverter
+      case PlayStatus.Type    => PlayStatusConverter
     }
     converter.asInstanceOf[MapConverter[E]]
   }
@@ -33,12 +33,12 @@ object AppConverters {
   // **************** General converters **************** //
   implicit val EntityTypeConverter: Converter[EntityType.any] =
     StandardConverters.enumConverter(
-      EntityType.UserType,
-      EntityType.SongType,
-      EntityType.AlbumType,
-      EntityType.ArtistType,
-      EntityType.PlaylistEntryType,
-      EntityType.PlayStatusType)
+      User.Type,
+      Song.Type,
+      Album.Type,
+      Artist.Type,
+      PlaylistEntry.Type,
+      PlayStatus.Type)
 
   // **************** Entity converters **************** //
   implicit val UserConverter: EntityConverter[User] = new EntityConverter(
