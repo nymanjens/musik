@@ -6,6 +6,7 @@ import hydro.models.access.DbQuery.Filter
 import hydro.models.access.DbQuery.Sorting
 import hydro.models.access.DbQueryImplicits._
 import app.models.modification.EntityType
+import app.models.modification.EntityTypes
 import app.models.media.Song
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry

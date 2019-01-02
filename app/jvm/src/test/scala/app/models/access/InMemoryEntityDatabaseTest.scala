@@ -8,6 +8,7 @@ import hydro.models.access.DbQueryImplicits._
 import app.models.access.InMemoryEntityDatabase.EntitiesFetcher
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
+import app.models.modification.EntityTypes
 import app.models.media.Song
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry

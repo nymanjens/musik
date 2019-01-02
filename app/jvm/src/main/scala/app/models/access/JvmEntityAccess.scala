@@ -17,6 +17,7 @@ import app.models.media.PlayStatus
 import app.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity
 import app.models.modification.EntityType
+import app.models.modification.EntityTypes
 import app.models.media.Song
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
@@ -97,7 +98,7 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
   }
 
   def checkConsistentCaches(): Unit = {
-    for (entityType <- EntityType.values) {
+    for (entityType <- EntityTypes.all) {
       def run[E <: Entity](entityType: EntityType[E]): Unit = {
         val allEntitiesInDb: Seq[E] = getManager(entityType).fetchAll().sortBy(_.id)
         val allEntitiesInMemory: Seq[E] =
