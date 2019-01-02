@@ -61,7 +61,7 @@ final class PendingModificationsStore(implicit jsEntityAccess: JsEntityAccess) e
 
       for (modification <- modifications) modification.entityType match {
         case User.Type => nonTransactionEditCount += 1
-        case _                   => nonTransactionEditCount += 1
+        case _         => nonTransactionEditCount += 1
       }
 
       affectedTransactionGroupIds.size + nonTransactionEditCount

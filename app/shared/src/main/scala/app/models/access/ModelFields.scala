@@ -40,7 +40,7 @@ import scala.concurrent.duration.FiniteDuration
 object ModelFields {
   // **************** Methods **************** //
   def id[E <: Entity](implicit entityType: EntityType[E]): ModelField[Long, E] = entityType match {
-    case app.models.user.User.Type          => User.id.asInstanceOf[ModelField[Long, E]]
+    case app.models.user.User.Type           => User.id.asInstanceOf[ModelField[Long, E]]
     case app.models.media.Song.Type          => Song.id.asInstanceOf[ModelField[Long, E]]
     case app.models.media.Album.Type         => Album.id.asInstanceOf[ModelField[Long, E]]
     case app.models.media.Artist.Type        => Artist.id.asInstanceOf[ModelField[Long, E]]

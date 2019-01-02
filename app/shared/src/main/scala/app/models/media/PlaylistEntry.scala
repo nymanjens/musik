@@ -8,7 +8,8 @@ import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
 
-import scala.async.Async.{async, await}
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

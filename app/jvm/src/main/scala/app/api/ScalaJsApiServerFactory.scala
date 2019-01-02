@@ -66,9 +66,7 @@ final class ScalaJsApiServerFactory @Inject()(implicit clock: Clock,
               "(see EntityModification.Update documentation)"
           )
         }
-        require(
-          modification.entityType != User.Type,
-          "Please modify users by calling upsertUser() instead")
+        require(modification.entityType != User.Type, "Please modify users by calling upsertUser() instead")
       }
 
       entityAccess.persistEntityModificationsAsync(modifications) // Don't wait for it to finish
