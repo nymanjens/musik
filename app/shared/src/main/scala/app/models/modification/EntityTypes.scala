@@ -1,11 +1,13 @@
 package app.models.modification
 
-import app.models.media._
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Song
 import app.models.user.User
-import hydro.models.Entity
 
 import scala.collection.immutable.Seq
-import scala.reflect.ClassTag
 
 object EntityTypes {
 
