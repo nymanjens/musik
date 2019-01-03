@@ -11,7 +11,7 @@ import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
 import hydro.models.modification.EntityModification
-import app.models.modification.EntityModificationEntity
+import hydro.models.modification.EntityModificationEntity
 import hydro.models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import hydro.models.slick.SlickUtils.finiteDurationToMillisMapper
 import hydro.models.slick.SlickUtils.instantToSqlTimestampMapper

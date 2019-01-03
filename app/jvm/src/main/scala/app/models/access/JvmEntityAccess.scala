@@ -12,7 +12,7 @@ import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
 import hydro.models.modification.EntityModification
-import app.models.modification.EntityModificationEntity
+import hydro.models.modification.EntityModificationEntity
 import hydro.models.modification.EntityType
 import app.models.modification.EntityTypes
 import hydro.models.slick.SlickEntityManager
