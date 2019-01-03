@@ -3,7 +3,7 @@ package app.tools
 import java.nio.file.Path
 import java.nio.file.Paths
 
-import app.common.ResourceFiles
+import hydro.common.ResourceFiles
 import app.models.access.JvmEntityAccess
 import hydro.models.modification.EntityModification
 import app.models.user.Users
