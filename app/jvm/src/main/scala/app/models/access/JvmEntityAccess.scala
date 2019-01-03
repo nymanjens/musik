@@ -11,6 +11,8 @@ import app.models.media.PlayStatus
 import app.models.media.Song
 import app.models.modification.EntityTypes
 import app.models.slick.SlickEntityTableDef
+import app.models.slick.SlickEntityTableDefs
+import app.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityDef
 import app.models.user.User
 import com.google.inject._
 import hydro.common.UpdateTokens.toUpdateToken
@@ -55,7 +57,7 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   def newSlickQuery[E <: Entity]()(
       implicit entityTableDef: SlickEntityTableDef[E]): TableQuery[entityTableDef.Table] =
-    SlickEntityManager.forType.newQuery.asInstanceOf[TableQuery[entityTableDef.Table]]
+    SlickEntityManager.forType[E].newQuery.asInstanceOf[TableQuery[entityTableDef.Table]]
 
   def entityModificationPublisher: Publisher[ModificationsWithToken] = entityModificationPublisher_
 
@@ -75,7 +77,7 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   // ********** Management methods ********** //
   def dropAndCreateTables(): Unit = {
-    for (tableDef <- SlickEntityTableDef.all) {
+    for (tableDef <- SlickEntityTableDefs.all) {
       def internal[E <: Entity](tableDef: SlickEntityTableDef[E]) = {
         val entityManager = SlickEntityManager.forType[E](tableDef)
         dbRun(sqlu"""DROP TABLE IF EXISTS #${tableDef.tableName}""")
@@ -113,12 +115,12 @@ final class JvmEntityAccess @Inject()(clock: Clock) extends EntityAccess {
 
   private def getEntityTableDef(entityType: EntityType.any): SlickEntityTableDef[entityType.get] = {
     val tableDef = entityType match {
-      case User.Type          => implicitly[SlickEntityTableDef[User]]
-      case Song.Type          => implicitly[SlickEntityTableDef[Song]]
-      case Album.Type         => implicitly[SlickEntityTableDef[Album]]
-      case Artist.Type        => implicitly[SlickEntityTableDef[Artist]]
-      case PlaylistEntry.Type => implicitly[SlickEntityTableDef[PlaylistEntry]]
-      case PlayStatus.Type    => implicitly[SlickEntityTableDef[PlayStatus]]
+      case User.Type          => SlickEntityTableDefs.UserDef
+      case Song.Type          => SlickEntityTableDefs.SongDef
+      case Album.Type         => SlickEntityTableDefs.AlbumDef
+      case Artist.Type        => SlickEntityTableDefs.ArtistDef
+      case PlaylistEntry.Type => SlickEntityTableDefs.PlaylistEntryDef
+      case PlayStatus.Type    => SlickEntityTableDefs.PlayStatusDef
     }
     tableDef.asInstanceOf[SlickEntityTableDef[entityType.get]]
   }
