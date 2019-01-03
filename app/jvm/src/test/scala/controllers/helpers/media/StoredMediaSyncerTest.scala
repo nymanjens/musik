@@ -6,7 +6,7 @@ import app.models.access.JvmEntityAccess
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.User
 import com.google.inject.Guice
 import com.google.inject.Inject

@@ -5,8 +5,8 @@ import app.models.media.Artist
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
-import app.models.modification.EntityModification
-import app.models.modification.EntityType
+import hydro.models.modification.EntityModification
+import hydro.models.modification.EntityType
 import app.models.user.User
 import boopickle.Default._
 import hydro.api.StandardPicklers

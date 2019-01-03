@@ -4,7 +4,7 @@ import app.flux.stores.media.PlayStatusStore.State
 import app.models.media.JsPlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.User
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore

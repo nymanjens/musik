@@ -1,6 +1,6 @@
 package app.models.media
 
-import app.models.modification.EntityType
+import hydro.models.modification.EntityType
 import hydro.models.Entity
 
 case class Album(relativePath: String,

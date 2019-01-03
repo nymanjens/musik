@@ -3,7 +3,7 @@ package app.flux.stores.media
 import app.flux.stores.media.AllArtistsStore.State
 import app.models.media.Artist
 import app.models.media._
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.User
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.models.access.JsEntityAccess

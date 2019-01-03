@@ -10,7 +10,7 @@ import app.models.media.Artist
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity
 import app.models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
 import app.models.slick.SlickUtils.finiteDurationToMillisMapper

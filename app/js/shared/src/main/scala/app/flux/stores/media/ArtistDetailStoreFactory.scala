@@ -6,7 +6,7 @@ import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
 import app.models.media._
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.User
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory

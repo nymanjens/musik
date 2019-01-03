@@ -1,8 +1,8 @@
 package app.scala2js
 
+import hydro.models.modification.EntityType
 import app.models.access.ModelFields
 import app.models.media._
-import app.models.modification._
 import app.models.user.User
 import hydro.models.Entity
 import hydro.scala2js.Scala2Js.Converter

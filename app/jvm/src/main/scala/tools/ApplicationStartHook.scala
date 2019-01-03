@@ -5,7 +5,7 @@ import java.nio.file.Paths
 
 import app.common.ResourceFiles
 import app.models.access.JvmEntityAccess
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.Users
 import com.google.inject.Inject
 import hydro.common.time.Clock

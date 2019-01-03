@@ -1,7 +1,7 @@
 package app.models.media
 
 import app.models.access.ModelFields
-import app.models.modification.EntityType
+import hydro.models.modification.EntityType
 import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._

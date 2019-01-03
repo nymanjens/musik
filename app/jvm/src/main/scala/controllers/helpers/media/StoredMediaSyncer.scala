@@ -6,8 +6,8 @@ import app.models.access.ModelFields
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
-import app.models.modification.EntityModification
-import app.models.modification.EntityType
+import hydro.models.modification.EntityModification
+import hydro.models.modification.EntityType
 import app.models.user.User
 import app.models.user.Users
 import com.google.inject.Inject

@@ -7,7 +7,7 @@ import app.models.media.Artist
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
-import app.models.modification.EntityType
+import hydro.models.modification.EntityType
 import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.ModelField

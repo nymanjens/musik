@@ -6,6 +6,7 @@ import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
 import app.models.user.User
+import hydro.models.modification.EntityType
 
 import scala.collection.immutable.Seq
 

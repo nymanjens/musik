@@ -5,7 +5,7 @@ import app.common.testing.TestObjects._
 import app.common.testing._
 import app.models.access.JvmEntityAccess
 import app.models.media.Artist
-import app.models.modification.EntityModification
+import hydro.models.modification.EntityModification
 import app.models.user.User
 import com.google.inject.Guice
 import com.google.inject.Inject
