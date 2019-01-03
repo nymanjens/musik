@@ -1,6 +1,6 @@
 package app.common
 
-import app.common.GuavaReplacement.Splitter
+import hydro.common.GuavaReplacement.Splitter
 
 object RelativePaths {
 

@@ -1,6 +1,6 @@
 package app.flux.react.app.media
 
-import app.common.I18n
+import hydro.common.I18n
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent

@@ -1,6 +1,6 @@
 package app.flux.stores.media
 
-import app.common.OrderToken
+import hydro.common.OrderToken
 import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import app.flux.action.AppActions.AddSongsToPlaylist
 import app.flux.action.AppActions.RemoveEntriesFromPlaylist

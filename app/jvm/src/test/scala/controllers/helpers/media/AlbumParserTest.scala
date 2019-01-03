@@ -1,6 +1,6 @@
 package controllers.helpers.media
 
-import app.common.GuavaReplacement.Iterables.getOnlyElement
+import hydro.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.testing.JvmTestObjects.mediaFile
 import app.common.testing._
 import com.google.inject.Guice

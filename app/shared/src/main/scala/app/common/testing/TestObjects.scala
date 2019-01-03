@@ -5,7 +5,7 @@ import java.time.Month._
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApi.UpdateToken
 import app.api.ScalaJsApi.UserPrototype
-import app.common.OrderToken
+import hydro.common.OrderToken
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.PlayStatus

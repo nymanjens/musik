@@ -1,7 +1,7 @@
 package app.models.access
 
-import app.common.GuavaReplacement.ImmutableBiMap
-import app.common.OrderToken
+import hydro.common.GuavaReplacement.ImmutableBiMap
+import hydro.common.OrderToken
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.PlayStatus

@@ -1,6 +1,6 @@
 package app.flux.react.app.media
 
-import app.common.CollectionUtils.ifThenSeq
+import hydro.common.CollectionUtils.ifThenSeq
 import app.flux.action.AppActions
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore

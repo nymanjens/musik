@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 import java.time.Instant
 
 import app.api.Picklers._
-import app.common.OrderToken
+import hydro.common.OrderToken
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.PlayStatus

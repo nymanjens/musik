@@ -1,7 +1,7 @@
 package controllers.helpers.media
 
-import app.common.CollectionUtils.getMostCommonString
-import app.common.GuavaReplacement.Splitter
+import hydro.common.CollectionUtils.getMostCommonString
+import hydro.common.GuavaReplacement.Splitter
 import app.common.RelativePaths
 import com.google.inject.Inject
 import controllers.helpers.media.AlbumParser.ParsedAlbum

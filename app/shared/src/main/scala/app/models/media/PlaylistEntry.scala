@@ -1,6 +1,6 @@
 package app.models.media
 
-import app.common.OrderToken
+import hydro.common.OrderToken
 import app.models.access.ModelFields
 import hydro.models.modification.EntityType
 import app.models.user.User

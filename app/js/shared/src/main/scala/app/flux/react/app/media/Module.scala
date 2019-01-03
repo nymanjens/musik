@@ -1,6 +1,6 @@
 package app.flux.react.app.media
 
-import app.common.I18n
+import hydro.common.I18n
 import app.flux.react.uielements
 import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.stores.media.AlbumDetailStoreFactory

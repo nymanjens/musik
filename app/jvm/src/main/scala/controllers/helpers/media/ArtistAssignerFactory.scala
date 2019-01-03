@@ -1,8 +1,8 @@
 package controllers.helpers.media
 
-import app.common.CollectionUtils.getMostCommonStringIgnoringCase
-import app.common.GuavaReplacement.Iterables.getOnlyElement
-import app.common.ScalaUtils.visibleForTesting
+import hydro.common.CollectionUtils.getMostCommonStringIgnoringCase
+import hydro.common.GuavaReplacement.Iterables.getOnlyElement
+import hydro.common.ScalaUtils.visibleForTesting
 import app.models.access.JvmEntityAccess
 import app.models.media.Artist
 import com.google.common.base.CharMatcher

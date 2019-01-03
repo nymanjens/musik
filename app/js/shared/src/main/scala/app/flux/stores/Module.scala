@@ -2,7 +2,7 @@ package app.flux.stores
 
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
-import app.common.I18n
+import hydro.common.I18n
 import app.flux.stores.media._
 import app.models.user.User
 import hydro.common.time.Clock
