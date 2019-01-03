@@ -17,8 +17,8 @@ import hydro.models.modification.EntityType
 import app.models.modification.EntityTypes
 import hydro.models.slick.SlickEntityManager
 import app.models.slick.SlickEntityTableDef
-import app.models.slick.SlickUtils.dbApi._
-import app.models.slick.SlickUtils.dbRun
+import hydro.models.slick.SlickUtils.dbApi._
+import hydro.models.slick.SlickUtils.dbRun
 import app.models.user.User
 import com.google.inject._
 import hydro.common.time.Clock

@@ -12,10 +12,10 @@ import app.models.media.PlaylistEntry
 import app.models.media.Song
 import hydro.models.modification.EntityModification
 import app.models.modification.EntityModificationEntity
-import app.models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
-import app.models.slick.SlickUtils.finiteDurationToMillisMapper
-import app.models.slick.SlickUtils.instantToSqlTimestampMapper
-import app.models.slick.SlickUtils.orderTokenToBytesMapper
+import hydro.models.slick.SlickUtils.dbApi.{Table => SlickTable, Tag => SlickTag, _}
+import hydro.models.slick.SlickUtils.finiteDurationToMillisMapper
+import hydro.models.slick.SlickUtils.instantToSqlTimestampMapper
+import hydro.models.slick.SlickUtils.orderTokenToBytesMapper
 import app.models.user.User
 import boopickle.Default.Pickle
 import boopickle.Default.Unpickle
