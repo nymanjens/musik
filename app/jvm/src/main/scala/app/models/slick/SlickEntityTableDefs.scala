@@ -5,8 +5,8 @@ import app.models.media.Artist
 import app.models.media.PlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.Song
-import app.models.slick.SlickEntityTableDef.EntityTable
-import app.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityDef
+import hydro.models.slick.SlickEntityTableDef.EntityTable
+import hydro.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityDef
 import app.models.user.User
 import hydro.common.OrderToken
 import hydro.models.slick.SlickUtils.dbApi.{Tag => SlickTag}

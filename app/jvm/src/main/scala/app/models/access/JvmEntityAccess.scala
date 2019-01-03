@@ -10,9 +10,9 @@ import app.models.media.PlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.Song
 import app.models.modification.EntityTypes
-import app.models.slick.SlickEntityTableDef
+import hydro.models.slick.SlickEntityTableDef
 import app.models.slick.SlickEntityTableDefs
-import app.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityDef
+import hydro.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityDef
 import app.models.user.User
 import com.google.inject._
 import hydro.common.UpdateTokens.toUpdateToken
