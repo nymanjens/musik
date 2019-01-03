@@ -4,30 +4,16 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
 import java.util.concurrent.ConcurrentSkipListSet
 
-import hydro.models.Entity
 import app.models.access.InMemoryEntityDatabase.EntitiesFetcher
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
+import hydro.models.Entity
+import hydro.models.access.DbQuery
+import hydro.models.access.DbQueryExecutor
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
-import hydro.models.access.EntityAccess
-import hydro.models.access.DbResultSet
-import hydro.models.access.DbQueryExecutor
-import hydro.models.access.DbQuery
 
 /** In memory storage class that supports DbQuery operations and EntityModifications. */
 private[access] final class InMemoryEntityDatabase(entitiesFetcher: EntitiesFetcher) {

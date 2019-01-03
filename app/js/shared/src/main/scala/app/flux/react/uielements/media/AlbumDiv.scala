@@ -1,12 +1,11 @@
 package app.flux.react.uielements.media
 
-import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.router.AppPages
-import hydro.flux.router.Page
+import app.models.media.JsAlbum
+import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import app.models.media.JsAlbum
 
 object AlbumDiv {
 

@@ -1,14 +1,14 @@
 package app.flux.react.uielements.media
 
-import hydro.common.LoggingUtils.LogExceptionsCallback
 import app.flux.action.AppActions
 import app.flux.action.AppActions.AddSongsToPlaylist.Placement
+import app.models.media.JsSong
+import hydro.common.LoggingUtils.LogExceptionsCallback
+import hydro.flux.action.Dispatcher
 import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.router.RouterContext
-import hydro.flux.action.Dispatcher
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import app.models.media.JsSong
 
 import scala.collection.immutable.Seq
 

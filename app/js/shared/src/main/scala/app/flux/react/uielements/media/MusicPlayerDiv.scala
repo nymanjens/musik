@@ -1,14 +1,13 @@
 package app.flux.react.uielements.media
 
+import app.flux.react.uielements
+import app.flux.router.AppPages
+import app.flux.stores.media.PlayStatusStore
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
-import hydro.flux.react.ReactVdomUtils.^^
-import app.flux.router.AppPages
-import hydro.flux.router.Page
-import hydro.flux.router.RouterContext
-import app.flux.react.uielements
-import app.flux.stores.media.PlayStatusStore
 import hydro.flux.react.HydroReactComponent
+import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

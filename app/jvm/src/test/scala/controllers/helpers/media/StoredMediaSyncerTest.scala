@@ -1,19 +1,17 @@
 package controllers.helpers.media
 
-import com.google.inject.Guice
-import com.google.inject.Inject
 import app.common.testing.TestObjects._
 import app.common.testing._
-import controllers.helpers.media.AlbumParser.ParsedAlbum
-import controllers.helpers.media.AlbumParser.ParsedSong
 import app.models.access.JvmEntityAccess
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
-import app.models.media.PlaylistEntry
-import app.models.media.PlayStatus
 import app.models.modification.EntityModification
 import app.models.user.User
+import com.google.inject.Guice
+import com.google.inject.Inject
+import controllers.helpers.media.AlbumParser.ParsedAlbum
+import controllers.helpers.media.AlbumParser.ParsedSong
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import play.api.test.WithApplication

@@ -1,36 +1,20 @@
 package controllers.helpers.media
 
-import hydro.models.access.DbQueryImplicits._
-import com.google.inject.Inject
 import app.common.RelativePaths
-import hydro.common.time.Clock
-import controllers.helpers.media.AlbumParser.ParsedAlbum
-import hydro.models.Entity
 import app.models.access.JvmEntityAccess
 import app.models.access.ModelFields
-import hydro.models.access.ModelField
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
-import app.models.media.PlaylistEntry
-import app.models.media.PlayStatus
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
 import app.models.user.User
 import app.models.user.Users
+import com.google.inject.Inject
+import controllers.helpers.media.AlbumParser.ParsedAlbum
+import hydro.common.time.Clock
+import hydro.models.Entity
+import hydro.models.access.DbQueryImplicits._
 
 import scala.collection.immutable.Seq
 

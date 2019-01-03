@@ -1,11 +1,4 @@
 package app.common.testing
-import app.models.media.Album
-import app.models.media.Artist
-import app.models.media.Song
-import app.models.media.PlaylistEntry
-import app.models.media.PlayStatus
-
-import scala.concurrent.duration._
 import java.time.Instant
 import java.time.Month._
 
@@ -13,17 +6,17 @@ import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApi.UpdateToken
 import app.api.ScalaJsApi.UserPrototype
 import app.common.OrderToken
-import hydro.common.time.LocalDateTime
-import hydro.common.time.LocalDateTimes
 import app.models.media.Album
 import app.models.media.Artist
-import app.models.media.Song
-import app.models.media.PlaylistEntry
 import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
+import app.models.media.Song
 import app.models.modification.EntityModification
 import app.models.user.User
+import hydro.common.time.LocalDateTime
+import hydro.common.time.LocalDateTimes
 
-import scala.collection.immutable.Seq
+import scala.concurrent.duration._
 
 object TestObjects {
 

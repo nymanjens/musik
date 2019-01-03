@@ -1,15 +1,14 @@
 package app.flux.react.app.media
 
-import hydro.flux.react.uielements.PageHeader
 import app.common.I18n
 import hydro.common.LoggingUtils.logExceptions
-import hydro.flux.router.RouterContext
-import app.flux.react.uielements
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
+import hydro.flux.react.uielements.PageHeader
+import hydro.flux.router.RouterContext
+import hydro.models.access.EntityAccess
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.models.access.EntityAccess
 
 private[app] final class Home(implicit i18n: I18n,
                               entityAccess: EntityAccess,

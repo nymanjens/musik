@@ -1,7 +1,8 @@
 package app.common.testing
 
-import scala.concurrent.duration._
 import controllers.helpers.media.MediaScanner.MediaFile
+
+import scala.concurrent.duration._
 
 object JvmTestObjects {
 

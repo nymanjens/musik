@@ -2,8 +2,6 @@ package app.common
 
 import app.common.GuavaReplacement.Splitter
 
-import scala.collection.immutable.ListMap
-
 object RelativePaths {
 
   def joinPaths(s1: String, s2: String): String = {

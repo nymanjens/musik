@@ -1,24 +1,20 @@
 package app.flux.react.app.media
 
-import app.common.CollectionUtils
 import app.common.CollectionUtils.ifThenSeq
-import hydro.common.LoggingUtils.LogExceptionsCallback
-import hydro.common.LoggingUtils.logExceptions
 import app.flux.action.AppActions
-import hydro.flux.action.StandardActions
-import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.router.RouterContext
-import app.flux.react.uielements
-import hydro.flux.stores.StateStore
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
+import app.models.media.JsPlaylistEntry
+import hydro.common.LoggingUtils.LogExceptionsCallback
+import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
+import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.react.uielements.PageHeader
+import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^.<
 import japgolly.scalajs.react.vdom.html_<^._
-import app.models.media.JsPlaylistEntry
 
 import scala.collection.immutable.Seq
 

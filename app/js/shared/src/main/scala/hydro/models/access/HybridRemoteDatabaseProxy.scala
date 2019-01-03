@@ -2,26 +2,13 @@ package hydro.models.access
 
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
-import hydro.common.LoggingUtils.logFailure
-import hydro.models.Entity
-import app.models.access._
-import hydro.models.access.SingletonKey.NextUpdateTokenKey
-import hydro.models.access.SingletonKey.VersionKey
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
 import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
+import hydro.common.LoggingUtils.logFailure
+import hydro.models.Entity
+import hydro.models.access.SingletonKey.NextUpdateTokenKey
+import hydro.models.access.SingletonKey.VersionKey
 import org.scalajs.dom.console
 
 import scala.async.Async.async

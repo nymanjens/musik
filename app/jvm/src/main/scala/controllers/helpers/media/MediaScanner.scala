@@ -5,21 +5,17 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
+import app.common.GuavaReplacement.Splitter
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
-import app.common.GuavaReplacement.Splitter
 import controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
 import controllers.helpers.media.MediaScanner.MediaFile
-import app.models.access.JvmEntityAccess
-
-import scala.collection.JavaConverters._
-import scala.collection.immutable.ListMap
-import scala.collection.immutable.Seq
 import org.jaudiotagger.audio.AudioFileIO
+import org.jaudiotagger.audio.exceptions._
 import org.jaudiotagger.tag.FieldKey
 import org.jaudiotagger.tag.TagException
-import org.jaudiotagger.audio.exceptions._
 
+import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._

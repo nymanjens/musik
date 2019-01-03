@@ -1,24 +1,11 @@
 package hydro.models.access
 
-import hydro.models.Entity
 import app.models.access.ModelFields
+import app.models.modification.EntityType
+import hydro.models.Entity
 import hydro.models.access.DbQuery.Filter
 import hydro.models.access.DbQuery.Sorting
 import hydro.models.access.DbQueryImplicits._
-import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
 
 import scala.async.Async.async
 import scala.async.Async.await

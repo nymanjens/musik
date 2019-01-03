@@ -1,26 +1,12 @@
 package hydro.api
 
-import hydro.api.PicklableDbQuery.Sorting.FieldWithDirection
+import app.models.modification.EntityType
 import hydro.api.PicklableDbQuery.Filter
 import hydro.api.PicklableDbQuery.Sorting
+import hydro.api.PicklableDbQuery.Sorting.FieldWithDirection
 import hydro.models.Entity
 import hydro.models.access.DbQuery
-import app.models.access.ModelFields
 import hydro.models.access.ModelField
-import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
 
 import scala.collection.immutable.Seq
 

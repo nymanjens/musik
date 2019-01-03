@@ -1,27 +1,12 @@
 package hydro.flux.stores
 
 import app.api.ScalaJsApiClient
-import hydro.flux.action.StandardActions.UpsertUser
-import hydro.flux.stores.UserStore.State
+import app.models.modification.EntityModification
+import app.models.user.User
 import hydro.flux.action.Dispatcher
 import hydro.flux.action.StandardActions.UpsertUser
+import hydro.flux.stores.UserStore.State
 import hydro.models.access.JsEntityAccess
-import app.models.modification.EntityModification
-import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.user.User
 
 import scala.async.Async.async
 import scala.async.Async.await

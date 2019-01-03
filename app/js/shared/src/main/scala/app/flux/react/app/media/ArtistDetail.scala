@@ -1,11 +1,11 @@
 package app.flux.react.app.media
 
-import hydro.flux.react.uielements.PageHeader
-import hydro.common.LoggingUtils.logExceptions
-import hydro.flux.router.RouterContext
 import app.flux.react.uielements
 import app.flux.stores.media.ArtistDetailStoreFactory
+import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
+import hydro.flux.react.uielements.PageHeader
+import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

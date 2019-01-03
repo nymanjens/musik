@@ -8,9 +8,9 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.component.Scala.MountedImpure
 import japgolly.scalajs.react.internal.Box
 import japgolly.scalajs.react.vdom.html_<^._
-import org.scalajs.dom.raw.HTMLAudioElement
 import org.scalajs.dom.console
 import org.scalajs.dom.html
+import org.scalajs.dom.raw.HTMLAudioElement
 
 private[media] object RawMusicPlayer extends HydroReactComponent.Stateless {
 

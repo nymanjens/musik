@@ -1,8 +1,6 @@
 package app.flux.react.app.media
 
-import hydro.flux.react.uielements.PageHeader
 import app.common.I18n
-import hydro.common.time.Clock
 import app.flux.react.uielements
 import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.stores.media.AlbumDetailStoreFactory
@@ -10,7 +8,9 @@ import app.flux.stores.media.AllArtistsStore
 import app.flux.stores.media.ArtistDetailStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
+import hydro.common.time.Clock
 import hydro.flux.action.Dispatcher
+import hydro.flux.react.uielements.PageHeader
 import hydro.models.access.JsEntityAccess
 
 final class Module(implicit i18n: I18n,

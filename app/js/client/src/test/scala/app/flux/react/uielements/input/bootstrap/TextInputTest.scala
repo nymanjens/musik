@@ -2,14 +2,10 @@ package app.flux.react.uielements.input.bootstrap
 
 import app.common.testing.ReactTestWrapper
 import app.common.testing.TestModule
-import hydro.flux.react.uielements.input.InputBase
 import app.flux.react.uielements.input.bootstrap
-import japgolly.scalajs.react.test.ReactTestUtils
+import hydro.flux.react.uielements.input.InputBase
 import japgolly.scalajs.react.vdom._
 import utest._
-
-import hydro.scala2js.StandardConverters._
-import app.scala2js.AppConverters._
 
 object TextInputTest extends TestSuite {
   implicit private val fake18n = new TestModule().fakeI18n

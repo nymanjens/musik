@@ -1,23 +1,10 @@
 package app.flux.stores
 
 import app.flux.stores.PendingModificationsStore.State
+import app.models.modification.EntityModification
+import app.models.user.User
 import hydro.flux.stores.StateStore
 import hydro.models.access.JsEntityAccess
-import app.models.modification.EntityModification
-import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable

@@ -1,30 +1,17 @@
 package app.flux.stores.media
 
 import app.flux.stores.media.AlbumDetailStoreFactory.State
-import hydro.flux.stores.StoreFactory
+import app.models.access.ModelFields
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
+import app.models.media._
+import app.models.modification.EntityModification
+import app.models.user.User
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.StoreFactory
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.JsEntityAccess
-import app.models.access.ModelFields
-import hydro.models.access.ModelField
-import app.models.media._
-import app.models.modification.EntityModification
-import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.user.User
 
 import scala.async.Async.async
 import scala.async.Async.await

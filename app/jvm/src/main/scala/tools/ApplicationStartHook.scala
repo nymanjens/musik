@@ -3,23 +3,16 @@ package tools
 import java.nio.file.Path
 import java.nio.file.Paths
 
-import com.google.inject.Inject
-import hydro.common.time.Clock
-import app.common.OrderToken
 import app.common.ResourceFiles
 import app.models.access.JvmEntityAccess
-import app.models.media.Album
-import app.models.media.Artist
-import app.models.media.Song
-import app.models.media.PlaylistEntry
-import app.models.media.PlayStatus
 import app.models.modification.EntityModification
 import app.models.user.Users
+import com.google.inject.Inject
+import hydro.common.time.Clock
 import play.api.Application
 import play.api.Mode
 
 import scala.collection.JavaConverters._
-import scala.collection.immutable.Seq
 
 final class ApplicationStartHook @Inject()(implicit app: Application,
                                            entityAccess: JvmEntityAccess,

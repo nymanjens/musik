@@ -1,7 +1,7 @@
 package app.models.media
 
-import hydro.models.access.EntityAccess
 import app.models.media
+import hydro.models.access.EntityAccess
 
 import scala.async.Async.async
 import scala.async.Async.await

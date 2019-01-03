@@ -1,9 +1,9 @@
 package controllers.helpers.media
 
-import com.google.inject.Inject
 import app.common.CollectionUtils.getMostCommonString
 import app.common.GuavaReplacement.Splitter
 import app.common.RelativePaths
+import com.google.inject.Inject
 import controllers.helpers.media.AlbumParser.ParsedAlbum
 import controllers.helpers.media.AlbumParser.ParsedSong
 import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner

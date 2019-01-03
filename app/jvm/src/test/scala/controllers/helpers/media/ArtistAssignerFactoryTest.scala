@@ -1,7 +1,5 @@
 package controllers.helpers.media
 
-import com.google.inject.Guice
-import com.google.inject.Inject
 import app.common.testing.JvmTestObjects._
 import app.common.testing.TestObjects._
 import app.common.testing._
@@ -9,6 +7,8 @@ import app.models.access.JvmEntityAccess
 import app.models.media.Artist
 import app.models.modification.EntityModification
 import app.models.user.User
+import com.google.inject.Guice
+import com.google.inject.Inject
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import play.api.test.WithApplication

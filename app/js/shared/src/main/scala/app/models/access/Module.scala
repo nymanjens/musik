@@ -2,13 +2,11 @@ package app.models.access
 
 import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
-import hydro.models.access.LocalDatabaseImpl.SecondaryIndexFunction
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
-
 import app.models.user.User
 import hydro.models.access.EntityModificationPushClientFactory
 import hydro.models.access.HybridRemoteDatabaseProxy

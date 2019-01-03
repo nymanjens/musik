@@ -4,8 +4,6 @@ import app.common.testing._
 import org.junit.runner._
 import org.specs2.runner._
 
-import scala.collection.immutable.Seq
-
 @RunWith(classOf[JUnitRunner])
 class RelativePathsTest extends HookedSpecification {
 

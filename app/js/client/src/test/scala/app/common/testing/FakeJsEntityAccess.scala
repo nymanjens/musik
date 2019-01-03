@@ -1,33 +1,16 @@
 package app.common.testing
 
-import hydro.models.Entity
-import hydro.models.access.JsEntityAccess.Listener
-import app.models.access._
 import app.models.modification.EntityModification
 import app.models.modification.EntityType
-import app.models.modification.EntityTypes
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.media.Song
-import app.models.media.PlayStatus
-import app.models.media.PlaylistEntry
-import app.models.media.Artist
-import app.models.media.Album
-import app.models.user.User
-import app.models.user.User
+import hydro.models.Entity
+import hydro.models.access.JsEntityAccess.Listener
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable
-import scala.concurrent.duration._
 import scala.concurrent.Future
 import scala.concurrent.Promise
+import scala.concurrent.duration._
 import scala.scalajs.js
-import hydro.scala2js.StandardConverters._
-import app.scala2js.AppConverters._
 
 final class FakeJsEntityAccess extends JsEntityAccess {
 

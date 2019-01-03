@@ -1,6 +1,5 @@
 package app.flux.router
 
-import hydro.models.access.EntityAccess
 import app.common.I18n
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
@@ -9,6 +8,7 @@ import hydro.flux.action.StandardActions
 import hydro.flux.router.Page
 import hydro.flux.router.RouterContext
 import hydro.flux.router.StandardPages
+import hydro.models.access.EntityAccess
 import japgolly.scalajs.react.extra.router.StaticDsl.RouteB
 import japgolly.scalajs.react.extra.router._
 import japgolly.scalajs.react.vdom.html_<^._

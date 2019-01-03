@@ -1,16 +1,15 @@
 package controllers.helpers.media
 
-import com.google.common.base.CharMatcher
-import com.google.common.base.Splitter
-import com.google.inject.Inject
 import app.common.CollectionUtils.getMostCommonStringIgnoringCase
 import app.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.ScalaUtils.visibleForTesting
-import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
-import controllers.helpers.media.MediaScanner.MediaFile
 import app.models.access.JvmEntityAccess
 import app.models.media.Artist
-import app.models.slick.SlickUtils.dbRun
+import com.google.common.base.CharMatcher
+import com.google.common.base.Splitter
+import com.google.inject.Inject
+import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
+import controllers.helpers.media.MediaScanner.MediaFile
 
 import scala.collection.immutable.Seq
 
