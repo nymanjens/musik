@@ -7,7 +7,7 @@ import akka.stream.scaladsl.StreamConverters
 import app.api.ScalaJsApiServerFactory
 import app.models.access.JvmEntityAccess
 import com.google.inject.Inject
-import app.controllers.helpers.AuthenticatedAction
+import hydro.controllers.helpers.AuthenticatedAction
 import hydro.common.time.Clock
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
