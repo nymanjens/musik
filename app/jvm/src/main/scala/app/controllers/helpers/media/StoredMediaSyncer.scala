@@ -1,4 +1,4 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import app.common.RelativePaths
 import app.models.access.JvmEntityAccess
@@ -11,7 +11,7 @@ import hydro.models.modification.EntityType
 import app.models.user.User
 import app.models.user.Users
 import com.google.inject.Inject
-import controllers.helpers.media.AlbumParser.ParsedAlbum
+import app.controllers.helpers.media.AlbumParser.ParsedAlbum
 import hydro.common.time.Clock
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._

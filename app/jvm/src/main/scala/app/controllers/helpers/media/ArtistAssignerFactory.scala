@@ -1,4 +1,4 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import hydro.common.CollectionUtils.getMostCommonStringIgnoringCase
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
@@ -8,8 +8,8 @@ import app.models.media.Artist
 import com.google.common.base.CharMatcher
 import com.google.common.base.Splitter
 import com.google.inject.Inject
-import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
-import controllers.helpers.media.MediaScanner.MediaFile
+import app.controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
+import app.controllers.helpers.media.MediaScanner.MediaFile
 
 import scala.collection.immutable.Seq
 

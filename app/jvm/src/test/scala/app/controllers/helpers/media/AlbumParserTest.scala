@@ -1,13 +1,13 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.testing.JvmTestObjects.mediaFile
 import app.common.testing._
 import com.google.inject.Guice
 import com.google.inject.Inject
-import controllers.helpers.media.AlbumParser.ParsedAlbum
-import controllers.helpers.media.AlbumParser.ParsedSong
-import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
+import app.controllers.helpers.media.AlbumParser.ParsedAlbum
+import app.controllers.helpers.media.AlbumParser.ParsedSong
+import app.controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 

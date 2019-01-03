@@ -1,4 +1,4 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import app.common.testing.JvmTestObjects._
 import app.common.testing.TestObjects._

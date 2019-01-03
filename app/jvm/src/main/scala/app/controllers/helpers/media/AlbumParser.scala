@@ -1,13 +1,13 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import hydro.common.CollectionUtils.getMostCommonString
 import hydro.common.GuavaReplacement.Splitter
 import app.common.RelativePaths
 import com.google.inject.Inject
-import controllers.helpers.media.AlbumParser.ParsedAlbum
-import controllers.helpers.media.AlbumParser.ParsedSong
-import controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
-import controllers.helpers.media.MediaScanner.MediaFile
+import app.controllers.helpers.media.AlbumParser.ParsedAlbum
+import app.controllers.helpers.media.AlbumParser.ParsedSong
+import app.controllers.helpers.media.ArtistAssignerFactory.ArtistAssigner
+import app.controllers.helpers.media.MediaScanner.MediaFile
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.FiniteDuration

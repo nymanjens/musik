@@ -1,4 +1,4 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import java.io.IOException
 import java.nio.file.Files
@@ -8,8 +8,8 @@ import java.nio.file.Paths
 import hydro.common.GuavaReplacement.Splitter
 import com.google.common.io.MoreFiles
 import com.google.inject.Inject
-import controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
-import controllers.helpers.media.MediaScanner.MediaFile
+import app.controllers.helpers.media.MediaScanner.AddedAndRemovedMedia
+import app.controllers.helpers.media.MediaScanner.MediaFile
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.audio.exceptions._
 import org.jaudiotagger.tag.FieldKey

@@ -1,6 +1,6 @@
 package app.common.testing
 
-import controllers.helpers.media.MediaScanner.MediaFile
+import app.controllers.helpers.media.MediaScanner.MediaFile
 
 import scala.concurrent.duration._
 

@@ -1,14 +1,14 @@
-package controllers
+package app.controllers
 
 import app.common.RelativePaths.joinPaths
 import app.models.access.JvmEntityAccess
 import app.models.media.Album
 import app.models.media.Song
 import com.google.inject.Inject
-import controllers.helpers.media.AlbumParser
-import controllers.helpers.media.ArtistAssignerFactory
-import controllers.helpers.media.MediaScanner
-import controllers.helpers.media.StoredMediaSyncer
+import app.controllers.helpers.media.AlbumParser
+import app.controllers.helpers.media.ArtistAssignerFactory
+import app.controllers.helpers.media.MediaScanner
+import app.controllers.helpers.media.StoredMediaSyncer
 import hydro.common.time.Clock
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi

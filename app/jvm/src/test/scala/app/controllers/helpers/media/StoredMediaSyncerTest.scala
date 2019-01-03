@@ -1,4 +1,4 @@
-package controllers.helpers.media
+package app.controllers.helpers.media
 
 import app.common.testing.TestObjects._
 import app.common.testing._
@@ -10,8 +10,8 @@ import hydro.models.modification.EntityModification
 import app.models.user.User
 import com.google.inject.Guice
 import com.google.inject.Inject
-import controllers.helpers.media.AlbumParser.ParsedAlbum
-import controllers.helpers.media.AlbumParser.ParsedSong
+import app.controllers.helpers.media.AlbumParser.ParsedAlbum
+import app.controllers.helpers.media.AlbumParser.ParsedSong
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import play.api.test.WithApplication
