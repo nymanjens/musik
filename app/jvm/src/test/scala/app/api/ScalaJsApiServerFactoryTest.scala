@@ -11,6 +11,9 @@ import hydro.models.modification.EntityModificationEntity
 import hydro.models.slick.SlickUtils.dbRun
 import app.models.user.User
 import com.google.inject._
+import hydro.api.PicklableDbQuery
+import hydro.common.testing.Awaiter
+import hydro.common.testing.FakeClock
 import hydro.models.access.DbQuery
 import hydro.models.access.DbQueryImplicits._
 import org.junit.runner._

@@ -9,6 +9,7 @@ import hydro.models.modification.EntityType
 import app.models.user.User
 import boopickle.Default._
 import boopickle.Pickler
+import app.api.Picklers._
 import org.junit.runner._
 import org.specs2.runner._
 
