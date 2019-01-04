@@ -3,6 +3,7 @@ package app.controllers.helpers.media
 import app.common.testing.JvmTestObjects._
 import app.common.testing.TestObjects._
 import app.common.testing._
+import hydro.common.testing._
 import app.models.access.JvmEntityAccess
 import app.models.media.Artist
 import hydro.models.modification.EntityModification

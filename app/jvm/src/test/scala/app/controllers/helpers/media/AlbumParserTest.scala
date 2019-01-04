@@ -3,6 +3,7 @@ package app.controllers.helpers.media
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.testing.JvmTestObjects.mediaFile
 import app.common.testing._
+import hydro.common.testing._
 import com.google.inject.Guice
 import com.google.inject.Inject
 import app.controllers.helpers.media.AlbumParser.ParsedAlbum

@@ -2,6 +2,7 @@ package app.controllers.helpers.media
 
 import app.common.testing.TestObjects._
 import app.common.testing._
+import hydro.common.testing._
 import app.models.access.JvmEntityAccess
 import app.models.media.Album
 import app.models.media.Artist
