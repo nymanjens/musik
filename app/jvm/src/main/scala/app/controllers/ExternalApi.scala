@@ -30,11 +30,6 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
     with I18nSupport {
 
   // ********** actions ********** //
-  def healthCheck = Action { implicit request =>
-    entityAccess.checkConsistentCaches()
-    Ok("OK")
-  }
-
   def rescanMediaLibrary(applicationSecret: String) = Action { implicit request =>
     validateApplicationSecret(applicationSecret)
 
