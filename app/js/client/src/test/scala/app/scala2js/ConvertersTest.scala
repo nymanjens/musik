@@ -6,19 +6,22 @@ import app.common.testing.TestObjects._
 import app.models.access.ModelFields
 import app.models.media.Album
 import app.models.media.Artist
-import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
+import app.models.media.PlayStatus
 import app.models.media.Song
-import hydro.models.modification.EntityModification
-import hydro.models.modification.EntityType
 import app.models.user.User
 import app.scala2js.AppConverters._
+import hydro.scala2js.StandardConverters._
 import hydro.common.time.LocalDateTime
+import hydro.models.modification.EntityModification
+import hydro.models.modification.EntityType
+import hydro.scala2js.Scala2Js
+import hydro.scala2js.StandardConverters
 import utest._
 
 import scala.collection.immutable.Seq
-import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.duration._
+import scala.concurrent.duration.FiniteDuration
 import scala.scalajs.js
 
 object ConvertersTest extends TestSuite {
@@ -47,7 +50,7 @@ object ConvertersTest extends TestSuite {
     }
 
     "fromEntityType" - {
-      fromEntityType(EntityType.UserType) ==> UserConverter
+      fromEntityType(User.Type) ==> UserConverter
     }
 
     "seqConverter" - {
@@ -76,7 +79,7 @@ object ConvertersTest extends TestSuite {
     }
 
     "EntityTypeConverter" - {
-      testToJsAndBack[EntityType.any](EntityType.UserType)
+      testToJsAndBack[EntityType.any](User.Type)
     }
 
     "EntityModificationConverter" - {
