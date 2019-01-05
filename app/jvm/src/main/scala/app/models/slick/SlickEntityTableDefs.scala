@@ -23,7 +23,6 @@ object SlickEntityTableDefs {
   val all: Seq[SlickEntityTableDef[_]] =
     Seq(UserDef, SongDef, AlbumDef, ArtistDef, PlaylistEntryDef, PlayStatusDef, EntityModificationEntityDef)
 
-
   implicit object UserDef extends SlickEntityTableDef[User] {
 
     override val tableName: String = "USERS"
