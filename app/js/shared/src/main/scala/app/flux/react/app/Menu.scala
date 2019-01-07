@@ -25,22 +25,22 @@ private[app] final class Menu(implicit playStatusStore: PlayStatusStore, sbadmin
         ),
       ),
       enableSearch = false,
-      router = router
+      router = router,
+      configureAdditionalKeyboardShortcuts = () => configureAdditionalKeyboardShortcuts(),
     )
   }
 
-  private def configureAdditionalKeyboardShortcuts(implicit router: RouterContext): Callback =
-    LogExceptionsCallback {
-      def bind(shortcut: String, runnable: () => Unit): Unit = {
-        Mousetrap.bind(shortcut, e => {
-          e.preventDefault()
-          runnable()
-        })
-      }
-
-      bind("space", () => playStatusStore.togglePlay())
-      bind("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))
-      bind("ctrl+right", () => playStatusStore.advanceEntriesInPlaylist(step = +1))
-      bind("ctrl+shift+space", () => playStatusStore.toggleStopAfterCurrentSong())
+  private def configureAdditionalKeyboardShortcuts()(implicit router: RouterContext): Unit = {
+    def bind(shortcut: String, runnable: () => Unit): Unit = {
+      Mousetrap.bind(shortcut, e => {
+        e.preventDefault()
+        runnable()
+      })
     }
+
+    bind("space", () => playStatusStore.togglePlay())
+    bind("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))
+    bind("ctrl+right", () => playStatusStore.advanceEntriesInPlaylist(step = +1))
+    bind("ctrl+shift+space", () => playStatusStore.toggleStopAfterCurrentSong())
+  }
 }
