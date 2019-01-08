@@ -15,7 +15,7 @@ import scala.collection.immutable.Seq
 private[app] final class Menu(implicit playStatusStore: PlayStatusStore, sbadminMenu: SbadminMenu) {
 
   // **************** API ****************//
-  def apply(implicit router: RouterContext): VdomElement = {
+  def apply()(implicit router: RouterContext): VdomElement = {
     sbadminMenu(
       menuItems = Seq(
         Seq(
