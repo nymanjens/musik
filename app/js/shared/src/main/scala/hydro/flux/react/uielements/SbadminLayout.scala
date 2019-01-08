@@ -36,7 +36,6 @@ final class SbadminLayout(implicit globalMessages: GlobalMessages,
       // Navigation
       <.nav(
         ^.className := "navbar navbar-default navbar-static-top",
-        ^.role := "navigation",
         ^.style := js.Dictionary("marginBottom" -> 0),
         <.div(
           ^.className := "navbar-header",
@@ -111,9 +110,8 @@ final class SbadminLayout(implicit globalMessages: GlobalMessages,
         ^.style := js.Dictionary("minHeight" -> s"${pageWrapperHeightPx}px"),
         <.div(
           ^.className := "container-fluid",
-          <.div(
-            ^.className := "row",
-            <.div(^.className := "col-lg-12", globalMessages(), pageContent)
+          Bootstrap.Row(
+            Bootstrap.Col(lg = 12)(globalMessages(), pageContent)
           )
         )
       )

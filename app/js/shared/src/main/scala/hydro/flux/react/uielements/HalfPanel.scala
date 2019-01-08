@@ -11,12 +11,10 @@ object HalfPanel {
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
     .renderPC((_, props, children) =>
-      <.div(
-        ^^.classes("col-lg-6" +: props.panelClasses),
-        <.div(
-          ^^.classes("panel panel-default"),
-          <.div(
-            ^^.classes("panel-heading"),
+      Bootstrap.Col(lg = 6)(
+        ^^.classes(props.panelClasses),
+        Bootstrap.Panel(
+          Bootstrap.PanelHeading(
             props.title,
             <<.ifThen(props.closeButtonCallback.isDefined) {
               <.div(
@@ -30,7 +28,7 @@ object HalfPanel {
               )
             }
           ),
-          <.div(^^.classes("panel-body"), children)
+          Bootstrap.PanelBody(children)
         )
     ))
     .build
