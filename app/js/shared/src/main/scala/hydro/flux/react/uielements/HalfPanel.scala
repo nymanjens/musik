@@ -2,6 +2,8 @@ package hydro.flux.react.uielements
 
 import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap.Variant
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
@@ -13,17 +15,15 @@ object HalfPanel {
     .renderPC((_, props, children) =>
       Bootstrap.Col(lg = 6)(
         ^^.classes(props.panelClasses),
-        Bootstrap.Panel(
+        Bootstrap.Panel()(
           Bootstrap.PanelHeading(
             props.title,
             <<.ifThen(props.closeButtonCallback.isDefined) {
               <.div(
                 ^.className := "pull-right",
-                <.button(
-                  ^.tpe := "button",
-                  ^.className := "btn btn-default btn-xs",
+                Bootstrap.Button(variant = Variant.default, size = Size.xs)(
                   ^.onClick --> props.closeButtonCallback.get,
-                  <.i(^.className := "fa  fa-times fa-fw")
+                  Bootstrap.FontAwesomeIcon("times"),
                 )
               )
             }
