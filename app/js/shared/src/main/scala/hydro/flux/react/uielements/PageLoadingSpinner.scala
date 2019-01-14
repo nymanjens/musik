@@ -5,9 +5,6 @@ import hydro.flux.react.HydroReactComponent
 import hydro.flux.stores.PageLoadingStateStore
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 final class PageLoadingSpinner(implicit pageLoadingStateStore: PageLoadingStateStore)
     extends HydroReactComponent {

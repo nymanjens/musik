@@ -5,9 +5,6 @@ import hydro.flux.router.Page
 import hydro.models.access.EntityAccess
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 final class PageHeader(implicit i18n: I18n, entityAccess: EntityAccess) {
 
