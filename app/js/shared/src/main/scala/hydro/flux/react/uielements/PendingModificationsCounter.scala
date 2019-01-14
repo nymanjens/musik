@@ -5,6 +5,9 @@ import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 
 final class PendingModificationsCounter(implicit pendingModificationsStore: PendingModificationsStore)
     extends HydroReactComponent {

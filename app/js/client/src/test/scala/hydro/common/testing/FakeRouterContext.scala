@@ -7,6 +7,9 @@ import hydro.flux.router.StandardPages
 import japgolly.scalajs.react.extra.router.Path
 import japgolly.scalajs.react.vdom.html_<^.VdomTagOf
 import japgolly.scalajs.react.vdom.html_<^._
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import org.scalajs.dom.html
 
 import scala.collection.mutable
