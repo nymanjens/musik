@@ -9,6 +9,9 @@ import hydro.flux.router.RouterContext
 import hydro.models.access.EntityAccess
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 
 private[app] final class Home(implicit i18n: I18n,
                               entityAccess: EntityAccess,
