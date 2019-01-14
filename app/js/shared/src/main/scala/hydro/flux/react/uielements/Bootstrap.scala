@@ -58,6 +58,8 @@ object Bootstrap {
 
   def Alert(variant: Variant): VdomTag = <.div(^.className := s"alert alert-${variant.name}")
 
+  def FormHorizontal: VdomTag = <.form(^.className := "form-horizontal")
+
   case class Variant private (name: String)
   object Variant {
     val default = Variant("default")
