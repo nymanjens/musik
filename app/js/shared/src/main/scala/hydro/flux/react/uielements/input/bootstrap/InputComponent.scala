@@ -5,6 +5,9 @@ import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.input.InputBase
 import hydro.flux.react.uielements.input.InputValidator
 import japgolly.scalajs.react.Ref.ToScalaComponent

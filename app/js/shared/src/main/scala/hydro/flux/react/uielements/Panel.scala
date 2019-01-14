@@ -1,6 +1,9 @@
 package hydro.flux.react.uielements
 
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 

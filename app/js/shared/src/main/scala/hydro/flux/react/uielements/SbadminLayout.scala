@@ -7,6 +7,9 @@ import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.flux.action.Dispatcher
 import hydro.flux.action.StandardActions
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.router.RouterContext
 import hydro.flux.router.StandardPages
 import hydro.models.access.JsEntityAccess

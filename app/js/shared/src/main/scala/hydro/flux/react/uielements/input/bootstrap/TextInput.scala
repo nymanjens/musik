@@ -2,6 +2,9 @@ package hydro.flux.react.uielements.input.bootstrap
 
 import hydro.common.I18n
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.input.InputBase
 import hydro.flux.react.uielements.input.InputValidator
 import hydro.flux.react.uielements.input.bootstrap.InputComponent.Props

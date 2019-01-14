@@ -7,6 +7,9 @@ import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap.Variant
+import hydro.flux.react.uielements.Bootstrap.Size
+import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.input.TextInput
 import hydro.flux.react.uielements.Bootstrap.Variant
 import hydro.flux.react.uielements.SbadminMenu.MenuItem
