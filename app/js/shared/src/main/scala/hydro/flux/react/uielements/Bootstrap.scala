@@ -1,11 +1,6 @@
 package hydro.flux.react.uielements
 
 import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
-import hydro.flux.router.Page
-import hydro.flux.router.RouterContext
 import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.collection.mutable
@@ -27,6 +22,7 @@ object Bootstrap {
   def Button(variant: Variant = Variant.default,
              size: Size = null,
              block: Boolean = false,
+             circle: Boolean = false,
              tag: VdomTag = <.button): VdomTag = {
     val classes = mutable.Buffer[String]()
     classes += "btn"
@@ -37,11 +33,16 @@ object Bootstrap {
     if (block) {
       classes += s"btn-block"
     }
+    if (circle) {
+      classes += s"btn-circle"
+    }
     tag(^^.classes(classes))
   }
 
   def Icon(className: String): VdomTag = <.i(^.className := className)
-  def FontAwesomeIcon(name: String): VdomTag = Icon(s"fa fa-$name fa-fw")
+  def FontAwesomeIcon(name: String, otherNames: String*): VdomTag = {
+    <.i(^^.classes(s"fa fa-$name fa-fw" +: otherNames.map(n => s"fa-$n")))
+  }
 
   def Panel(variant: Variant = Variant.default): VdomTag =
     <.div(^.className := s"panel panel-${variant.name}")
@@ -49,6 +50,8 @@ object Bootstrap {
   def PanelBody: VdomTag = <.div(^.className := "panel-body")
 
   def NavbarBrand(tag: VdomTag = <.span): VdomTag = tag(^.className := "navbar-brand")
+
+  def Alert(variant: Variant): VdomTag = <.div(^.className := s"alert alert-${variant.name}")
 
   case class Variant private (name: String)
   object Variant {

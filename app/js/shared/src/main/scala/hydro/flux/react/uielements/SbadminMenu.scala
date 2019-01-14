@@ -1,20 +1,17 @@
 package hydro.flux.react.uielements
 
-import hydro.flux.router.StandardPages
 import hydro.common.I18n
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.input.TextInput
 import hydro.flux.react.uielements.Bootstrap.Variant
 import hydro.flux.react.uielements.SbadminMenu.MenuItem
 import hydro.flux.router.Page
 import hydro.flux.router.RouterContext
+import hydro.flux.router.StandardPages
 import hydro.jsfacades.Mousetrap
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
