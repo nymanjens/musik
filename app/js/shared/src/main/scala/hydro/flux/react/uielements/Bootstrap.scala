@@ -45,6 +45,8 @@ object Bootstrap {
   def PanelHeading: VdomTag = <.div(^.className := "panel-heading")
   def PanelBody: VdomTag = <.div(^.className := "panel-body")
 
+  def NavbarBrand(tag: VdomTag = <.span): VdomTag = tag(^.className := "navbar-brand")
+
   case class Variant private (name: String)
   object Variant {
     val default = Variant("default")
