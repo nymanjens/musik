@@ -4,9 +4,6 @@ import japgolly.scalajs.react.vdom.TagMod
 import japgolly.scalajs.react.vdom.VdomArray
 import japgolly.scalajs.react.vdom.VdomNode
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 import scala.collection.immutable.Seq
 
