@@ -20,8 +20,8 @@ final class UserAdministration(implicit i18n: I18n,
       implicit val router = props.router
       <.span(
         pageHeader(router.currentPage),
-        <.div(^.className := "row", allUsersList()),
-        <.div(^.className := "row", addUserForm())
+        Bootstrap.Row(allUsersList()),
+        Bootstrap.Row(addUserForm()),
       )
     })
     .build

@@ -1,13 +1,11 @@
 package hydro.flux.react.uielements.usermanagement
 
 import hydro.common.I18n
+import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 final class UserProfile(implicit i18n: I18n, updatePasswordForm: UpdatePasswordForm, pageHeader: PageHeader) {
 
@@ -17,10 +15,7 @@ final class UserProfile(implicit i18n: I18n, updatePasswordForm: UpdatePasswordF
       implicit val router = props.router
       <.span(
         pageHeader(router.currentPage),
-        <.div(
-          ^.className := "row",
-          updatePasswordForm()
-        )
+        Bootstrap.Row(updatePasswordForm())
       )
     })
     .build

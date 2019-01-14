@@ -41,12 +41,11 @@ private[usermanagement] final class UpdatePasswordForm(implicit user: User,
     private val passwordVerificationRef = TextInput.ref()
 
     override def render(props: Props, state: State) = logExceptions {
-      <.form(
-        ^.className := "form-horizontal",
+      Bootstrap.FormHorizontal(
         HalfPanel(title = <.span(i18n("app.change-password")))(
           {
             for (error <- state.globalErrors) yield {
-              <.div(^.className := "alert alert-danger", ^.key := error, error)
+              Bootstrap.Alert(Variant.danger)(^.key := error, error)
             }
           }.toVdomArray,
           TextInput(
@@ -72,11 +71,7 @@ private[usermanagement] final class UpdatePasswordForm(implicit user: User,
             required = true,
             showErrorMessage = state.showErrorMessages
           ),
-          <.button(
-            ^.tpe := "submit",
-            ^.className := "btn btn-default",
-            ^.onClick ==> onSubmit,
-            i18n("app.ok"))
+          Bootstrap.Button()(^.tpe := "submit", ^.onClick ==> onSubmit, i18n("app.ok"))
         )
       )
     }
