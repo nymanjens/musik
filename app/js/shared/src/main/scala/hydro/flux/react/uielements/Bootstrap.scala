@@ -9,14 +9,19 @@ object Bootstrap {
 
   def Row: VdomTag = <.div(^.className := "row")
 
-  def Col(sm: Int = -1, md: Int = -1, lg: Int = -1, smOffset: Int = -1, mdOffset: Int = -1): VdomTag = {
+  def Col(sm: Int = -1,
+          md: Int = -1,
+          lg: Int = -1,
+          smOffset: Int = -1,
+          mdOffset: Int = -1,
+          tag: VdomTag = <.div): VdomTag = {
     val classes = mutable.Buffer[String]()
     if (sm != -1) classes += s"col-sm-$sm"
     else if (md != -1) classes += s"col-md-$md"
     else if (lg != -1) classes += s"col-lg-$lg"
     else if (smOffset != -1) classes += s"col-sm-offset-$smOffset"
     else if (mdOffset != -1) classes += s"col-md-offset-$mdOffset"
-    <.div(^^.classes(classes))
+    tag(^^.classes(classes))
   }
 
   def Button(variant: Variant = Variant.default,

@@ -57,9 +57,8 @@ object InputComponent {
 
           <.div(
             ^^.classes(Seq("form-group") ++ errorMessage.map(_ => "has-error")),
-            <.label(^.className := "col-sm-4 control-label", props.label),
-            <.div(
-              ^.className := "col-sm-8",
+            Bootstrap.Col(sm = 4, tag = <.label)(^.className := "control-label", props.label),
+            Bootstrap.Col(sm = 8)(
               inputRenderer.renderInput(
                 classes = "form-control" +: props.inputClasses,
                 name = props.name,
