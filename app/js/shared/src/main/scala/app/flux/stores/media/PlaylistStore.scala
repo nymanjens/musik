@@ -87,7 +87,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
               maybeNextEntry match {
                 case Some(nextEntry) =>
                   EntityModification.createUpdate(playStatus.get.copy(currentPlaylistEntryId = nextEntry.id))
-                case None => EntityModification.createDelete(playStatus.get)
+                case None => EntityModification.createRemove(playStatus.get)
               }
             })
           }

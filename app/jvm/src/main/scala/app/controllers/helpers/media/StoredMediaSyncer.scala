@@ -50,13 +50,13 @@ final class StoredMediaSyncer @Inject()(implicit entityAccess: JvmEntityAccess, 
     val affectedAlbums = songsToRemove.map(_.albumId).distinct.map(fetchAlbum)
     val affectedArtistIds = songsToRemove.flatMap(_.artistId) ++ affectedAlbums.flatMap(_.artistId)
 
-    entityAccess.persistEntityModifications(songsToRemove.map(EntityModification.createDelete[Song]))
+    entityAccess.persistEntityModifications(songsToRemove.map(EntityModification.createRemove[Song]))
 
     for (album <- affectedAlbums) {
       val songChildren =
         entityAccess.newQuerySync[Song]().filter(ModelFields.Song.albumId === album.id).data()
       if (songChildren.isEmpty) {
-        entityAccess.persistEntityModifications(EntityModification.createDelete(album))
+        entityAccess.persistEntityModifications(EntityModification.createRemove(album))
       }
     }
 
