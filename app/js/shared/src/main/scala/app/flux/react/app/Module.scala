@@ -36,6 +36,7 @@ final class Module(implicit i18n: I18n,
   private val fluxUielementsModule = new app.flux.react.uielements.Module
   implicit private val songDiv = fluxUielementsModule.songDiv
   implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
+  implicit private val artistDiv = fluxUielementsModule.artistDiv
 
   private val userManagementModule = new hydro.flux.react.uielements.usermanagement.Module
   private val mediaModule = new app.flux.react.app.media.Module

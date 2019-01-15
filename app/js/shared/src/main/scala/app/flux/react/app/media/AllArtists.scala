@@ -1,6 +1,6 @@
 package app.flux.react.app.media
 
-import app.flux.react.uielements
+import app.flux.react.uielements.media.ArtistDiv
 import app.flux.stores.media.AllArtistsStore
 import app.models.media.JsArtist
 import hydro.common.LoggingUtils.logExceptions
@@ -12,7 +12,9 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.collection.immutable.Seq
 
-private[app] final class AllArtists(implicit pageHeader: PageHeader, allArtistsStore: AllArtistsStore)
+private[app] final class AllArtists(implicit pageHeader: PageHeader,
+                                    allArtistsStore: AllArtistsStore,
+                                    artistDiv: ArtistDiv)
     extends HydroReactComponent {
 
   // **************** API ****************//
@@ -40,7 +42,7 @@ private[app] final class AllArtists(implicit pageHeader: PageHeader, allArtistsS
             <.div("Loading...")
           case Some(artists) =>
             artists.map { artist =>
-              uielements.media.ArtistDiv(artist, key = artist.id)
+              artistDiv(artist, key = artist.id)
             }.toVdomArray
         }
       )
