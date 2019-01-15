@@ -9,9 +9,6 @@ import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 import scala.collection.immutable.Seq
 

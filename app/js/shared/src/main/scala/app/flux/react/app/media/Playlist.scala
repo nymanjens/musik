@@ -66,14 +66,12 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                   ^^.classes("playlist-entry" +: ifThenSeq(isCurrentSong, "active")),
                   s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
                   " ",
-                  <.a(
-                    ^^.classes("btn", "btn-default", "btn-xs"),
+                  Bootstrap.Button(size = Size.xs)(
                     ^.onClick --> LogExceptionsCallback[Unit](
                       playStatusStore.play(playlistEntryId = entry.id)),
                     Bootstrap.FontAwesomeIcon("play-circle-o")
                   ),
-                  <.a(
-                    ^^.classes("btn", "btn-default", "btn-xs"),
+                  Bootstrap.Button(size = Size.xs)(
                     ^.onClick --> LogExceptionsCallback[Unit](
                       dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
                     Bootstrap.FontAwesomeIcon("times-circle-o")
