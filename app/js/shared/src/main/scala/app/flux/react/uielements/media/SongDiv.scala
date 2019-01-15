@@ -25,9 +25,7 @@ final class SongDiv(implicit dispatcher: Dispatcher) {
     .renderP((_, props) => {
       implicit val router = props.router
       <.div(
-        <.a(
-          ^^.classes("btn", "btn-default", "btn-xl"),
-          ^.role := "button",
+        Bootstrap.Button(size = Size.xl)(
           ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd),
           props.song.title
         )
