@@ -7,17 +7,12 @@ import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.uielements.Bootstrap
+import hydro.flux.react.uielements.Bootstrap.Variant
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
-import scala.collection.immutable.Seq
 import scala.scalajs.js
 
 final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends HydroReactComponent {
@@ -72,31 +67,27 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
               ),
               <.div(
                 ^.className := "controls",
-                <.button(
-                  ^.className := "btn btn-primary",
+                Bootstrap.Button(Variant.primary)(
                   ^.onClick --> LogExceptionsCallback[Unit](
                     playStatusStore.advanceEntriesInPlaylist(step = -1)),
-                  <.i(^.className := "fa fa-step-backward"),
+                  Bootstrap.FontAwesomeIcon("step-backward"),
                 ),
                 " ",
-                <.button(
-                  ^.className := "btn btn-primary",
+                Bootstrap.Button(Variant.primary)(
                   ^.onClick --> LogExceptionsCallback[Unit](
                     playStatusStore.advanceEntriesInPlaylist(step = +1)),
-                  <.i(^.className := "fa fa-step-forward"),
+                  Bootstrap.FontAwesomeIcon("step-forward"),
                 ),
                 " ",
-                <.button(
-                  ^^.classes(
-                    Seq("btn", "btn-primary") ++ (if (stopAfterCurrentSong) Seq("active") else Seq())),
+                Bootstrap.Button(Variant.primary)(
+                  ^^.ifThen(stopAfterCurrentSong)(^.className := "active"),
                   ^.onClick --> LogExceptionsCallback[Unit](playStatusStore.toggleStopAfterCurrentSong()),
-                  <.i(^.className := "fa fa-fast-forward"),
-                  <.i(^.className := "fa fa-stop"),
+                  Bootstrap.FontAwesomeIcon("fast-forward"),
+                  Bootstrap.FontAwesomeIcon("stop"),
                   " ",
-                  <.i(
-                    ^.className := (if (stopAfterCurrentSong) "fa fa-check-square-o" else "fa fa-square-o"),
+                  Bootstrap.FontAwesomeIcon(if (stopAfterCurrentSong) "check-square-o" else "square-o")(
                     ^.style := js.Dictionary("width" -> "0.8em"),
-                  ),
+                  )
                 ),
               ),
               uielements.media.RawMusicPlayer(

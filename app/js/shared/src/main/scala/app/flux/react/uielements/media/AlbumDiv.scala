@@ -2,16 +2,11 @@ package app.flux.react.uielements.media
 
 import app.flux.router.AppPages
 import app.models.media.JsAlbum
-import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.uielements.Bootstrap
+import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
 object AlbumDiv {
 
@@ -20,11 +15,8 @@ object AlbumDiv {
     .renderP((_, props) => {
       implicit val router = props.router
       <.div(
-        router.anchorWithHrefTo(AppPages.Album(props.album.id))(
-          ^^.classes("btn", "btn-default", "btn-xl"),
-          ^.role := "button",
-          " ",
-          props.album.title
+        Bootstrap.Button(size = Size.xl, tag = router.anchorWithHrefTo(AppPages.Album(props.album.id)))(
+          props.album.title,
         )
       )
     })

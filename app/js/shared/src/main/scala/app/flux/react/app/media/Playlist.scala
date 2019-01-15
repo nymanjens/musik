@@ -70,13 +70,13 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                     ^^.classes("btn", "btn-default", "btn-xs"),
                     ^.onClick --> LogExceptionsCallback[Unit](
                       playStatusStore.play(playlistEntryId = entry.id)),
-                    <.i(^.className := "fa fa-play-circle-o")
+                    Bootstrap.FontAwesomeIcon("play-circle-o")
                   ),
                   <.a(
                     ^^.classes("btn", "btn-default", "btn-xs"),
                     ^.onClick --> LogExceptionsCallback[Unit](
                       dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
-                    <.i(^.className := "fa fa-times-circle-o")
+                    Bootstrap.FontAwesomeIcon("times-circle-o")
                   )
                 )
             }.toVdomArray
