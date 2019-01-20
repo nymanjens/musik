@@ -110,13 +110,6 @@ table.table-bordered {
   }
 }
 
-/****** playlist entry ******/
-.playlist-entry {
-  &.active {
-    font-weight: bold;
-  }
-}
-
 /****** artist-div ******/
 .artist-div {
   .main-info {
@@ -135,8 +128,14 @@ table.table-bordered {
 
 /****** playlist-entry-div ******/
 .playlist-entry-div {
+  &.active {
+    font-weight: bold;
+  }
   .main-info {
     font-size: 1.35em;
+  }
+  .buttons {
+    
   }
   .extra-info {
     padding-left: 21px;

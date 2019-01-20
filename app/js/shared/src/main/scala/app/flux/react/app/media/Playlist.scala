@@ -3,6 +3,7 @@ package app.flux.react.app.media
 import scala.scalajs.js
 import hydro.common.CollectionUtils.ifThenSeq
 import app.flux.action.AppActions
+import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
 import app.models.media.JsPlaylistEntry
@@ -33,6 +34,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                                   dispatcher: Dispatcher,
                                   playlistStore: PlaylistStore,
                                   playStatusStore: PlayStatusStore,
+                                  playlistEntryDiv: PlaylistEntryDiv,
 ) extends HydroReactComponent {
 
   // **************** API ****************//
@@ -70,31 +72,18 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                     rawTagMod("ref", provided.innerRef),
                     entries.zipWithIndex.map {
                       case (entry, index) =>
-                        val isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)
                         ReactBeautifulDnd.Draggable(
                           key = entry.id,
                           draggableId = entry.id.toString,
-                          index = index) {
-                          (provided, snapshot) =>
-                            <.div(
-                              toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
-                              ^.key := entry.id,
-                              rawTagMod("ref", provided.innerRef),
-                              ^^.classes("playlist-entry" +: ifThenSeq(isCurrentSong, "active")),
-                              s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist
-                                .map(_.name) getOrElse "-"})",
-                              " ",
-                              Bootstrap.Button(size = Size.xs)(
-                                ^.onClick --> LogExceptionsCallback[Unit](
-                                  playStatusStore.play(playlistEntryId = entry.id)),
-                                Bootstrap.FontAwesomeIcon("play-circle-o")
-                              ),
-                              Bootstrap.Button(size = Size.xs)(
-                                ^.onClick --> LogExceptionsCallback[Unit](
-                                  dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
-                                Bootstrap.FontAwesomeIcon("times-circle-o")
-                              )
-                            )
+                          index = index) { (provided, snapshot) =>
+                          <.div(
+                            toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
+                            ^.key := entry.id,
+                            rawTagMod("ref", provided.innerRef),
+                            playlistEntryDiv(
+                              entry,
+                              isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)),
+                          )
                         }
                     }.toVdomArray
                   )
