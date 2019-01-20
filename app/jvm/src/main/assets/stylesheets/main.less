@@ -126,41 +126,51 @@ table.table-bordered {
   }
 }
 
-/****** playlist-entry-div ******/
-.playlist-entry-div {
-  width: 100%;
-  max-width: 600px;
-
-  &:hover {
-    .main-info {
+/****** playlist ******/
+.playlist {
+  .draggable {
+    &.dragging {
       color: orange;
     }
-  }
-  &.active { // TODO: Change this
-    font-weight: bold;
-  }
-  .main-info {
-    float: left;
-    font-size: 1.35em;
-  }
-  .buttons {
-    float: right;
-    font-size: 1.5em;
-    i:hover {
-      color: orange;
-      cursor: pointer;
-    }
-  }
-  .extra-info {
-    clear: both;
-    padding-left: 21px;
-    height: 35px;
-    &, a {
-      color: #AAA;
-    }
+    .playlist-entry-div {
+      width: 100%;
+      max-width: 600px;
 
-    .artist {
-      padding-right: 20px;
+      &.active {
+        .main-info {
+          font-weight: bold;
+          color: blueviolet;
+        }
+      }
+      &:hover {
+        .main-info {
+          color: orange;
+        }
+      }
+      .main-info {
+        float: left;
+        font-size: 1.35em;
+      }
+      .buttons {
+        float: right;
+        font-size: 1.5em;
+        i:hover {
+          color: orange;
+          cursor: pointer;
+        }
+      }
+      .extra-info {
+        clear: both;
+        padding-left: 21px;
+        height: 35px;
+        &, a {
+          color: #AAA;
+        }
+
+        .artist {
+          padding-right: 20px;
+        }
+      }
     }
   }
 }

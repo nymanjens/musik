@@ -69,6 +69,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
               ReactBeautifulDnd.Droppable(droppableId = "droppable") {
                 (provided, snapshot) =>
                   <.div(
+                    ^.className := "playlist",
                     rawTagMod("ref", provided.innerRef),
                     entries.zipWithIndex.map {
                       case (entry, index) =>
@@ -78,6 +79,8 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                           index = index) { (provided, snapshot) =>
                           <.div(
                             toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
+                            ^.className := "draggable",
+                            ^^.ifThen(snapshot.isDragging)(^.className := "dragging"),
                             ^.key := entry.id,
                             rawTagMod("ref", provided.innerRef),
                             playlistEntryDiv(
