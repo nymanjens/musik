@@ -1,5 +1,6 @@
 package app.flux.react.app.media
 
+import scala.scalajs.js
 import hydro.common.CollectionUtils.ifThenSeq
 import app.flux.action.AppActions
 import app.flux.stores.media.PlayStatusStore
@@ -21,8 +22,12 @@ import japgolly.scalajs.react.vdom.html_<^._
 import hydro.flux.react.uielements.Bootstrap.Variant
 import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.uielements.Bootstrap
+import hydro.jsfacades.ReactBeautifulDnd
+import hydro.jsfacades.ReactBeautifulDnd.OnDragEndHandler
+import org.scalajs.dom
 
 import scala.collection.immutable.Seq
+import scala.collection.mutable
 
 private[app] final class Playlist(implicit pageHeader: PageHeader,
                                   dispatcher: Dispatcher,
@@ -58,28 +63,56 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
           case None =>
             <.div("Loading...")
           case Some(entries) =>
-            entries.map {
-              entry =>
-                val isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)
-                <.div(
-                  ^.key := entry.id,
-                  ^^.classes("playlist-entry" +: ifThenSeq(isCurrentSong, "active")),
-                  s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist.map(_.name) getOrElse "-"})",
-                  " ",
-                  Bootstrap.Button(size = Size.xs)(
-                    ^.onClick --> LogExceptionsCallback[Unit](
-                      playStatusStore.play(playlistEntryId = entry.id)),
-                    Bootstrap.FontAwesomeIcon("play-circle-o")
-                  ),
-                  Bootstrap.Button(size = Size.xs)(
-                    ^.onClick --> LogExceptionsCallback[Unit](
-                      dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
-                    Bootstrap.FontAwesomeIcon("times-circle-o")
+            ReactBeautifulDnd.DragDropContext(onDragEndHandler = onDragEndHandler)(
+              ReactBeautifulDnd.Droppable(droppableId = "droppable") {
+                (provided, snapshot) =>
+                  <.div(
+                    rawTagMod("ref", provided.innerRef),
+                    entries.zipWithIndex.map {
+                      case (entry, index) =>
+                        val isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)
+                        ReactBeautifulDnd.Draggable(
+                          key = entry.id,
+                          draggableId = entry.id.toString,
+                          index = index) {
+                          (provided, snapshot) =>
+                            <.div(
+                              toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
+                              ^.key := entry.id,
+                              rawTagMod("ref", provided.innerRef),
+                              ^^.classes("playlist-entry" +: ifThenSeq(isCurrentSong, "active")),
+                              s"- ${entry.song.trackNumber} ${entry.song.title} (artist: ${entry.song.artist
+                                .map(_.name) getOrElse "-"})",
+                              " ",
+                              Bootstrap.Button(size = Size.xs)(
+                                ^.onClick --> LogExceptionsCallback[Unit](
+                                  playStatusStore.play(playlistEntryId = entry.id)),
+                                Bootstrap.FontAwesomeIcon("play-circle-o")
+                              ),
+                              Bootstrap.Button(size = Size.xs)(
+                                ^.onClick --> LogExceptionsCallback[Unit](
+                                  dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(entry.id)))),
+                                Bootstrap.FontAwesomeIcon("times-circle-o")
+                              )
+                            )
+                        }
+                    }.toVdomArray
                   )
-                )
-            }.toVdomArray
+              }
+            )
         }
       )
     }
+
+    private val onDragEndHandler: OnDragEndHandler = { (sourceIndex, destinationIndex) =>
+      println(s"onDragEndHandler($sourceIndex, $destinationIndex)")
+    }
+
+    private def toTagMods(props: js.Dictionary[js.Object]): Seq[TagMod] = {
+      val scalaProps: mutable.Map[String, js.Object] = props
+      for ((name, value) <- scalaProps.toVector) yield rawTagMod(name, value)
+    }
+
+    private def rawTagMod(name: String, value: js.Object): TagMod = TagMod.fn(_.addAttr(name, value))
   }
 }
