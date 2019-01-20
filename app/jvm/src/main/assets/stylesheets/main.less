@@ -128,19 +128,36 @@ table.table-bordered {
 
 /****** playlist-entry-div ******/
 .playlist-entry-div {
-  &.active {
+  width: 100%;
+  max-width: 600px;
+
+  &:hover {
+    .main-info {
+      color: orange;
+    }
+  }
+  &.active { // TODO: Change this
     font-weight: bold;
   }
   .main-info {
+    float: left;
     font-size: 1.35em;
   }
   .buttons {
-    
+    float: right;
+    font-size: 1.5em;
+    i:hover {
+      color: orange;
+      cursor: pointer;
+    }
   }
   .extra-info {
+    clear: both;
     padding-left: 21px;
     height: 35px;
-    color: #AAA;
+    &, a {
+      color: #AAA;
+    }
 
     .artist {
       padding-right: 20px;

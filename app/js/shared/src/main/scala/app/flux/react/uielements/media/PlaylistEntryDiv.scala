@@ -46,21 +46,21 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
           Bootstrap.Glyphicon("music"),
           " ",
           song.title,
-          " ",
-          Bootstrap.Button()(
+        ),
+        <.div(
+          ^.className := "buttons",
+          Bootstrap.FontAwesomeIcon("play-circle-o")(
             ^.onClick --> {
               playStatusStore.play(playlistEntryId = props.playlistEntry.id)
               Callback.empty
             },
-            Bootstrap.FontAwesomeIcon("play-circle-o")
           ),
           " ",
-          Bootstrap.Button()(
+          Bootstrap.FontAwesomeIcon("times-circle-o")(
             ^.onClick --> {
               dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(props.playlistEntry.id)))
               Callback.empty
             },
-            Bootstrap.FontAwesomeIcon("times-circle-o"),
           )
         ),
         <.div(
