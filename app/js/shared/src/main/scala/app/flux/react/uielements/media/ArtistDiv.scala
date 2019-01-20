@@ -52,12 +52,12 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
     }
 
     private def albumAndSongsCount(storeState: ArtistDetailStoreFactory.State): VdomElement = {
-      def countIfNonEmpty(iconClass: String, seq: Seq[_]): Option[VdomElement] = {
+      def countIfNonEmpty(icon: VdomTag, seq: Seq[_]): Option[VdomElement] = {
         if (seq.nonEmpty) {
           Some[VdomElement](
             <.span(
               ^.className := "count",
-              Bootstrap.Icon(iconClass),
+              icon,
               " ",
               seq.size,
             )
@@ -68,8 +68,8 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
       }
 
       <.span(
-        <<.ifThen(countIfNonEmpty("glyphicon glyphicon-cd", storeState.albums))(identity),
-        <<.ifThen(countIfNonEmpty("glyphicon glyphicon-music", storeState.songsWithoutAlbum))(identity),
+        <<.ifThen(countIfNonEmpty(Bootstrap.Glyphicon("cd"), storeState.albums))(identity),
+        <<.ifThen(countIfNonEmpty(Bootstrap.Glyphicon("music"), storeState.songsWithoutAlbum))(identity),
       )
     }
   }
