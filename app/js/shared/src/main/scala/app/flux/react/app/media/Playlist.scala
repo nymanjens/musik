@@ -105,7 +105,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
           val destinationIndex = maybeDestinationIndex.get
           val remainingEntries = entries.filterNot(_ == entries(sourceIndex))
           def maybeOrderToken(index: Int): Option[OrderToken] =
-            if (entries.indices contains index) Some(entries(index).orderToken) else None
+            if (remainingEntries.indices contains index) Some(remainingEntries(index).orderToken) else None
           val newOrderToken =
             OrderToken.middleBetween(maybeOrderToken(destinationIndex - 1), maybeOrderToken(destinationIndex))
           playlistStore.updateOrderTokenAndReturnState(entries(sourceIndex), newOrderToken)
