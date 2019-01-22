@@ -94,8 +94,9 @@ object BuildSettings {
     "startbootstrap-sb-admin-2" -> "1.0.7",
     // Used in ScalaJS code
     "lokijs" -> "1.4.2",
-    "react" -> "16.2.0",
-    "react-dom" -> "16.2.0",
+    "react" -> "16.3.1",
+    "react-dom" -> "16.3.1",
+    "react-beautiful-dnd" -> "10.0.3",
     "react-contenteditable" -> "2.1.0",
     "escape-html" -> "1.0.3",
     "mousetrap" -> "^1.6.2",

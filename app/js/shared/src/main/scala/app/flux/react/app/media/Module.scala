@@ -4,6 +4,7 @@ import hydro.common.I18n
 import app.flux.react.uielements
 import app.flux.react.uielements.media.ArtistDiv
 import app.flux.react.uielements.media.MusicPlayerDiv
+import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.stores.media.AlbumDetailStoreFactory
 import app.flux.stores.media.AllArtistsStore
 import app.flux.stores.media.ArtistDetailStoreFactory
@@ -22,6 +23,7 @@ final class Module(implicit i18n: I18n,
                    songDiv: uielements.media.SongDiv,
                    musicPlayerDiv: MusicPlayerDiv,
                    artistDiv: ArtistDiv,
+                   playlistEntryDiv: PlaylistEntryDiv,
                    playlistStore: PlaylistStore,
                    playStatusStore: PlayStatusStore,
                    allArtistsStore: AllArtistsStore,
