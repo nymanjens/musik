@@ -78,7 +78,8 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                               playlistEntryDiv(
                                 entry,
                                 isCurrentSong =
-                                  state.playStatusStoreState.currentPlaylistEntry == Some(entry)),
+                                  state.playStatusStoreState.currentPlaylistEntry.map(_.id) ==
+                                    Some(entry.id)),
                             )
                         }
                     }.toVdomArray
