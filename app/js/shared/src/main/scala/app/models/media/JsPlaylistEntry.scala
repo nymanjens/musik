@@ -15,6 +15,8 @@ case class JsPlaylistEntry(song: JsSong, orderToken: OrderToken, userId: Long, i
 }
 
 object JsPlaylistEntry {
+  implicit val ordering: Ordering[JsPlaylistEntry] = Ordering.by(_.toEntity)
+
   def fromEntity(playlistEntry: PlaylistEntry)(implicit entityAccess: EntityAccess): Future[JsPlaylistEntry] =
     async {
       val song = await(JsSong.fromEntityId(playlistEntry.songId))

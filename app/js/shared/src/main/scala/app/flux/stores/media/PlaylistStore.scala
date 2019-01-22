@@ -98,11 +98,16 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
   }
 
   // **************** Additional public API **************** //
-  def updateOrderTokenAndReturnState(entry: JsPlaylistEntry, newOrderToken: OrderToken): State = {
+  def updateOrderTokenAndReturnState(oldState: State,
+                                     entry: JsPlaylistEntry,
+                                     newOrderToken: OrderToken): State = {
     // TODO: Update with fieldmask or replace by remove and add (updating PlayStatus)
     entityAccess.persistModifications(
       EntityModification.createUpdate(entry.toEntity.copy(orderToken = newOrderToken)))
-    null
+
+    def updated(entries: Seq[JsPlaylistEntry]): Seq[JsPlaylistEntry] =
+      entries.updated(entries.indexOf(entry), entry.copy(orderToken = newOrderToken)).sorted
+    State(entries = updated(oldState.entries))
   }
 
   // **************** Implementation of base class methods **************** //

@@ -22,15 +22,16 @@ case class PlaylistEntry(songId: Long, orderToken: OrderToken, userId: Long, idO
 object PlaylistEntry {
   implicit val Type: EntityType[PlaylistEntry] = EntityType()
 
+  implicit val ordering: Ordering[PlaylistEntry] = Ordering.fromLessThan { (e1, e2) =>
+    e1.orderToken compare e2.orderToken match {
+      case 0 => e1.id < e2.id
+      case i => i < 0
+    }
+  }
+
   def tupled = (this.apply _).tupled
 
   def getOrderedSeq()(implicit user: User, entityAccess: EntityAccess): Future[Seq[PlaylistEntry]] = async {
-    await(entityAccess.newQuery[PlaylistEntry]().filter(ModelFields.PlaylistEntry.userId === user.id).data())
-      .sortWith(lt = (e1, e2) => {
-        e1.orderToken compare e2.orderToken match {
-          case 0 => e1.id < e2.id
-          case i => i < 0
-        }
-      })
+    await(entityAccess.newQuery[PlaylistEntry]().filter(ModelFields.PlaylistEntry.userId === user.id).data()).sorted
   }
 }

@@ -98,9 +98,13 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
             if (remainingEntries.indices contains index) Some(remainingEntries(index).orderToken) else None
           val newOrderToken =
             OrderToken.middleBetween(maybeOrderToken(destinationIndex - 1), maybeOrderToken(destinationIndex))
-          playlistStore.updateOrderTokenAndReturnState(entries(sourceIndex), newOrderToken)
 
-          // TODO: modstate
+          $.modState { oldState =>
+            val oldStoreState = PlaylistStore.State(entries)
+            val newStoreState =
+              playlistStore.updateOrderTokenAndReturnState(oldStoreState, entries(sourceIndex), newOrderToken)
+            oldState.copy(maybeEntries = Some(newStoreState.entries))
+          }.runNow()
         }
     }
 
