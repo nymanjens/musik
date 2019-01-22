@@ -1,35 +1,25 @@
 package app.flux.react.app.media
 
-import scala.scalajs.js
-import hydro.common.CollectionUtils.ifThenSeq
-import app.flux.action.AppActions
 import app.flux.react.uielements.media.PlaylistEntryDiv
-import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
+import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsPlaylistEntry
-import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
 import hydro.common.OrderToken
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.^^
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext
-import japgolly.scalajs.react._
-import japgolly.scalajs.react.vdom.html_<^.<
-import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 import hydro.jsfacades.ReactBeautifulDnd
 import hydro.jsfacades.ReactBeautifulDnd.OnDragEndHandler
-import org.scalajs.dom
+import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.html_<^._
+import japgolly.scalajs.react.vdom.html_<^.<
 
 import scala.collection.immutable.Seq
 import scala.collection.mutable
+import scala.scalajs.js
 
 private[app] final class Playlist(implicit pageHeader: PageHeader,
                                   dispatcher: Dispatcher,
@@ -87,8 +77,8 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                               rawTagMod("ref", provided.innerRef),
                               playlistEntryDiv(
                                 entry,
-                                isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(
-                                  entry)),
+                                isCurrentSong =
+                                  state.playStatusStoreState.currentPlaylistEntry == Some(entry)),
                             )
                         }
                     }.toVdomArray

@@ -14,7 +14,6 @@ object ReactBeautifulDnd {
   // **************** API ****************//
   def DragDropContext(onDragEndHandler: OnDragEndHandler)(children: VdomNode*) = {
     val onDragEnd: js.Function1[Result, Unit] = result => {
-      dom.console.log("onDragEndHandler", result)
       onDragEndHandler(
         sourceIndex = result.source.index,
         destinationIndex = Option(result.destination) map (_.index))
