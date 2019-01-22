@@ -46,13 +46,13 @@ object ReactBeautifulDnd {
   }
 
   @js.native
-  private trait Provided extends js.Object {
+  trait Provided extends js.Object {
     def innerRef: js.Object = js.native
     def draggableProps: js.Dictionary[js.Object] = js.native
     def dragHandleProps: js.Dictionary[js.Object] = js.native
   }
   @js.native
-  private trait Snapshot extends js.Object {
+  trait Snapshot extends js.Object {
     def isDragging: Boolean = js.native
     def isDraggingOver: Boolean = js.native
   }
