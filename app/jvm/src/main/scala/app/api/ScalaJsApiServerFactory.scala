@@ -5,6 +5,7 @@ import hydro.common.UpdateTokens.toUpdateToken
 import hydro.common.PlayI18n
 import app.models.access.JvmEntityAccess
 import app.models.media.PlayStatus
+import app.models.media.PlaylistEntry
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
 import app.models.user.User
@@ -46,8 +47,9 @@ final class ScalaJsApiServerFactory @Inject()(implicit clock: Clock,
 
     override def persistEntityModifications(modifications: Seq[EntityModification]): Unit = {
       // check permissions
+      val entityTypesWithUpdateException = Set[EntityType.any](PlayStatus.Type, PlaylistEntry.Type)
       for (modification <- modifications) {
-        if (modification.entityType != PlayStatus.Type) {
+        if (!(entityTypesWithUpdateException contains modification.entityType)) {
           require(
             !modification.isInstanceOf[EntityModification.Update[_]],
             "Update modifications are not allowed by remote clients " +

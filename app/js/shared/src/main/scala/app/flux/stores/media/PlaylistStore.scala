@@ -97,6 +97,14 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
       }
   }
 
+  // **************** Additional public API **************** //
+  def updateOrderTokenAndReturnState(entry: JsPlaylistEntry, newOrderToken: OrderToken): State = {
+    // TODO: Update with fieldmask or replace by remove and add (updating PlayStatus)
+    entityAccess.persistModifications(
+      EntityModification.createUpdate(entry.toEntity.copy(orderToken = newOrderToken)))
+    null
+  }
+
   // **************** Implementation of base class methods **************** //
   override protected def calculateState(): Future[State] = async {
     val entries = await(PlaylistEntry.getOrderedSeq())

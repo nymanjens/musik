@@ -9,6 +9,7 @@ import app.flux.stores.media.PlaylistStore
 import app.models.media.JsPlaylistEntry
 import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.common.LoggingUtils.logExceptions
+import hydro.common.OrderToken
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.^^
@@ -65,7 +66,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
           case None =>
             <.div("Loading...")
           case Some(entries) =>
-            ReactBeautifulDnd.DragDropContext(onDragEndHandler = onDragEndHandler)(
+            ReactBeautifulDnd.DragDropContext(onDragEndHandler = onDragEndHandler(entries))(
               ReactBeautifulDnd.Droppable(droppableId = "droppable") {
                 (provided, snapshot) =>
                   <.div(
@@ -76,17 +77,19 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                         ReactBeautifulDnd.Draggable(
                           key = entry.id,
                           draggableId = entry.id.toString,
-                          index = index) { (provided, snapshot) =>
-                          <.div(
-                            toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
-                            ^.className := "draggable",
-                            ^^.ifThen(snapshot.isDragging)(^.className := "dragging"),
-                            ^.key := entry.id,
-                            rawTagMod("ref", provided.innerRef),
-                            playlistEntryDiv(
-                              entry,
-                              isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(entry)),
-                          )
+                          index = index) {
+                          (provided, snapshot) =>
+                            <.div(
+                              toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
+                              ^.className := "draggable",
+                              ^^.ifThen(snapshot.isDragging)(^.className := "dragging"),
+                              ^.key := entry.id,
+                              rawTagMod("ref", provided.innerRef),
+                              playlistEntryDiv(
+                                entry,
+                                isCurrentSong = state.playStatusStoreState.currentPlaylistEntry == Some(
+                                  entry)),
+                            )
                         }
                     }.toVdomArray
                   )
@@ -96,8 +99,19 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
       )
     }
 
-    private val onDragEndHandler: OnDragEndHandler = { (sourceIndex, destinationIndex) =>
-      println(s"onDragEndHandler($sourceIndex, $destinationIndex)")
+    private def onDragEndHandler(entries: Seq[JsPlaylistEntry]): OnDragEndHandler = {
+      (sourceIndex, maybeDestinationIndex) =>
+        if (maybeDestinationIndex.isDefined) {
+          val destinationIndex = maybeDestinationIndex.get
+          val remainingEntries = entries.filterNot(_ == entries(sourceIndex))
+          def maybeOrderToken(index: Int): Option[OrderToken] =
+            if (entries.indices contains index) Some(entries(index).orderToken) else None
+          val newOrderToken =
+            OrderToken.middleBetween(maybeOrderToken(destinationIndex - 1), maybeOrderToken(destinationIndex))
+          playlistStore.updateOrderTokenAndReturnState(entries(sourceIndex), newOrderToken)
+
+          // TODO: modstate
+        }
     }
 
     private def toTagMods(props: js.Dictionary[js.Object]): Seq[TagMod] = {

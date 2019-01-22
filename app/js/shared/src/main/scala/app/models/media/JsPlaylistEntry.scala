@@ -9,7 +9,10 @@ import scala.async.Async.await
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-case class JsPlaylistEntry(song: JsSong, orderToken: OrderToken, id: Long)
+case class JsPlaylistEntry(song: JsSong, orderToken: OrderToken, userId: Long, id: Long) {
+  def toEntity: PlaylistEntry =
+    PlaylistEntry(songId = song.id, orderToken = orderToken, userId = userId, idOption = Some(id))
+}
 
 object JsPlaylistEntry {
   def fromEntity(playlistEntry: PlaylistEntry)(implicit entityAccess: EntityAccess): Future[JsPlaylistEntry] =
@@ -18,6 +21,7 @@ object JsPlaylistEntry {
       media.JsPlaylistEntry(
         song = song,
         orderToken = playlistEntry.orderToken,
+        userId = playlistEntry.userId,
         id = playlistEntry.id
       )
     }
