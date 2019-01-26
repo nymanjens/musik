@@ -54,7 +54,8 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
       val updatedUser1 = user1.copy(name = "other nme")
       entityAccess.persistEntityModifications(EntityModification.Add(user1))
 
-      entityAccess.persistEntityModifications(EntityModification.createUpdate(updatedUser1))
+      entityAccess.persistEntityModifications(EntityModification.createUpdateAllFields(lastUpdateTime =>
+        updatedUser1.copy(lastUpdateTime = lastUpdateTime)))
 
       entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1)
     }

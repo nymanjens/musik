@@ -1,7 +1,9 @@
 package hydro.models.modification
 
+import scala.collection.immutable.Seq
 import java.lang.Math.abs
 
+import hydro.common.time.Clock
 import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.Entity.LastUpdateTime
@@ -36,7 +38,17 @@ object EntityModification {
     Add(entityWithId)
   }
 
-  def createUpdate[E <: Entity: EntityType](entity: E): Update[E] = Update(entity)
+  def createUpdate[E <: Entity: EntityType](
+      entityWithLastUpdateTime: LastUpdateTime => E,
+      fieldMask: Seq[ModelField[_, E]])(implicit clock: Clock): Update[E] = {
+    val now = clock.nowInstant
+    Update(entityWithLastUpdateTime(LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)))
+  }
+
+  def createUpdateAllFields[E <: Entity: EntityType](entityWithLastUpdateTime: LastUpdateTime => E)(
+      implicit clock: Clock): Update[E] = {
+    Update(entityWithLastUpdateTime(LastUpdateTime.AllFields(clock.nowInstant)))
+  }
 
   def createRemove[E <: Entity: EntityType](entityWithId: E): Remove[E] = {
     require(entityWithId.idOption.isDefined, entityWithId)

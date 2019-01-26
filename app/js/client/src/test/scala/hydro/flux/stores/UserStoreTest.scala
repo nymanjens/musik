@@ -21,6 +21,7 @@ object UserStoreTest extends TestSuite {
     implicit val entityAccess = testModule.fakeEntityAccess
     implicit val fakeDispatcher = testModule.fakeDispatcher
     implicit val fakeScalaJsApiClient = testModule.fakeScalaJsApiClient
+    implicit val fakeClock = testModule.fakeClock
 
     val store: UserStore = new UserStore()
 
@@ -69,7 +70,8 @@ object UserStoreTest extends TestSuite {
       entityAccess.addRemotelyAddedEntities(testUserA)
       entityAccess.addRemotelyAddedEntities(testUserB)
       val newStateFuture = store.stateFuture
-      entityAccess.persistModifications(EntityModification.createUpdate(testUserBUpdate))
+      entityAccess.persistModifications(EntityModification.createUpdateAllFields(lastUpdateTime =>
+        testUserBUpdate.copy(lastUpdateTime = lastUpdateTime)))
 
       await(newStateFuture).allUsers ==> Seq(testUserA, testUserBUpdate)
     }

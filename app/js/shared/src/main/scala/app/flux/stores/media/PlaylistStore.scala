@@ -5,11 +5,13 @@ import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import app.flux.action.AppActions.AddSongsToPlaylist
 import app.flux.action.AppActions.RemoveEntriesFromPlaylist
 import app.flux.stores.media.PlaylistStore.State
+import app.models.access.ModelFields
 import app.models.media.JsPlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import hydro.models.modification.EntityModification
 import app.models.user.User
+import hydro.common.time.Clock
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.models.access.JsEntityAccess
@@ -20,7 +22,10 @@ import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dispatcher: Dispatcher)
+final class PlaylistStore(implicit entityAccess: JsEntityAccess,
+                          user: User,
+                          dispatcher: Dispatcher,
+                          clock: Clock)
     extends AsyncEntityDerivedStateStore[State] {
   dispatcher.registerPartialAsync {
     case AddSongsToPlaylist(songIds, placement) =>
@@ -86,7 +91,12 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
             await(entityAccess.persistModifications {
               maybeNextEntry match {
                 case Some(nextEntry) =>
-                  EntityModification.createUpdate(playStatus.get.copy(currentPlaylistEntryId = nextEntry.id))
+                  EntityModification.createUpdate(
+                    lastUpdateTime =>
+                      playStatus.get
+                        .copy(currentPlaylistEntryId = nextEntry.id, lastUpdateTime = lastUpdateTime),
+                    fieldMask = Seq(ModelFields.PlayStatus.currentPlaylistEntryId)
+                  )
                 case None => EntityModification.createRemove(playStatus.get)
               }
             })
@@ -101,9 +111,10 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess, user: User, dis
   def updateOrderTokenAndReturnState(oldState: State,
                                      entry: JsPlaylistEntry,
                                      newOrderToken: OrderToken): State = {
-    // TODO: Update with fieldmask or replace by remove and add (updating PlayStatus)
     entityAccess.persistModifications(
-      EntityModification.createUpdate(entry.toEntity.copy(orderToken = newOrderToken)))
+      EntityModification.createUpdate(
+        lastUpdateTime => entry.toEntity.copy(orderToken = newOrderToken, lastUpdateTime = lastUpdateTime),
+        fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
 
     def updated(entries: Seq[JsPlaylistEntry]): Seq[JsPlaylistEntry] =
       entries.updated(entries.indexOf(entry), entry.copy(orderToken = newOrderToken)).sorted
