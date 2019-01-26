@@ -14,6 +14,7 @@ import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
+import hydro.models.UpdatableEntity
 import hydro.scala2js.Scala2Js.Converter
 import hydro.scala2js.Scala2Js.MapConverter
 
@@ -204,7 +205,11 @@ object StandardConverters {
           case Vector(entity) if modificationTypeNumber == addNumber =>
             EntityModification.Add(Scala2Js.toScala[E](entity))
           case Vector(entity) if modificationTypeNumber == updateNumber =>
-            EntityModification.Update(Scala2Js.toScala[E](entity))
+            def updateInternal[E2 <: UpdatableEntity] = {
+              implicit val castEntityType = entityType.asInstanceOf[EntityType[E2]]
+              EntityModification.Update(Scala2Js.toScala[E2](entity))
+            }
+            updateInternal
           case Vector(entityId) if modificationTypeNumber == removeNumber =>
             EntityModification.Remove(Scala2Js.toScala[Long](entityId))(entityType)
         }
