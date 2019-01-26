@@ -80,9 +80,9 @@ abstract class StandardPicklers {
   implicit val EntityTypePickler: Pickler[EntityType.any] = enumPickler(EntityTypes.all)
 
   implicit object LastUpdateTimePickler extends Pickler[LastUpdateTime] {
-    val neverUpdated: Byte = 1
-    val allFields: Byte = 2
-    val perField: Byte = 3
+    private val neverUpdated: Byte = 1
+    private val allFields: Byte = 2
+    private val perField: Byte = 3
 
     override def pickle(lastUpdateTime: LastUpdateTime)(implicit state: PickleState): Unit = logExceptions {
       lastUpdateTime match {
@@ -160,9 +160,9 @@ abstract class StandardPicklers {
   }
 
   implicit object EntityModificationPickler extends Pickler[EntityModification] {
-    val addNumber: Byte = 1
-    val updateNumber: Byte = 3
-    val removeNumber: Byte = 2
+    private val addNumber: Byte = 1
+    private val updateNumber: Byte = 3
+    private val removeNumber: Byte = 2
 
     override def pickle(modification: EntityModification)(implicit state: PickleState): Unit =
       logExceptions {

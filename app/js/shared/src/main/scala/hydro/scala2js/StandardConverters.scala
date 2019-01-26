@@ -1,5 +1,6 @@
 package hydro.scala2js
 
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -15,6 +16,7 @@ import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
 import hydro.models.UpdatableEntity
+import hydro.models.UpdatableEntity.LastUpdateTime
 import hydro.scala2js.Scala2Js.Converter
 import hydro.scala2js.Scala2Js.MapConverter
 
@@ -143,6 +145,16 @@ object StandardConverters {
     }
   }
 
+  implicit object InstantConverter extends Converter[Instant] {
+    override def toJs(value: Instant) = {
+      js.Array[js.Any](Scala2Js.toJs(value.getEpochSecond), value.getNano)
+    }
+    override def toScala(value: js.Any) = value.asInstanceOf[js.Array[js.Any]].toVector match {
+      case Seq(epochSecond, nano) =>
+        Instant.ofEpochSecond(Scala2Js.toScala[Long](epochSecond), Scala2Js.toScala[Int](nano))
+    }
+  }
+
   implicit object FiniteDurationConverter extends Converter[FiniteDuration] {
 
     private val secondsInDay = 60 * 60 * 24
@@ -161,6 +173,38 @@ object StandardConverters {
     }
     override def toScala(value: js.Any) = {
       OrderToken(value.asInstanceOf[js.Array[Int]].toList)
+    }
+  }
+
+  implicit object LastUpdateTimeConverter extends Converter[LastUpdateTime] {
+    private val neverUpdated: Int = 1
+    private val allFields: Int = 2
+    private val perField: Int = 3
+
+    override def toJs(value: LastUpdateTime) = value match {
+      case LastUpdateTime.NeverUpdated    => js.Array[js.Any](neverUpdated)
+      case LastUpdateTime.AllFields(time) => js.Array[js.Any](allFields, Scala2Js.toJs(time))
+      case LastUpdateTime.PerField(timePerField) =>
+        val timePerFieldJs = timePerField.map {
+          case (field, time) => js.Array[js.Any](ModelFields.toNumber(field), Scala2Js.toJs(time))
+        }.toJSArray
+        js.Array[js.Any](perField, timePerFieldJs)
+    }
+    override def toScala(value: js.Any) = {
+      val array = value.asInstanceOf[js.Array[js.Any]]
+      Scala2Js.toScala[Int](array(0)) match {
+        case `neverUpdated` => LastUpdateTime.NeverUpdated
+        case `allFields`    => LastUpdateTime.AllFields(Scala2Js.toScala[Instant](array(1)))
+        case `perField` =>
+          val timePerFieldJs = array(1).asInstanceOf[js.Array[js.Any]]
+          val timePerField = timePerFieldJs.toVector
+            .map { item =>
+              val arr = item.asInstanceOf[js.Array[js.Any]]
+              ModelFields.fromNumber(Scala2Js.toScala[Int](arr(0))) -> Scala2Js.toScala[Instant](arr(1))
+            }
+            .toMap[ModelField.any, Instant]
+          LastUpdateTime.PerField(timePerField)
+      }
     }
   }
 
@@ -234,17 +278,30 @@ object StandardConverters {
       for (id <- entity.idOption) {
         result.update(ModelFields.id[E].name, Scala2Js.toJs(id, ModelFields.id[E]))
       }
+      entity match {
+        case updatableEntity: UpdatableEntity =>
+          result.update("lastUpdateTime", Scala2Js.toJs(updatableEntity.lastUpdateTime))
+        case _ =>
+      }
       result
     }
 
     override def toScala(dict: js.Dictionary[js.Any]) = {
-      val entityWithoutId = toScalaWithoutId(new EntityConverter.DictWrapper(dict))
+      var entity = toScalaWithoutId(new EntityConverter.DictWrapper(dict))
+
       val idOption = dict.get(ModelFields.id[E].name).map(Scala2Js.toScala[Long])
       if (idOption.isDefined) {
-        Entity.withId(idOption.get, entityWithoutId)
-      } else {
-        entityWithoutId
+        entity = Entity.withId(idOption.get, entity)
       }
+
+      entity match {
+        case updatableEntity: UpdatableEntity =>
+          val lastUpdateTime = Scala2Js.toScala[LastUpdateTime](dict("lastUpdateTime"))
+          entity = updatableEntity.withLastUpdateTime(lastUpdateTime).asInstanceOf[E]
+        case _ =>
+      }
+
+      entity
     }
   }
   object EntityConverter {
