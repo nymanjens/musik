@@ -3,6 +3,8 @@ package hydro.models.modification
 import java.lang.Math.abs
 
 import hydro.models.Entity
+import hydro.models.access.ModelField
+import hydro.models.Entity.LastUpdateTime
 
 import scala.util.Random
 
@@ -55,6 +57,9 @@ object EntityModification {
   /** Update to an existing entity. */
   case class Update[E <: Entity: EntityType](updatedEntity: E) extends EntityModification {
     require(updatedEntity.idOption.isDefined, s"Entity ID must be defined (for entity $updatedEntity)")
+    require(
+      updatedEntity.lastUpdateTime != LastUpdateTime.NeverUpdated,
+      s"Entity has no lastUpdateTime: $updatedEntity")
     entityType.checkRightType(updatedEntity)
 
     override def entityType: EntityType[E] = implicitly[EntityType[E]]
