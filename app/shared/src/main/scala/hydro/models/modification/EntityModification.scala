@@ -52,12 +52,7 @@ object EntityModification {
     override def entityId: Long = entity.id
   }
 
-  /**
-    * Update to an existing entity.
-    *
-    * Warning: Different clients could end up in different states if the ordering of Updates are changed. Don't use
-    * this for client-created modifications. Use Remove + Add instead.
-    */
+  /** Update to an existing entity. */
   case class Update[E <: Entity: EntityType](updatedEntity: E) extends EntityModification {
     require(updatedEntity.idOption.isDefined, s"Entity ID must be defined (for entity $updatedEntity)")
     entityType.checkRightType(updatedEntity)

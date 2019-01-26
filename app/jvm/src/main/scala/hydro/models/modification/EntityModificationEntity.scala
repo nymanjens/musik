@@ -15,12 +15,13 @@ import hydro.models.Entity
 case class EntityModificationEntity(userId: Long,
                                     modification: EntityModification,
                                     instant: Instant,
-                                    idOption: Option[Long] = None)
+                                    override val idOption: Option[Long] = None)
     extends Entity {
   require(userId > 0)
   for (idVal <- idOption) require(idVal > 0)
 
   override def withId(id: Long) = copy(idOption = Some(id))
+  override def lastUpdateTime = throw new RuntimeException("Can never be updated")
 
   def user(implicit entityAccess: JvmEntityAccess): User = entityAccess.newQuerySync[User]().findById(userId)
 }

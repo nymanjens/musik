@@ -6,6 +6,7 @@ import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
+import hydro.models.Entity.LastUpdateTime
 
 import scala.async.Async.async
 import scala.async.Async.await
@@ -16,7 +17,8 @@ case class PlayStatus(currentPlaylistEntryId: Long,
                       hasStarted: Boolean,
                       stopAfterCurrentSong: Boolean,
                       userId: Long,
-                      idOption: Option[Long] = None)
+                      override val idOption: Option[Long] = None,
+                      override val lastUpdateTime: LastUpdateTime)
     extends Entity {
 
   override def withId(id: Long) = copy(idOption = Some(id))

@@ -7,6 +7,7 @@ import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
+import hydro.models.Entity.LastUpdateTime
 
 import scala.async.Async.async
 import scala.async.Async.await
@@ -14,7 +15,11 @@ import scala.collection.immutable.Seq
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-case class PlaylistEntry(songId: Long, orderToken: OrderToken, userId: Long, idOption: Option[Long] = None)
+case class PlaylistEntry(songId: Long,
+                         orderToken: OrderToken,
+                         userId: Long,
+                         override val idOption: Option[Long] = None,
+                         override val lastUpdateTime: LastUpdateTime)
     extends Entity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
