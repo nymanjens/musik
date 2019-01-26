@@ -7,7 +7,8 @@ import app.models.user.User
 import hydro.models.Entity
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.EntityAccess
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 import scala.async.Async.async
 import scala.async.Async.await
@@ -20,9 +21,10 @@ case class PlaylistEntry(songId: Long,
                          userId: Long,
                          override val idOption: Option[Long] = None,
                          override val lastUpdateTime: LastUpdateTime = LastUpdateTime.NeverUpdated)
-    extends Entity {
+    extends UpdatableEntity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
+  override def withLastUpdateTime(time: LastUpdateTime): Entity = copy(lastUpdateTime = time)
 }
 object PlaylistEntry {
   implicit val Type: EntityType[PlaylistEntry] = EntityType()

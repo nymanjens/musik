@@ -13,7 +13,8 @@ import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 abstract class StandardPicklers {
 
@@ -174,7 +175,7 @@ abstract class StandardPicklers {
         })
         modification match {
           case EntityModification.Add(entity)      => state.pickle(entity)
-          case EntityModification.Update(entity)   => state.pickle(entity)
+          case EntityModification.Update(entity)   => state.pickle[Entity](entity)
           case EntityModification.Remove(entityId) => state.pickle(entityId)
         }
       }
@@ -189,9 +190,10 @@ abstract class StandardPicklers {
           addModification(entity, entityType)
         case `updateNumber` =>
           val entity = state.unpickle[Entity]
-          def updateModification[E <: Entity](entity: Entity,
-                                              entityType: EntityType[E]): EntityModification = {
-            EntityModification.Update(entityType.checkRightType(entity))(entityType)
+          def updateModification[E <: UpdatableEntity](entity: Entity,
+                                                       entityType: EntityType.any): EntityModification = {
+            val castEntityType = entityType.asInstanceOf[EntityType[E]]
+            EntityModification.Update(castEntityType.checkRightType(entity))(castEntityType)
           }
           updateModification(entity, entityType)
         case `removeNumber` =>

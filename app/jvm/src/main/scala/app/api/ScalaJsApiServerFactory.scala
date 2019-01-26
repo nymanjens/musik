@@ -130,8 +130,7 @@ final class ScalaJsApiServerFactory @Inject()(implicit clock: Clock,
             result
           }
 
-          entityAccess.persistEntityModifications(EntityModification.createUpdateAllFields(lastUpdateTime =>
-            updatedUser.copy(lastUpdateTime = lastUpdateTime)))
+          entityAccess.persistEntityModifications(EntityModification.createUpdateAllFields(updatedUser))
       }
     }
   }

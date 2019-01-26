@@ -5,8 +5,9 @@ import java.lang.Math.abs
 
 import hydro.common.time.Clock
 import hydro.models.Entity
+import hydro.models.UpdatableEntity
 import hydro.models.access.ModelField
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 import scala.util.Random
 
@@ -38,16 +39,16 @@ object EntityModification {
     Add(entityWithId)
   }
 
-  def createUpdate[E <: Entity: EntityType](
-      entityWithLastUpdateTime: LastUpdateTime => E,
-      fieldMask: Seq[ModelField[_, E]])(implicit clock: Clock): Update[E] = {
+  def createUpdate[E <: UpdatableEntity: EntityType](entity: E, fieldMask: Seq[ModelField[_, E]])(
+      implicit clock: Clock): Update[E] = {
     val now = clock.nowInstant
-    Update(entityWithLastUpdateTime(LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)))
+    val lastUpdateTime = LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)
+    Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
-  def createUpdateAllFields[E <: Entity: EntityType](entityWithLastUpdateTime: LastUpdateTime => E)(
-      implicit clock: Clock): Update[E] = {
-    Update(entityWithLastUpdateTime(LastUpdateTime.AllFields(clock.nowInstant)))
+  def createUpdateAllFields[E <: UpdatableEntity: EntityType](entity: E)(implicit clock: Clock): Update[E] = {
+    val lastUpdateTime = LastUpdateTime.AllFields(clock.nowInstant)
+    Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
   def createRemove[E <: Entity: EntityType](entityWithId: E): Remove[E] = {
@@ -67,7 +68,7 @@ object EntityModification {
   }
 
   /** Update to an existing entity. */
-  case class Update[E <: Entity: EntityType](updatedEntity: E) extends EntityModification {
+  case class Update[E <: UpdatableEntity: EntityType](updatedEntity: E) extends EntityModification {
     require(updatedEntity.idOption.isDefined, s"Entity ID must be defined (for entity $updatedEntity)")
     require(
       updatedEntity.lastUpdateTime != LastUpdateTime.NeverUpdated,

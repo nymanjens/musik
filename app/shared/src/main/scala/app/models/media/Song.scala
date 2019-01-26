@@ -16,7 +16,6 @@ case class Song(filename: String,
     extends Entity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
-  override def lastUpdateTime = throw new RuntimeException("Can never be updated")
 }
 object Song {
   implicit val Type: EntityType[Song] = EntityType()

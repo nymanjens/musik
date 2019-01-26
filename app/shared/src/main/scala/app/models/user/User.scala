@@ -2,7 +2,8 @@ package app.models.user
 
 import hydro.models.modification.EntityType
 import hydro.models.Entity
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 case class User(loginName: String,
                 passwordHash: String,
@@ -10,9 +11,10 @@ case class User(loginName: String,
                 isAdmin: Boolean,
                 override val idOption: Option[Long] = None,
                 override val lastUpdateTime: LastUpdateTime = LastUpdateTime.NeverUpdated)
-    extends Entity {
+    extends UpdatableEntity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
+  override def withLastUpdateTime(time: LastUpdateTime): Entity = copy(lastUpdateTime = time)
 }
 
 object User {

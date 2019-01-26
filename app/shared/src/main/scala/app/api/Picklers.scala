@@ -9,7 +9,7 @@ import app.models.user.User
 import boopickle.Default._
 import hydro.api.StandardPicklers
 import hydro.models.Entity
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 object Picklers extends StandardPicklers {
 

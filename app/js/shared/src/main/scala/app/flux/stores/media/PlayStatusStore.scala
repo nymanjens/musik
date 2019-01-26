@@ -98,16 +98,14 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess,
       case Some(playStatus) =>
         Seq(
           EntityModification.createUpdate(
-            lastUpdateTime =>
-              PlayStatus(
-                currentPlaylistEntryId =
-                  nonNullLongOrElse(currentPlaylistEntryId, fallback = playStatus.currentPlaylistEntryId),
-                hasStarted = nonNullBooleanOrElse(hasStarted, fallback = playStatus.hasStarted),
-                stopAfterCurrentSong =
-                  nonNullBooleanOrElse(stopAfterCurrentSong, fallback = playStatus.stopAfterCurrentSong),
-                userId = user.id,
-                idOption = Some(playStatus.id),
-                lastUpdateTime = lastUpdateTime
+            PlayStatus(
+              currentPlaylistEntryId =
+                nonNullLongOrElse(currentPlaylistEntryId, fallback = playStatus.currentPlaylistEntryId),
+              hasStarted = nonNullBooleanOrElse(hasStarted, fallback = playStatus.hasStarted),
+              stopAfterCurrentSong =
+                nonNullBooleanOrElse(stopAfterCurrentSong, fallback = playStatus.stopAfterCurrentSong),
+              userId = user.id,
+              idOption = Some(playStatus.id)
             ),
             fieldMask = Seq() ++
               someIfNonNull(currentPlaylistEntryId, ModelFields.PlayStatus.currentPlaylistEntryId) ++

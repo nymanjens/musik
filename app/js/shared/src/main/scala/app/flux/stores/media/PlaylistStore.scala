@@ -92,9 +92,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
               maybeNextEntry match {
                 case Some(nextEntry) =>
                   EntityModification.createUpdate(
-                    lastUpdateTime =>
-                      playStatus.get
-                        .copy(currentPlaylistEntryId = nextEntry.id, lastUpdateTime = lastUpdateTime),
+                    playStatus.get.copy(currentPlaylistEntryId = nextEntry.id),
                     fieldMask = Seq(ModelFields.PlayStatus.currentPlaylistEntryId)
                   )
                 case None => EntityModification.createRemove(playStatus.get)
@@ -113,7 +111,7 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
                                      newOrderToken: OrderToken): State = {
     entityAccess.persistModifications(
       EntityModification.createUpdate(
-        lastUpdateTime => entry.toEntity.copy(orderToken = newOrderToken, lastUpdateTime = lastUpdateTime),
+        entry.toEntity.copy(orderToken = newOrderToken),
         fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
 
     def updated(entries: Seq[JsPlaylistEntry]): Seq[JsPlaylistEntry] =

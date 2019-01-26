@@ -15,7 +15,7 @@ import hydro.models.slick.SlickUtils.dbApi._
 import hydro.models.slick.SlickUtils.finiteDurationToMillisMapper
 import hydro.models.slick.SlickUtils.orderTokenToBytesMapper
 import hydro.models.slick.SlickUtils.lastUpdateTimeToBytesMapper
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.FiniteDuration

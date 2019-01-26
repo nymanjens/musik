@@ -21,7 +21,6 @@ case class EntityModificationEntity(userId: Long,
   for (idVal <- idOption) require(idVal > 0)
 
   override def withId(id: Long) = copy(idOption = Some(id))
-  override def lastUpdateTime = throw new RuntimeException("Can never be updated")
 
   def user(implicit entityAccess: JvmEntityAccess): User = entityAccess.newQuerySync[User]().findById(userId)
 }

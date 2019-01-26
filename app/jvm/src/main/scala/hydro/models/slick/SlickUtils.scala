@@ -12,7 +12,7 @@ import boopickle.Default.Unpickle
 import hydro.common.OrderToken
 import hydro.common.time.LocalDateTime
 import hydro.common.time.LocalDateTimes
-import hydro.models.Entity.LastUpdateTime
+import hydro.models.UpdatableEntity.LastUpdateTime
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 

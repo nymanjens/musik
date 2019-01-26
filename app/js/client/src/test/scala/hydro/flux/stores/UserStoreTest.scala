@@ -70,8 +70,7 @@ object UserStoreTest extends TestSuite {
       entityAccess.addRemotelyAddedEntities(testUserA)
       entityAccess.addRemotelyAddedEntities(testUserB)
       val newStateFuture = store.stateFuture
-      entityAccess.persistModifications(EntityModification.createUpdateAllFields(lastUpdateTime =>
-        testUserBUpdate.copy(lastUpdateTime = lastUpdateTime)))
+      entityAccess.persistModifications(EntityModification.createUpdateAllFields(testUserBUpdate))
 
       await(newStateFuture).allUsers ==> Seq(testUserA, testUserBUpdate)
     }
