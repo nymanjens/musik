@@ -143,8 +143,8 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
       async {
         val userId = user.id
         modifications.collect {
-          case EntityModification.Add(PlayStatus(_, /* hasStarted */ true, _, `userId`, _)) |
-              EntityModification.Update(PlayStatus(_, /* hasStarted */ true, _, `userId`, _)) =>
+          case EntityModification.Add(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) |
+              EntityModification.Update(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) =>
             playWasEverStartedInThisSession = true
         }
       }
