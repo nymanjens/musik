@@ -33,7 +33,7 @@ object Entity {
   sealed trait LastUpdateTime
   object LastUpdateTime {
     object NeverUpdated extends LastUpdateTime
-    case class AllFields(time: Instant)
-    case class PerField(timePerField: Map[ModelField[_, _], Instant])
+    case class AllFields(time: Instant) extends LastUpdateTime
+    case class PerField(timePerField: Map[ModelField[_, _], Instant]) extends LastUpdateTime
   }
 }

@@ -1,5 +1,6 @@
 package hydro.api
 
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -12,31 +13,11 @@ import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
+import hydro.models.Entity.LastUpdateTime
 
 abstract class StandardPicklers {
 
   implicit val entityPickler: Pickler[Entity]
-
-  def enumPickler[T](values: Seq[T]): Pickler[T] = {
-    val valueToNumber: ImmutableBiMap[T, Int] = {
-      val builder = ImmutableBiMap.builder[T, Int]()
-      for ((value, number) <- values.zipWithIndex) {
-        builder.put(value, number + 1)
-      }
-      builder.build()
-    }
-
-    new Pickler[T] {
-      override def pickle(value: T)(implicit state: PickleState): Unit = {
-        state.pickle(valueToNumber.get(value))
-      }
-      override def unpickle(implicit state: UnpickleState): T = {
-        valueToNumber.inverse().get(state.unpickle[Int])
-      }
-    }
-  }
-
-  implicit val EntityTypePickler: Pickler[EntityType.any] = enumPickler(EntityTypes.all)
 
   implicit object LocalDateTimePickler extends Pickler[LocalDateTime] {
     override def pickle(dateTime: LocalDateTime)(implicit state: PickleState): Unit = logExceptions {
@@ -63,6 +44,70 @@ abstract class StandardPicklers {
           state.unpickle[Int] /* second */
         )
       )
+    }
+  }
+
+  implicit object InstantPickler extends Pickler[Instant] {
+    override def pickle(instant: Instant)(implicit state: PickleState): Unit = logExceptions {
+      state.pickle(instant.getEpochSecond)
+      state.pickle(instant.getNano)
+    }
+    override def unpickle(implicit state: UnpickleState): Instant = logExceptions {
+      Instant.ofEpochSecond(state.unpickle[Long], state.unpickle[Int])
+    }
+  }
+
+  def enumPickler[T](values: Seq[T]): Pickler[T] = {
+    val valueToNumber: ImmutableBiMap[T, Int] = {
+      val builder = ImmutableBiMap.builder[T, Int]()
+      for ((value, number) <- values.zipWithIndex) {
+        builder.put(value, number + 1)
+      }
+      builder.build()
+    }
+
+    new Pickler[T] {
+      override def pickle(value: T)(implicit state: PickleState): Unit = {
+        state.pickle(valueToNumber.get(value))
+      }
+      override def unpickle(implicit state: UnpickleState): T = {
+        valueToNumber.inverse().get(state.unpickle[Int])
+      }
+    }
+  }
+
+  implicit val EntityTypePickler: Pickler[EntityType.any] = enumPickler(EntityTypes.all)
+
+  implicit object LastUpdateTimePickler extends Pickler[LastUpdateTime] {
+    val neverUpdated: Byte = 1
+    val allFields: Byte = 2
+    val perField: Byte = 3
+
+    override def pickle(lastUpdateTime: LastUpdateTime)(implicit state: PickleState): Unit = logExceptions {
+      lastUpdateTime match {
+        case LastUpdateTime.NeverUpdated =>
+          state.pickle(neverUpdated)
+        case LastUpdateTime.AllFields(time) =>
+          state.pickle(allFields)
+          state.pickle(time)
+        case LastUpdateTime.PerField(timeMap) =>
+          state.pickle(perField)
+          state.pickle(timeMap.map { case (k, v) => PicklableModelField.fromRegular(k) -> v }.toMap)
+      }
+    }
+    override def unpickle(implicit state: UnpickleState): LastUpdateTime = logExceptions {
+      state.unpickle[Byte] match {
+        case `neverUpdated` => LastUpdateTime.NeverUpdated
+        case `allFields`    => LastUpdateTime.AllFields(state.unpickle[Instant])
+        case `perField` =>
+          LastUpdateTime.PerField(
+            state
+              .unpickle[Map[PicklableModelField, Instant]]
+              .map {
+                case (k, v) => k.toRegular -> v
+              }
+              .toMap)
+      }
     }
   }
 
@@ -114,9 +159,9 @@ abstract class StandardPicklers {
   }
 
   implicit object EntityModificationPickler extends Pickler[EntityModification] {
-    val addNumber = 1
-    val updateNumber = 3
-    val removeNumber = 2
+    val addNumber: Byte = 1
+    val updateNumber: Byte = 3
+    val removeNumber: Byte = 2
 
     override def pickle(modification: EntityModification)(implicit state: PickleState): Unit =
       logExceptions {
@@ -135,7 +180,7 @@ abstract class StandardPicklers {
       }
     override def unpickle(implicit state: UnpickleState): EntityModification = logExceptions {
       val entityType = state.unpickle[EntityType.any]
-      state.unpickle[Int] match {
+      state.unpickle[Byte] match {
         case `addNumber` =>
           val entity = state.unpickle[Entity]
           def addModification[E <: Entity](entity: Entity, entityType: EntityType[E]): EntityModification = {
