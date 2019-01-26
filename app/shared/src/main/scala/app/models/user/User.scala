@@ -9,7 +9,7 @@ case class User(loginName: String,
                 name: String,
                 isAdmin: Boolean,
                 override val idOption: Option[Long] = None,
-                override val lastUpdateTime: LastUpdateTime)
+                override val lastUpdateTime: LastUpdateTime = LastUpdateTime.NeverUpdated)
     extends Entity {
 
   override def withId(id: Long) = copy(idOption = Some(id))
