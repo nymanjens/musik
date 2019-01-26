@@ -23,8 +23,10 @@ abstract class ModelField[V, E](val name: String, accessor: E => V)(implicit val
 
 object ModelField {
 
-  def toBiMapWithUniqueValues(fields: ModelField[_, _]*): ImmutableBiMap[ModelField[_, _], Int] = {
-    val resultBuilder = ImmutableBiMap.builder[ModelField[_, _], Int]()
+  type any = ModelField[_, _]
+
+  def toBiMapWithUniqueValues(fields: ModelField.any*): ImmutableBiMap[ModelField.any, Int] = {
+    val resultBuilder = ImmutableBiMap.builder[ModelField.any, Int]()
     for ((field, index) <- fields.zipWithIndex) {
       resultBuilder.put(field, index + 1)
     }

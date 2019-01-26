@@ -130,7 +130,7 @@ abstract class StandardPicklers {
         internal
       }
 
-      private def picklerForField(field: ModelField[_, _]): Pickler[_] = {
+      private def picklerForField(field: ModelField.any): Pickler[_] = {
         def fromFieldType(fieldType: ModelField.FieldType[_]): Pickler[_] = {
           def fromType[V: Pickler](fieldType: ModelField.FieldType[V]): Pickler[V] = implicitly
           fieldType match {

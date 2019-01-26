@@ -219,8 +219,8 @@ object LocalDatabaseImpl {
       new LocalDatabaseImpl()
     }
 
-  case class SecondaryIndexFunction(function: EntityType.any => Seq[ModelField[_, _]]) {
-    def apply(entityType: EntityType.any): Seq[ModelField[_, _]] = function(entityType)
+  case class SecondaryIndexFunction(function: EntityType.any => Seq[ModelField.any]) {
+    def apply(entityType: EntityType.any): Seq[ModelField.any] = function(entityType)
   }
 
   private case class Singleton(key: String, value: js.Any)

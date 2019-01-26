@@ -90,7 +90,7 @@ object ModelFields {
   }
 
   // **************** Field numbers **************** //
-  private val fieldToNumberMap: ImmutableBiMap[ModelField[_, _], Int] =
+  private val fieldToNumberMap: ImmutableBiMap[ModelField.any, Int] =
     toBiMapWithUniqueValues(
       User.id,
       User.loginName,
@@ -122,6 +122,6 @@ object ModelFields {
       PlayStatus.stopAfterCurrentSong,
       PlayStatus.userId
     )
-  def toNumber(field: ModelField[_, _]): Int = fieldToNumberMap.get(field)
-  def fromNumber(number: Int): ModelField[_, _] = fieldToNumberMap.inverse().get(number)
+  def toNumber(field: ModelField.any): Int = fieldToNumberMap.get(field)
+  def fromNumber(number: Int): ModelField.any = fieldToNumberMap.inverse().get(number)
 }

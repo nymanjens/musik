@@ -34,6 +34,6 @@ object Entity {
   object LastUpdateTime {
     object NeverUpdated extends LastUpdateTime
     case class AllFields(time: Instant) extends LastUpdateTime
-    case class PerField(timePerField: Map[ModelField[_, _], Instant]) extends LastUpdateTime
+    case class PerField(timePerField: Map[ModelField.any, Instant]) extends LastUpdateTime
   }
 }
