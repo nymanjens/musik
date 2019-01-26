@@ -127,8 +127,10 @@ abstract class JvmEntityAccessBase(implicit clock: Clock) extends EntityAccess {
       }
 
     private def processSync(modifications: Seq[EntityModification])(implicit user: User): Unit = {
-      def isDuplicate(modification: EntityModification,
-                      existingModifications: Iterable[EntityModification]): Boolean = {
+
+      /** Returns true if an existing modification makes the given one irrelevant. */
+      def eclipsedByExistingModification(modification: EntityModification,
+                                         existingModifications: Iterable[EntityModification]): Boolean = {
         val existingEntities = existingModifications.toStream
           .filter(_.entityId == modification.entityId)
           .filter(_.entityType == modification.entityType)
@@ -160,7 +162,7 @@ abstract class JvmEntityAccessBase(implicit clock: Clock) extends EntityAccess {
         for {
           modification <- modifications
           if {
-            if (isDuplicate(modification, existingModifications)) {
+            if (eclipsedByExistingModification(modification, existingModifications)) {
               println(s"  Note: Modification marked as duplicate: modification = $modification")
               false
             } else {
