@@ -67,7 +67,11 @@ object EntityModification {
     override def entityId: Long = entity.id
   }
 
-  /** Update to an existing entity. */
+  /**
+    * Update to an existing entity.
+    *
+    * If no entity exists yet, it is added.
+    */
   case class Update[E <: UpdatableEntity: EntityType](updatedEntity: E) extends EntityModification {
     require(updatedEntity.idOption.isDefined, s"Entity ID must be defined (for entity $updatedEntity)")
     require(
