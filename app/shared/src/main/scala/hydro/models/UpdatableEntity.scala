@@ -23,7 +23,10 @@ object UpdatableEntity {
   def withLastUpdateTime[E <: UpdatableEntity](time: LastUpdateTime, entity: E): E =
     entity.withLastUpdateTime(time).asInstanceOf[E]
 
-  def merge[E <: UpdatableEntity](oldEntity: E, newEntity: E): E = ???
+  def merge[E <: UpdatableEntity](oldEntity: E, newEntity: E): E = {
+    // TODO: Implement merge based on lastUpdateTime
+    newEntity
+  }
 
   sealed trait LastUpdateTime
   object LastUpdateTime {
