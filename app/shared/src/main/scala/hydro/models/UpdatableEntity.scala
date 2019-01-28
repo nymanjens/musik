@@ -28,7 +28,9 @@ object UpdatableEntity {
     newEntity
   }
 
-  sealed trait LastUpdateTime
+  sealed trait LastUpdateTime {
+    def merge(lastUpdateTime: LastUpdateTime): LastUpdateTime = ???
+  }
   object LastUpdateTime {
     object NeverUpdated extends LastUpdateTime
     case class AllFields(time: Instant) extends LastUpdateTime

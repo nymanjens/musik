@@ -42,7 +42,7 @@ object EntityModification {
   def createUpdate[E <: UpdatableEntity: EntityType](entity: E, fieldMask: Seq[ModelField[_, E]])(
       implicit clock: Clock): Update[E] = {
     val now = clock.nowInstant
-    val lastUpdateTime = LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)
+    val lastUpdateTime = entity.lastUpdateTime merge LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)
     Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
