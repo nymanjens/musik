@@ -1,5 +1,7 @@
 package hydro.models.access
 
+import hydro.models.access.DbQueryImplicits._
+import app.models.access.ModelFields
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
 import app.models.modification.EntityTypes
@@ -13,6 +15,7 @@ import hydro.models.access.LocalDatabaseImpl.Singleton
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.LokiQuery
 import hydro.models.access.webworker.LocalDatabaseWebWorkerApi.WriteOperation
+import hydro.models.UpdatableEntity
 import hydro.scala2js.Scala2Js
 import hydro.scala2js.StandardConverters._
 import org.scalajs.dom.console
@@ -122,18 +125,48 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
   }
 
   // **************** Setters ****************//
-  override def applyModifications(modifications: Seq[EntityModification]) =
+  override def applyModifications(modifications: Seq[EntityModification]) = async {
+    val updatesToExistingEntityMap: Map[EntityModification, Option[Entity]] = await(
+      Future
+        .sequence(
+          modifications
+            .filter(m => m.isInstanceOf[EntityModification.Update[_]])
+            .map { m =>
+              def inner[E <: Entity: EntityType] =
+                DbResultSet
+                  .fromExecutor(queryExecutor[E]())
+                  .findOne(ModelFields.id[E] === m.entityId)
+                  .map(e => m -> e)
+              inner(m.entityType)
+            })).toMap
+
     webWorker.applyWriteOperations(modifications map {
       case modification @ EntityModification.Add(entity) =>
         implicit val entityType = modification.entityType
         WriteOperation.Insert(collectionNameOf(entityType), Scala2Js.toJsMap(entity))
       case modification @ EntityModification.Update(updatedEntity) =>
-        implicit val entityType = modification.entityType
-        WriteOperation.Update(collectionNameOf(entityType), Scala2Js.toJsMap(updatedEntity))
+        def updateInner[E <: UpdatableEntity] = {
+          implicit val entityType = modification.entityType.asInstanceOf[EntityType[E]]
+          val maybeExistingEntity = updatesToExistingEntityMap(modification).asInstanceOf[Option[E]]
+
+          maybeExistingEntity match {
+            case Some(existingEntity) =>
+              val mergedEntity = UpdatableEntity.merge(existingEntity, updatedEntity.asInstanceOf[E])
+              println(
+                s"\n\n!!!!! UPDATE LOCAL DB: \n$existingEntity\n -> \n$updatedEntity\n = \n$mergedEntity\n\n")
+              WriteOperation.Update(collectionNameOf(entityType), Scala2Js.toJsMap(mergedEntity))
+            case None =>
+              println(s"!!!!! UPDATE LOCAL DB: NONE -> $updatedEntity")
+              WriteOperation
+                .Insert(collectionNameOf(entityType), Scala2Js.toJsMap(updatedEntity.asInstanceOf[E]))
+          }
+        }
+        updateInner
       case modification @ EntityModification.Remove(id) =>
         val entityType = modification.entityType
         WriteOperation.Remove(collectionNameOf(entityType), Scala2Js.toJs(id))
     })
+  }
 
   override def addAll[E <: Entity: EntityType](entities: Seq[E]) = {
     val collectionName = collectionNameOf(implicitly[EntityType[E]])
