@@ -41,13 +41,14 @@ object EntityModification {
 
   def createUpdate[E <: UpdatableEntity: EntityType](entity: E, fieldMask: Seq[ModelField[_, E]])(
       implicit clock: Clock): Update[E] = {
-    val lastUpdateTime = entity.lastUpdateTime merge
+    val lastUpdateTime = entity.lastUpdateTime mergeForcingIncrement
       LastUpdateTime.someFieldsUpdated(fieldMask, clock.nowInstant)
     Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
   def createUpdateAllFields[E <: UpdatableEntity: EntityType](entity: E)(implicit clock: Clock): Update[E] = {
-    val lastUpdateTime = entity.lastUpdateTime merge LastUpdateTime.allFieldsUpdated(clock.nowInstant)
+    val lastUpdateTime = entity.lastUpdateTime mergeForcingIncrement
+      LastUpdateTime.allFieldsUpdated(clock.nowInstant)
     Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
