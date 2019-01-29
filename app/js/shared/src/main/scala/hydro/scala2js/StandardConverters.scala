@@ -177,34 +177,23 @@ object StandardConverters {
   }
 
   implicit object LastUpdateTimeConverter extends Converter[LastUpdateTime] {
-    private val neverUpdated: Int = 1
-    private val allFields: Int = 2
-    private val perField: Int = 3
-
-    override def toJs(value: LastUpdateTime) = value match {
-      case LastUpdateTime.NeverUpdated    => js.Array[js.Any](neverUpdated)
-      case LastUpdateTime.AllFields(time) => js.Array[js.Any](allFields, Scala2Js.toJs(time))
-      case LastUpdateTime.PerField(timePerField) =>
-        val timePerFieldJs = timePerField.map {
-          case (field, time) => js.Array[js.Any](ModelFields.toNumber(field), Scala2Js.toJs(time))
-        }.toJSArray
-        js.Array[js.Any](perField, timePerFieldJs)
+    override def toJs(value: LastUpdateTime) = {
+      val timePerFieldJs = value.timePerField.map {
+        case (field, time) => js.Array[js.Any](ModelFields.toNumber(field), Scala2Js.toJs(time))
+      }.toJSArray
+      js.Array[js.Any](timePerFieldJs, Scala2Js.toJs(value.otherFieldsTime))
     }
     override def toScala(value: js.Any) = {
       val array = value.asInstanceOf[js.Array[js.Any]]
-      Scala2Js.toScala[Int](array(0)) match {
-        case `neverUpdated` => LastUpdateTime.NeverUpdated
-        case `allFields`    => LastUpdateTime.AllFields(Scala2Js.toScala[Instant](array(1)))
-        case `perField` =>
-          val timePerFieldJs = array(1).asInstanceOf[js.Array[js.Any]]
-          val timePerField = timePerFieldJs.toVector
-            .map { item =>
-              val arr = item.asInstanceOf[js.Array[js.Any]]
-              ModelFields.fromNumber(Scala2Js.toScala[Int](arr(0))) -> Scala2Js.toScala[Instant](arr(1))
-            }
-            .toMap[ModelField.any, Instant]
-          LastUpdateTime.PerField(timePerField)
-      }
+      val timePerFieldJs = array(0).asInstanceOf[js.Array[js.Any]]
+      val timePerField = timePerFieldJs.toVector
+        .map { item =>
+          val arr = item.asInstanceOf[js.Array[js.Any]]
+          ModelFields.fromNumber(Scala2Js.toScala[Int](arr(0))) -> Scala2Js.toScala[Instant](arr(1))
+        }
+        .toMap[ModelField.any, Instant]
+      val otherFieldsTime = Scala2Js.toScala[Option[Instant]](array(1))
+      LastUpdateTime(timePerField, otherFieldsTime)
     }
   }
 

@@ -80,35 +80,16 @@ abstract class StandardPicklers {
   implicit val EntityTypePickler: Pickler[EntityType.any] = enumPickler(EntityTypes.all)
 
   implicit object LastUpdateTimePickler extends Pickler[LastUpdateTime] {
-    private val neverUpdated: Byte = 1
-    private val allFields: Byte = 2
-    private val perField: Byte = 3
-
-    override def pickle(lastUpdateTime: LastUpdateTime)(implicit state: PickleState): Unit = logExceptions {
-      lastUpdateTime match {
-        case LastUpdateTime.NeverUpdated =>
-          state.pickle(neverUpdated)
-        case LastUpdateTime.AllFields(time) =>
-          state.pickle(allFields)
-          state.pickle(time)
-        case LastUpdateTime.PerField(timeMap) =>
-          state.pickle(perField)
-          state.pickle(timeMap.map { case (k, v) => PicklableModelField.fromRegular(k) -> v }.toMap)
-      }
+    override def pickle(value: LastUpdateTime)(implicit state: PickleState): Unit = logExceptions {
+      state.pickle(value.timePerField.map { case (k, v) => PicklableModelField.fromRegular(k) -> v }.toMap)
+      state.pickle(value.otherFieldsTime)
     }
     override def unpickle(implicit state: UnpickleState): LastUpdateTime = logExceptions {
-      state.unpickle[Byte] match {
-        case `neverUpdated` => LastUpdateTime.NeverUpdated
-        case `allFields`    => LastUpdateTime.AllFields(state.unpickle[Instant])
-        case `perField` =>
-          LastUpdateTime.PerField(
-            state
-              .unpickle[Map[PicklableModelField, Instant]]
-              .map {
-                case (k, v) => k.toRegular -> v
-              }
-              .toMap)
-      }
+      LastUpdateTime(
+        timePerField =
+          state.unpickle[Map[PicklableModelField, Instant]].map { case (k, v) => k.toRegular -> v }.toMap,
+        otherFieldsTime = state.unpickle[Option[Instant]]
+      )
     }
   }
 

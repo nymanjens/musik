@@ -41,13 +41,13 @@ object EntityModification {
 
   def createUpdate[E <: UpdatableEntity: EntityType](entity: E, fieldMask: Seq[ModelField[_, E]])(
       implicit clock: Clock): Update[E] = {
-    val now = clock.nowInstant
-    val lastUpdateTime = entity.lastUpdateTime merge LastUpdateTime.PerField(fieldMask.map(_ -> now).toMap)
+    val lastUpdateTime = entity.lastUpdateTime merge
+      LastUpdateTime.someFieldsUpdated(fieldMask, clock.nowInstant)
     Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
   def createUpdateAllFields[E <: UpdatableEntity: EntityType](entity: E)(implicit clock: Clock): Update[E] = {
-    val lastUpdateTime = LastUpdateTime.AllFields(clock.nowInstant)
+    val lastUpdateTime = entity.lastUpdateTime merge LastUpdateTime.allFieldsUpdated(clock.nowInstant)
     Update(UpdatableEntity.withLastUpdateTime(lastUpdateTime, entity))
   }
 
@@ -75,7 +75,7 @@ object EntityModification {
   case class Update[E <: UpdatableEntity: EntityType](updatedEntity: E) extends EntityModification {
     require(updatedEntity.idOption.isDefined, s"Entity ID must be defined (for entity $updatedEntity)")
     require(
-      updatedEntity.lastUpdateTime != LastUpdateTime.NeverUpdated,
+      updatedEntity.lastUpdateTime != LastUpdateTime.neverUpdated,
       s"Entity has no lastUpdateTime: $updatedEntity")
     entityType.checkRightType(updatedEntity)
 

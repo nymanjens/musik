@@ -5,6 +5,8 @@ import java.time.Instant
 import hydro.models.UpdatableEntity.LastUpdateTime
 import hydro.models.access.ModelField
 
+import scala.collection.immutable.Seq
+
 /**
   * Extension of Entity that allows safe* client updates via lastUpdateTime.
   *
@@ -28,12 +30,17 @@ object UpdatableEntity {
     newEntity
   }
 
-  sealed trait LastUpdateTime {
-    def merge(lastUpdateTime: LastUpdateTime): LastUpdateTime = ???
+  case class LastUpdateTime(timePerField: Map[ModelField.any, Instant], otherFieldsTime: Option[Instant]) {
+    def merge(that: LastUpdateTime): LastUpdateTime = {
+      // TODO: Implement merge by taking most recent times
+      that
+    }
   }
   object LastUpdateTime {
-    object NeverUpdated extends LastUpdateTime
-    case class AllFields(time: Instant) extends LastUpdateTime
-    case class PerField(timePerField: Map[ModelField.any, Instant]) extends LastUpdateTime
+    val neverUpdated: LastUpdateTime = LastUpdateTime(Map(), None)
+    def allFieldsUpdated(time: Instant): LastUpdateTime =
+      LastUpdateTime(timePerField = Map(), otherFieldsTime = Some(time))
+    def someFieldsUpdated(fields: Seq[ModelField.any], time: Instant): LastUpdateTime =
+      LastUpdateTime(timePerField = fields.map(_ -> time).toMap, otherFieldsTime = None)
   }
 }
