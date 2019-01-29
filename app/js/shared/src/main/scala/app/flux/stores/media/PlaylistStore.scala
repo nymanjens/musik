@@ -109,13 +109,12 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
   def updateOrderTokenAndReturnState(oldState: State,
                                      entry: JsPlaylistEntry,
                                      newOrderToken: OrderToken): State = {
+    val newEntity = entry.entity.copy(orderToken = newOrderToken)
     entityAccess.persistModifications(
-      EntityModification.createUpdate(
-        entry.toEntity.copy(orderToken = newOrderToken),
-        fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
+      EntityModification.createUpdate(newEntity, fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
 
     def updated(entries: Seq[JsPlaylistEntry]): Seq[JsPlaylistEntry] =
-      entries.updated(entries.indexOf(entry), entry.copy(orderToken = newOrderToken)).sorted
+      entries.updated(entries.indexOf(entry), entry.copy(entity = newEntity)).sorted
     State(entries = updated(oldState.entries))
   }
 
