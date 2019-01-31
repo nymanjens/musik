@@ -6,6 +6,7 @@ import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
 import app.models.modification.EntityTypes
 import app.scala2js.AppConverters._
+import hydro.common.SerializingTaskQueue
 import hydro.jsfacades.LokiJs
 import hydro.jsfacades.LokiJs.FilterFactory.Operation
 import hydro.models.Entity
@@ -32,6 +33,8 @@ import scala.util.matching.Regex
 private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorkerApi,
                                       secondaryIndexFunction: SecondaryIndexFunction)
     extends LocalDatabase {
+
+  private val serializingWriteQueue = new SerializingTaskQueue()
 
   // Scala compiler bug workaround: Declare implicit converters
   implicit private val modificationWithIdConverter = ModificationWithId.Converter
@@ -125,70 +128,76 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
   }
 
   // **************** Setters ****************//
-  override def applyModifications(modifications: Seq[EntityModification]) = async {
-    val updatesToExistingEntityMap: Map[EntityModification, Option[Entity]] = await(
-      Future
-        .sequence(
-          modifications
-            .filter(m => m.isInstanceOf[EntityModification.Update[_]])
-            .map { m =>
-              def inner[E <: Entity: EntityType] =
-                DbResultSet
-                  .fromExecutor(queryExecutor[E]())
-                  .findOne(ModelFields.id[E] === m.entityId)
-                  .map(e => m -> e)
-              inner(m.entityType)
-            })).toMap
+  override def applyModifications(modifications: Seq[EntityModification]) = serializingWriteQueue.schedule {
+    async {
+      val updatesToExistingEntityMap: Map[EntityModification, Option[Entity]] = await(
+        Future
+          .sequence(
+            modifications
+              .filter(m => m.isInstanceOf[EntityModification.Update[_]])
+              .map { m =>
+                def inner[E <: Entity: EntityType] =
+                  DbResultSet
+                    .fromExecutor(queryExecutor[E]())
+                    .findOne(ModelFields.id[E] === m.entityId)
+                    .map(e => m -> e)
+                inner(m.entityType)
+              })).toMap
 
-    webWorker.applyWriteOperations(modifications map {
-      case modification @ EntityModification.Add(entity) =>
-        implicit val entityType = modification.entityType
-        WriteOperation.Insert(collectionNameOf(entityType), Scala2Js.toJsMap(entity))
-      case modification @ EntityModification.Update(updatedEntity) =>
-        def updateInner[E <: UpdatableEntity] = {
-          implicit val entityType = modification.entityType.asInstanceOf[EntityType[E]]
-          val maybeExistingEntity = updatesToExistingEntityMap(modification).asInstanceOf[Option[E]]
+      webWorker.applyWriteOperations(modifications map {
+        case modification @ EntityModification.Add(entity) =>
+          implicit val entityType = modification.entityType
+          WriteOperation.Insert(collectionNameOf(entityType), Scala2Js.toJsMap(entity))
+        case modification @ EntityModification.Update(updatedEntity) =>
+          def updateInner[E <: UpdatableEntity] = {
+            implicit val entityType = modification.entityType.asInstanceOf[EntityType[E]]
+            val maybeExistingEntity = updatesToExistingEntityMap(modification).asInstanceOf[Option[E]]
 
-          maybeExistingEntity match {
-            case Some(existingEntity) =>
-              val mergedEntity = UpdatableEntity.merge(existingEntity, updatedEntity.asInstanceOf[E])
-              println(
-                s"\n\n!!!!! UPDATE LOCAL DB: \n$existingEntity\n -> \n$updatedEntity\n = \n$mergedEntity\n\n")
-              WriteOperation.Update(collectionNameOf(entityType), Scala2Js.toJsMap(mergedEntity))
-            case None =>
-              println(s"!!!!! UPDATE LOCAL DB: NONE -> $updatedEntity")
-              WriteOperation
-                .Insert(collectionNameOf(entityType), Scala2Js.toJsMap(updatedEntity.asInstanceOf[E]))
+            maybeExistingEntity match {
+              case Some(existingEntity) =>
+                val mergedEntity = UpdatableEntity.merge(existingEntity, updatedEntity.asInstanceOf[E])
+                println(
+                  s"\n\n!!!!! UPDATE LOCAL DB: \n$existingEntity\n -> \n$updatedEntity\n = \n$mergedEntity\n\n")
+                WriteOperation.Update(collectionNameOf(entityType), Scala2Js.toJsMap(mergedEntity))
+              case None =>
+                println(s"!!!!! UPDATE LOCAL DB: NONE -> $updatedEntity")
+                WriteOperation
+                  .Insert(collectionNameOf(entityType), Scala2Js.toJsMap(updatedEntity.asInstanceOf[E]))
+            }
           }
-        }
-        updateInner
-      case modification @ EntityModification.Remove(id) =>
-        val entityType = modification.entityType
-        WriteOperation.Remove(collectionNameOf(entityType), Scala2Js.toJs(id))
-    })
+          updateInner
+        case modification @ EntityModification.Remove(id) =>
+          val entityType = modification.entityType
+          WriteOperation.Remove(collectionNameOf(entityType), Scala2Js.toJs(id))
+      })
+    }
   }
 
-  override def addAll[E <: Entity: EntityType](entities: Seq[E]) = {
+  override def addAll[E <: Entity: EntityType](entities: Seq[E]) = serializingWriteQueue.schedule {
     val collectionName = collectionNameOf(implicitly[EntityType[E]])
     webWorker.applyWriteOperations(
       for (entity <- entities) yield WriteOperation.Insert(collectionName, Scala2Js.toJsMap(entity)))
   }
 
   override def addPendingModifications(modifications: Seq[EntityModification]): Future[Unit] =
-    webWorker.applyWriteOperations(
-      for (modification <- modifications)
-        yield
-          WriteOperation
-            .Insert(pendingModificationsCollectionName, Scala2Js.toJsMap(ModificationWithId(modification))))
+    serializingWriteQueue.schedule {
+      webWorker.applyWriteOperations(
+        for (modification <- modifications)
+          yield
+            WriteOperation
+              .Insert(pendingModificationsCollectionName, Scala2Js.toJsMap(ModificationWithId(modification))))
+    }
 
   override def removePendingModifications(modifications: Seq[EntityModification]): Future[Unit] =
-    webWorker.applyWriteOperations(
-      for (modification <- modifications)
-        yield
-          WriteOperation
-            .Remove(pendingModificationsCollectionName, Scala2Js.toJs(ModificationWithId(modification).id)))
+    serializingWriteQueue.schedule {
+      webWorker.applyWriteOperations(
+        for (modification <- modifications)
+          yield
+            WriteOperation
+              .Remove(pendingModificationsCollectionName, Scala2Js.toJs(ModificationWithId(modification).id)))
+    }
 
-  override def setSingletonValue[V](key: SingletonKey[V], value: V) = {
+  override def setSingletonValue[V](key: SingletonKey[V], value: V) = serializingWriteQueue.schedule {
     implicit val converter = key.valueConverter
     webWorker.applyWriteOperations(
       Seq(
@@ -199,28 +208,30 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
       ))
   }
 
-  override def save(): Future[Unit] = async {
-    await(webWorker.applyWriteOperations(Seq(WriteOperation.SaveDatabase)))
+  override def save(): Future[Unit] = serializingWriteQueue.schedule {
+    webWorker.applyWriteOperations(Seq(WriteOperation.SaveDatabase))
   }
 
-  override def resetAndInitialize(): Future[Unit] = async {
-    console.log("  Resetting database...")
-    await(
-      webWorker.applyWriteOperations(
-        Seq() ++
-          (for (collectionName <- allCollectionNames)
-            yield WriteOperation.RemoveCollection(collectionName)) ++
-          (for (entityType <- EntityTypes.all)
-            yield
-              WriteOperation.AddCollection(
-                collectionNameOf(entityType),
-                uniqueIndices = Seq("id"),
-                indices = secondaryIndexFunction(entityType).map(_.name))) :+
-          WriteOperation
-            .AddCollection(singletonsCollectionName, uniqueIndices = Seq("id"), indices = Seq()) :+
-          WriteOperation
-            .AddCollection(pendingModificationsCollectionName, uniqueIndices = Seq("id"), indices = Seq())))
-    console.log("  Resetting database done.")
+  override def resetAndInitialize(): Future[Unit] = serializingWriteQueue.schedule {
+    async {
+      console.log("  Resetting database...")
+      await(
+        webWorker.applyWriteOperations(
+          Seq() ++
+            (for (collectionName <- allCollectionNames)
+              yield WriteOperation.RemoveCollection(collectionName)) ++
+            (for (entityType <- EntityTypes.all)
+              yield
+                WriteOperation.AddCollection(
+                  collectionNameOf(entityType),
+                  uniqueIndices = Seq("id"),
+                  indices = secondaryIndexFunction(entityType).map(_.name))) :+
+            WriteOperation
+              .AddCollection(singletonsCollectionName, uniqueIndices = Seq("id"), indices = Seq()) :+
+            WriteOperation
+              .AddCollection(pendingModificationsCollectionName, uniqueIndices = Seq("id"), indices = Seq())))
+      console.log("  Resetting database done.")
+    }
   }
 
   // **************** Private helper methods ****************//
