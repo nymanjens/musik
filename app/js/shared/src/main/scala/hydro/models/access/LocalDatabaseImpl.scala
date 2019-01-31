@@ -156,11 +156,8 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
             maybeExistingEntity match {
               case Some(existingEntity) =>
                 val mergedEntity = UpdatableEntity.merge(existingEntity, updatedEntity.asInstanceOf[E])
-                println(
-                  s"\n\n!!!!! UPDATE LOCAL DB: \n$existingEntity\n -> \n$updatedEntity\n = \n$mergedEntity\n\n")
                 WriteOperation.Update(collectionNameOf(entityType), Scala2Js.toJsMap(mergedEntity))
               case None =>
-                println(s"!!!!! UPDATE LOCAL DB: NONE -> $updatedEntity")
                 WriteOperation
                   .Insert(collectionNameOf(entityType), Scala2Js.toJsMap(updatedEntity.asInstanceOf[E]))
             }
