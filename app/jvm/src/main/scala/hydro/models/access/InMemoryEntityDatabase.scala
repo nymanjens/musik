@@ -85,14 +85,10 @@ object InMemoryEntityDatabase {
               entity.id,
               (id, existingEntity) =>
                 existingEntity match {
-                  case null =>
-                    println(s"!!!!! UPDATE IN MEMORY DB: NONE -> $entity")
-                    castEntity
+                  case null => castEntity
                   case _ =>
                     previousValue = existingEntity.asInstanceOf[E2]
-                    val mergedEntity = UpdatableEntity.merge(previousValue, castEntity)
-                    println(s"!!!!! UPDATE IN MEMORY DB: $existingEntity -> $entity = $mergedEntity")
-                    mergedEntity
+                    UpdatableEntity.merge(previousValue, castEntity)
               }
             )
             if (previousValue != null) {

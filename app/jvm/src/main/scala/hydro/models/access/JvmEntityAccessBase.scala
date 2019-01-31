@@ -201,10 +201,8 @@ abstract class JvmEntityAccessBase(implicit clock: Clock) extends EntityAccess {
                 maybeExistingEntity match {
                   case Some(existingEntity) =>
                     val mergedEntity = UpdatableEntity.merge(existingEntity, entity.asInstanceOf[E])
-                    println(s"\n\n!!!!! UPDATE DB: \n$existingEntity\n -> \n$entity\n = \n$mergedEntity\n\n")
                     getManager(castEntityType).updateIfExists(mergedEntity)
                   case None =>
-                    println(s"!!!!! UPDATE DB: NONE -> $entity")
                     getManager(castEntityType).addNew(castEntityType.checkRightType(entity))
                 }
               }
