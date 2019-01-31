@@ -16,9 +16,11 @@ import scala.concurrent.duration.FiniteDuration
   * @tparam V The type of the values
   * @tparam E The type corresponding to the entity that contains this field
   */
-abstract class ModelField[V, E](val name: String, accessor: E => V)(implicit val fieldType: FieldType[V]) {
+abstract class ModelField[V, E](val name: String, accessor: E => V, setter: V => E => E)(
+    implicit val fieldType: FieldType[V]) {
 
   def get(entity: E): V = accessor(entity)
+  def set(entity: E, value: V): E = setter(value)(entity)
 }
 
 object ModelField {
@@ -49,5 +51,6 @@ object ModelField {
     implicit case object OrderTokenType extends FieldType[OrderToken]
   }
 
-  abstract class IdModelField[E <: Entity] extends ModelField[Long, E]("id", _.idOption getOrElse -1)
+  abstract class IdModelField[E <: Entity]
+      extends ModelField[Long, E]("id", _.idOption getOrElse -1, v => _.withId(v).asInstanceOf[E])
 }

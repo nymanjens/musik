@@ -32,49 +32,56 @@ object ModelFields {
     private type E = User
 
     case object id extends IdModelField[E]
-    case object loginName extends ModelField[String, E]("loginName", _.loginName)
-    case object passwordHash extends ModelField[String, E]("passwordHash", _.passwordHash)
-    case object name extends ModelField[String, E]("name", _.name)
-    case object isAdmin extends ModelField[Boolean, E]("isAdmin", _.isAdmin)
+    case object loginName extends ModelField[String, E]("loginName", _.loginName, v => _.copy(loginName = v))
+    case object passwordHash
+        extends ModelField[String, E]("passwordHash", _.passwordHash, v => _.copy(passwordHash = v))
+    case object name extends ModelField[String, E]("name", _.name, v => _.copy(name = v))
+    case object isAdmin extends ModelField[Boolean, E]("isAdmin", _.isAdmin, v => _.copy(isAdmin = v))
   }
 
   object Song {
     private type E = Song
 
     case object id extends IdModelField[E]
-    case object filename extends ModelField[String, E]("filename", _.filename)
-    case object title extends ModelField[String, E]("title", _.title)
-    case object albumId extends ModelField[Long, E]("albumId", _.albumId)
-    case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
-    case object trackNumber extends ModelField[Int, E]("trackNumber", _.trackNumber)
-    case object duration extends ModelField[FiniteDuration, E]("duration", _.duration)
-    case object disc extends ModelField[Int, E]("disc", _.disc)
+    case object filename extends ModelField[String, E]("filename", _.filename, v => _.copy(filename = v))
+    case object title extends ModelField[String, E]("title", _.title, v => _.copy(title = v))
+    case object albumId extends ModelField[Long, E]("albumId", _.albumId, v => _.copy(albumId = v))
+    case object artistId
+        extends ModelField[Option[Long], E]("artistId", _.artistId, v => _.copy(artistId = v))
+    case object trackNumber
+        extends ModelField[Int, E]("trackNumber", _.trackNumber, v => _.copy(trackNumber = v))
+    case object duration
+        extends ModelField[FiniteDuration, E]("duration", _.duration, v => _.copy(duration = v))
+    case object disc extends ModelField[Int, E]("disc", _.disc, v => _.copy(disc = v))
   }
 
   object Album {
     private type E = Album
 
     case object id extends IdModelField[E]
-    case object relativePath extends ModelField[String, E]("relativePath", _.relativePath)
-    case object title extends ModelField[String, E]("title", _.title)
-    case object artistId extends ModelField[Option[Long], E]("artistId", _.artistId)
-    case object year extends ModelField[Option[Int], E]("year", _.year)
+    case object relativePath
+        extends ModelField[String, E]("relativePath", _.relativePath, v => _.copy(relativePath = v))
+    case object title extends ModelField[String, E]("title", _.title, v => _.copy(title = v))
+    case object artistId
+        extends ModelField[Option[Long], E]("artistId", _.artistId, v => _.copy(artistId = v))
+    case object year extends ModelField[Option[Int], E]("year", _.year, v => _.copy(year = v))
   }
 
   object Artist {
     private type E = Artist
 
     case object id extends IdModelField[E]
-    case object name extends ModelField[String, E]("name", _.name)
+    case object name extends ModelField[String, E]("name", _.name, v => _.copy(name = v))
   }
 
   object PlaylistEntry {
     private type E = PlaylistEntry
 
     case object id extends IdModelField[E]
-    case object songId extends ModelField[Long, E]("songId", _.songId)
-    case object orderToken extends ModelField[OrderToken, E]("orderToken", _.orderToken)
-    case object userId extends ModelField[Long, E]("userId", _.userId)
+    case object songId extends ModelField[Long, E]("songId", _.songId, v => _.copy(songId = v))
+    case object orderToken
+        extends ModelField[OrderToken, E]("orderToken", _.orderToken, v => _.copy(orderToken = v))
+    case object userId extends ModelField[Long, E]("userId", _.userId, v => _.copy(userId = v))
   }
 
   object PlayStatus {
@@ -82,11 +89,18 @@ object ModelFields {
 
     case object id extends IdModelField[E]
     case object currentPlaylistEntryId
-        extends ModelField[Long, E]("currentPlaylistEntryId", _.currentPlaylistEntryId)
-    case object hasStarted extends ModelField[Boolean, E]("hasStarted", _.hasStarted)
+        extends ModelField[Long, E](
+          "currentPlaylistEntryId",
+          _.currentPlaylistEntryId,
+          v => _.copy(currentPlaylistEntryId = v))
+    case object hasStarted
+        extends ModelField[Boolean, E]("hasStarted", _.hasStarted, v => _.copy(hasStarted = v))
     case object stopAfterCurrentSong
-        extends ModelField[Boolean, E]("stopAfterCurrentSong", _.stopAfterCurrentSong)
-    case object userId extends ModelField[Long, E]("userId", _.userId)
+        extends ModelField[Boolean, E](
+          "stopAfterCurrentSong",
+          _.stopAfterCurrentSong,
+          v => _.copy(stopAfterCurrentSong = v))
+    case object userId extends ModelField[Long, E]("userId", _.userId, v => _.copy(userId = v))
   }
 
   // **************** Field numbers **************** //
