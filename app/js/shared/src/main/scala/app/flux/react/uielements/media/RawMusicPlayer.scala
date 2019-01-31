@@ -94,11 +94,15 @@ private[media] object RawMusicPlayer extends HydroReactComponent.Stateless {
         ^.controls := true,
         ^.src := props.src,
         ^.preload := "auto",
-        ^.onPlay --> LogExceptionsCallback(props.onPlayingChanged(true)),
+        ^.onPlay --> LogExceptionsCallback {
+          if (!props.playing) {
+            props.onPlayingChanged(true)
+          }
+        },
         ^.onPause --> LogExceptionsCallback {
           val element = htmlAudioElement.get
           val pauseBecauseEnded = element.duration - element.currentTime < 0.01
-          if (!pauseBecauseEnded) {
+          if (!pauseBecauseEnded && props.playing) {
             props.onPlayingChanged(false)
           }
         },
