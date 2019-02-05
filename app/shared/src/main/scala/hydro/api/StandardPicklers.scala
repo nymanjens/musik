@@ -1,5 +1,6 @@
 package hydro.api
 
+import scala.collection.immutable.Seq
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -9,6 +10,7 @@ import app.models.modification.EntityTypes
 import boopickle.Default._
 import hydro.api.PicklableDbQuery.FieldWithValue
 import hydro.common.time.LocalDateTime
+import hydro.common.CollectionUtils
 import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
@@ -58,14 +60,9 @@ abstract class StandardPicklers {
     }
   }
 
-  def enumPickler[T](values: Seq[T]): Pickler[T] = {
-    val valueToNumber: ImmutableBiMap[T, Int] = {
-      val builder = ImmutableBiMap.builder[T, Int]()
-      for ((value, number) <- values.zipWithIndex) {
-        builder.put(value, number + 1)
-      }
-      builder.build()
-    }
+  def enumPickler[T](stableNameMapper: T => String, values: Seq[T]): Pickler[T] = {
+    val valueToNumber: ImmutableBiMap[T, Int] =
+      CollectionUtils.toBiMapWithStableIntKeys(stableNameMapper = stableNameMapper, values = values)
 
     new Pickler[T] {
       override def pickle(value: T)(implicit state: PickleState): Unit = {
@@ -77,7 +74,8 @@ abstract class StandardPicklers {
     }
   }
 
-  implicit val EntityTypePickler: Pickler[EntityType.any] = enumPickler(EntityTypes.all)
+  implicit val EntityTypePickler: Pickler[EntityType.any] =
+    enumPickler(stableNameMapper = _.name, values = EntityTypes.all)
 
   implicit object LastUpdateTimePickler extends Pickler[LastUpdateTime] {
     override def pickle(value: LastUpdateTime)(implicit state: PickleState): Unit = logExceptions {

@@ -27,14 +27,6 @@ object ModelField {
 
   type any = ModelField[_, _]
 
-  def toBiMapWithUniqueValues(fields: ModelField.any*): ImmutableBiMap[ModelField.any, Int] = {
-    val resultBuilder = ImmutableBiMap.builder[ModelField.any, Int]()
-    for ((field, index) <- fields.zipWithIndex) {
-      resultBuilder.put(field, index + 1)
-    }
-    resultBuilder.build()
-  }
-
   sealed trait FieldType[T]
   object FieldType {
     case class OptionType[V](fieldType: FieldType[V]) extends FieldType[Option[V]]

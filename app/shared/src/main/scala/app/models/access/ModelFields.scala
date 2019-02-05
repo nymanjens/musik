@@ -9,10 +9,12 @@ import app.models.media.PlaylistEntry
 import app.models.media.Song
 import hydro.models.modification.EntityType
 import app.models.user.User
+import hydro.common.CollectionUtils
+import hydro.common.ScalaUtils
 import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.access.ModelField.IdModelField
-import hydro.models.access.ModelField.toBiMapWithUniqueValues
+import scala.collection.immutable.Seq
 
 import scala.concurrent.duration.FiniteDuration
 
@@ -105,36 +107,40 @@ object ModelFields {
 
   // **************** Field numbers **************** //
   private val fieldToNumberMap: ImmutableBiMap[ModelField.any, Int] =
-    toBiMapWithUniqueValues(
-      User.id,
-      User.loginName,
-      User.passwordHash,
-      User.name,
-      User.isAdmin,
-      Song.id,
-      Song.filename,
-      Song.title,
-      Song.albumId,
-      Song.artistId,
-      Song.trackNumber,
-      Song.duration,
-      Song.disc,
-      Album.id,
-      Album.relativePath,
-      Album.title,
-      Album.artistId,
-      Album.year,
-      Artist.id,
-      Artist.name,
-      PlaylistEntry.id,
-      PlaylistEntry.songId,
-      PlaylistEntry.orderToken,
-      PlaylistEntry.userId,
-      PlayStatus.id,
-      PlayStatus.currentPlaylistEntryId,
-      PlayStatus.hasStarted,
-      PlayStatus.stopAfterCurrentSong,
-      PlayStatus.userId
+    CollectionUtils.toBiMapWithStableIntKeys(
+      stableNameMapper = field =>
+        ScalaUtils.stripRequiredPrefix(field.getClass.getName, prefix = ModelFields.getClass.getName),
+      values = Seq(
+        User.id,
+        User.loginName,
+        User.passwordHash,
+        User.name,
+        User.isAdmin,
+        Song.id,
+        Song.filename,
+        Song.title,
+        Song.albumId,
+        Song.artistId,
+        Song.trackNumber,
+        Song.duration,
+        Song.disc,
+        Album.id,
+        Album.relativePath,
+        Album.title,
+        Album.artistId,
+        Album.year,
+        Artist.id,
+        Artist.name,
+        PlaylistEntry.id,
+        PlaylistEntry.songId,
+        PlaylistEntry.orderToken,
+        PlaylistEntry.userId,
+        PlayStatus.id,
+        PlayStatus.currentPlaylistEntryId,
+        PlayStatus.hasStarted,
+        PlayStatus.stopAfterCurrentSong,
+        PlayStatus.userId,
+      )
     )
   def toNumber(field: ModelField.any): Int = fieldToNumberMap.get(field)
   def fromNumber(number: Int): ModelField.any = fieldToNumberMap.inverse().get(number)
