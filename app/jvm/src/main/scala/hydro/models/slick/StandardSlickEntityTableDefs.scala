@@ -47,6 +47,7 @@ object StandardSlickEntityTableDefs {
       }
     }
 
-    implicit val entityModificationToBytesMapper: ColumnType[EntityModification] = SlickUtils.bytesMapperFromPickler
+    implicit val entityModificationToBytesMapper: ColumnType[EntityModification] =
+      SlickUtils.bytesMapperFromPickler
   }
 }

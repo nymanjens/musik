@@ -37,9 +37,9 @@ class CollectionUtilsTest extends HookedSpecification {
       CollectionUtils.toBiMapWithStableIntKeys(stableNameMapper, Seq(a, a, c)) must throwAn[Exception]
     }
 
-      object A
-      object B
-      object C
+    object A
+    object B
+    object C
 
     "with strings" in doTest[String](s => s, "a", "b", "C")
     "with objects" in doTest[Any](_.getClass.getSimpleName, A, B, C)
