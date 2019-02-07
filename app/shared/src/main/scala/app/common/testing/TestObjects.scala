@@ -27,7 +27,10 @@ object TestObjects {
   val orderTokenE: OrderToken = OrderToken.middleBetween(Some(orderTokenD), None)
 
   val testDate: LocalDateTime = LocalDateTimes.createDateTime(2008, MARCH, 13)
-  val testInstant = Instant.ofEpochMilli(999000111)
+  val testInstantA: Instant = Instant.ofEpochMilli(999000001)
+  val testInstantB: Instant = Instant.ofEpochMilli(999000002)
+  val testInstantC: Instant = Instant.ofEpochMilli(999000003)
+  def testInstant: Instant = testInstantA
   val testUpdateToken: UpdateToken = s"123782:12378"
 
   def testUserA: User = User(

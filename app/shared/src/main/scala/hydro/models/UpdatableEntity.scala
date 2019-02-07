@@ -1,13 +1,12 @@
 package hydro.models
 
-import hydro.common.time.JavaTimeImplicits._
 import java.time.Instant
 
+import hydro.common.time.JavaTimeImplicits._
 import hydro.models.UpdatableEntity.LastUpdateTime
 import hydro.models.access.ModelField
 
 import scala.collection.immutable.Seq
-import scala.collection.mutable
 
 /**
   * Extension of Entity that allows safe* client updates via lastUpdateTime.
@@ -63,6 +62,13 @@ object UpdatableEntity {
 
   case class LastUpdateTime(timePerField: Map[ModelField.any, Instant], otherFieldsTime: Option[Instant]) {
 
+    def canonicalized: LastUpdateTime = otherFieldsTime match {
+      case None                                   => this
+      case _ if timePerField.isEmpty              => this
+      case Some(t) if t < timePerField.values.min => this
+      case Some(t)                                => copy(timePerField = timePerField.filter(_._2 > t))
+    }
+
     /**
       * Returns an instance that merges the fields in `this` and `that`.
       *
@@ -86,8 +92,23 @@ object UpdatableEntity {
           for (field <- allFields)
             yield field -> mergeInstant(this.timePerField.get(field), that.timePerField.get(field)).get
         }.toMap,
-        otherFieldsTime = mergeInstant(this.otherFieldsTime, that.otherFieldsTime)
-      )
+        otherFieldsTime = {
+          val candidate = mergeInstant(this.otherFieldsTime, that.otherFieldsTime)
+
+          if (forceIncrement && that.otherFieldsTime.isDefined) {
+            val unextendedTimePerField: Map[ModelField.any, Instant] =
+              this.timePerField.filterKeys(k => !(that.timePerField contains k))
+            if (unextendedTimePerField.nonEmpty && candidate.get < unextendedTimePerField.values.max) {
+              // This LastUpdateTime has an untouched field value larger than the given base time
+              Some(unextendedTimePerField.values.max plusNanos 1)
+            } else {
+              candidate
+            }
+          } else {
+            candidate
+          }
+        }
+      ).canonicalized
     }
   }
   object LastUpdateTime {
