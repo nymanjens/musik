@@ -15,6 +15,7 @@ import hydro.models.modification.EntityModification
 import app.models.user.User
 import hydro.common.time.LocalDateTime
 import hydro.common.time.LocalDateTimes
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 import scala.concurrent.duration._
 
@@ -34,6 +35,8 @@ object TestObjects {
   def testInstant: Instant = testInstantA
   val testUpdateToken: UpdateToken = s"123782:12378"
 
+  val testLastUpdateTime = LastUpdateTime.allFieldsUpdated(testInstant)
+
   def testUserA: User = User(
     loginName = "testUserA",
     passwordHash =
@@ -41,7 +44,8 @@ object TestObjects {
     // = sha512("pw")
     name = "Test User A",
     isAdmin = false,
-    idOption = Option(918273)
+    idOption = Option(918273),
+    lastUpdateTime = testLastUpdateTime,
   )
   val testUserB: User = User(
     loginName = "testUserB",
@@ -50,7 +54,8 @@ object TestObjects {
     // = sha512("pw")
     name = "Test User B",
     isAdmin = false,
-    idOption = Option(918274)
+    idOption = Option(918274),
+    lastUpdateTime = testLastUpdateTime,
   )
   def testUser: User = testUserA
   def testUserRedacted: User = testUser.copy(passwordHash = "<redacted>")
@@ -91,6 +96,7 @@ object TestObjects {
     stopAfterCurrentSong = true,
     userId = testUser.id,
     idOption = Some(1271626262),
+    lastUpdateTime = testLastUpdateTime,
   )
 
   val testModificationA: EntityModification = EntityModification.Add(testArtist)
