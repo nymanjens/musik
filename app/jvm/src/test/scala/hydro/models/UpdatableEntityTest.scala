@@ -1,13 +1,19 @@
 package hydro.models
 
-import scala.collection.immutable.Seq
+import java.lang.Math.abs
+
 import app.common.testing.TestObjects._
 import app.models.access.ModelFields
+import app.models.user.User
 import hydro.common.testing._
-import hydro.models.UpdatableEntity.LastUpdateTime
 import hydro.models.access.ModelField
+import hydro.models.UpdatableEntity.LastUpdateTime
+import hydro.models.modification.EntityModification
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+
+import scala.collection.immutable.Seq
+import scala.util.Random
 
 @RunWith(classOf[JUnitRunner])
 class UpdatableEntityTest extends HookedSpecification {
@@ -18,7 +24,61 @@ class UpdatableEntityTest extends HookedSpecification {
   private val testInstantBIncrement = testInstantB plusNanos 1
   require(testInstantBIncrement != testInstantB)
 
-  "merge" in { 1 mustEqual 1 }
+  "merge" in {
+    "allFieldsUpdated + allFieldsUpdated" in {
+      val user1 = randomUser(LastUpdateTime.allFieldsUpdated(testInstantA))
+      val user2 = randomUser(LastUpdateTime.allFieldsUpdated(testInstantB))
+
+      UpdatableEntity.merge(user1, user2) mustEqual user2
+      UpdatableEntity.merge(user2, user1) mustEqual user2
+    }
+    "allFieldsUpdated + someFieldsUpdated" in {
+      val user1 = randomUser(LastUpdateTime.allFieldsUpdated(testInstantA))
+      val user2 = randomUser(LastUpdateTime.someFieldsUpdated(Seq(fieldA), testInstantB), fieldA = "xxx")
+
+      val expectedTime =
+        LastUpdateTime(timePerField = Map(fieldA -> testInstantB), otherFieldsTime = Some(testInstantA))
+      UpdatableEntity.merge(user1, user2) mustEqual copy(user1, fieldA = "xxx", lastUpdateTime = expectedTime)
+      UpdatableEntity.merge(user2, user1) mustEqual copy(user1, fieldA = "xxx", lastUpdateTime = expectedTime)
+    }
+    "neverUpdated + someFieldsUpdated" in {
+      val user1 = randomUser(LastUpdateTime.neverUpdated)
+      val user2 = randomUser(LastUpdateTime.someFieldsUpdated(Seq(fieldA), testInstantB), fieldA = "aaa")
+
+      val expectedTime = user2.lastUpdateTime
+      UpdatableEntity.merge(user1, user2) mustEqual user2
+      UpdatableEntity.merge(user2, user1) mustEqual copy(user1, fieldA = "aaa", lastUpdateTime = expectedTime)
+    }
+    "someFieldsUpdated + someFieldsUpdated (overlap)" in {
+      val user1 =
+        randomUser(LastUpdateTime.someFieldsUpdated(Seq(fieldA, fieldB), testInstantA), fieldA = "aaa")
+      val user2 = randomUser(
+        LastUpdateTime.someFieldsUpdated(Seq(fieldB, fieldC), testInstantB),
+        fieldB = "bbb",
+        fieldC = "ccc")
+
+      val expectedTime =
+        LastUpdateTime(
+          timePerField = Map(fieldA -> testInstantA, fieldB -> testInstantB, fieldC -> testInstantB),
+          otherFieldsTime = None)
+      UpdatableEntity.merge(user1, user2) mustEqual copy(user2, fieldA = "aaa", lastUpdateTime = expectedTime)
+      UpdatableEntity.merge(user2, user1) mustEqual
+        copy(user1, fieldB = "bbb", fieldC = "ccc", lastUpdateTime = expectedTime)
+    }
+    "general + someFieldsUpdated (no overlap)" in {
+      val user1 = randomUser(
+        LastUpdateTime(timePerField = Map(fieldA -> testInstantC), otherFieldsTime = Some(testInstantA)),
+        fieldA = "aaa")
+      val user2 = randomUser(LastUpdateTime.someFieldsUpdated(Seq(fieldB), testInstantB), fieldB = "bbb")
+
+      val expectedTime = LastUpdateTime(
+        timePerField = Map(fieldA -> testInstantC, fieldB -> testInstantB),
+        otherFieldsTime = Some(testInstantA))
+      val expected = copy(user1, fieldB = "bbb", lastUpdateTime = expectedTime)
+      UpdatableEntity.merge(user1, user2) mustEqual expected
+      UpdatableEntity.merge(user2, user1) mustEqual expected
+    }
+  }
 
   "LastUpdateTime" in {
     "canonicalized" in {
@@ -157,5 +217,32 @@ class UpdatableEntityTest extends HookedSpecification {
         }
       }
     }
+  }
+
+  private def randomUser(lastUpdateTime: LastUpdateTime,
+                         fieldA: String = null,
+                         fieldB: String = null,
+                         fieldC: String = null): User = {
+
+    def randomString(prefix: String): String = s"${prefix}_${abs(Random.nextInt()).toString.substring(0, 4)}"
+    testUser.copy(
+      idOption = Some(EntityModification.generateRandomId()),
+      lastUpdateTime = lastUpdateTime,
+      loginName = Option(fieldA) getOrElse randomString("fieldA"),
+      name = Option(fieldB) getOrElse randomString("fieldB"),
+      passwordHash = Option(fieldC) getOrElse randomString("fieldC"),
+    )
+  }
+  private def copy(user: User,
+                   lastUpdateTime: LastUpdateTime = null,
+                   fieldA: String = null,
+                   fieldB: String = null,
+                   fieldC: String = null): User = {
+    user.copy(
+      loginName = Option(fieldA) getOrElse user.loginName,
+      name = Option(fieldB) getOrElse user.name,
+      passwordHash = Option(fieldC) getOrElse user.passwordHash,
+      lastUpdateTime = lastUpdateTime,
+    )
   }
 }
