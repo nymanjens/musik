@@ -66,7 +66,7 @@ object UpdatableEntity {
       case None                                   => this
       case _ if timePerField.isEmpty              => this
       case Some(t) if t < timePerField.values.min => this
-      case Some(t)                                => copy(timePerField = timePerField.filter(_._2 > t))
+      case Some(t)                                => copy(timePerField = timePerField.filter(_._2 >= t))
     }
 
     /**

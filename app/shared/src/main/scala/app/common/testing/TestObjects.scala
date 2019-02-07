@@ -30,6 +30,7 @@ object TestObjects {
   val testInstantA: Instant = Instant.ofEpochMilli(999000001)
   val testInstantB: Instant = Instant.ofEpochMilli(999000002)
   val testInstantC: Instant = Instant.ofEpochMilli(999000003)
+  val testInstantD: Instant = Instant.ofEpochMilli(999000004)
   def testInstant: Instant = testInstantA
   val testUpdateToken: UpdateToken = s"123782:12378"
 
