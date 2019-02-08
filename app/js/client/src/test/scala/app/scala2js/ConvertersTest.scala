@@ -23,9 +23,6 @@ object ConvertersTest extends TestSuite {
     "fromEntityType" - {
       fromEntityType(User.Type) ==> UserConverter
     }
-    "EntityTypeConverter" - {
-      testToJsAndBack[EntityType.any](User.Type)
-    }
 
     "UserConverter" - {
       testToJsAndBack[User](testUserRedacted)

@@ -7,10 +7,11 @@ import java.time.LocalTime
 import hydro.common.GuavaReplacement.ImmutableBiMap
 import hydro.common.OrderToken
 import app.models.access.ModelFields
+import app.models.modification.EntityTypes
 import app.scala2js.AppConverters
-import app.scala2js.AppConverters.EntityTypeConverter
 import app.scala2js.AppConverters.fromEntityType
 import hydro.common.time.LocalDateTime
+import hydro.common.CollectionUtils
 import hydro.models.Entity
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
@@ -48,14 +49,9 @@ object StandardConverters {
     fromFieldType(modelField.fieldType)
   }
 
-  def enumConverter[T](values: T*): Converter[T] = {
-    val valueToNumber: ImmutableBiMap[T, Int] = {
-      val builder = ImmutableBiMap.builder[T, Int]()
-      for ((value, number) <- values.zipWithIndex) {
-        builder.put(value, number)
-      }
-      builder.build()
-    }
+  def enumConverter[T](stableNameMapper: T => String, values: Seq[T]): Converter[T] = {
+    val valueToNumber: ImmutableBiMap[T, Int] =
+      CollectionUtils.toBiMapWithStableIntKeys(stableNameMapper = stableNameMapper, values = values)
 
     new Converter[T] {
       override def toJs(value: T) = Scala2Js.toJs(valueToNumber.get(value))
@@ -196,6 +192,9 @@ object StandardConverters {
       LastUpdateTime(timePerField, otherFieldsTime)
     }
   }
+
+  implicit val EntityTypeConverter: Converter[EntityType.any] =
+    enumConverter(stableNameMapper = _.name, values = EntityTypes.all)
 
   implicit object EntityModificationConverter extends Converter[EntityModification] {
     private val addNumber: Int = 1
