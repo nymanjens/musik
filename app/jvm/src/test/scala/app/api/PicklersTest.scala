@@ -19,35 +19,16 @@ import scala.collection.immutable.Seq
 @RunWith(classOf[JUnitRunner])
 class PicklersTest extends HookedSpecification {
 
-  "EntityType" in {
-    testPickleAndUnpickle[EntityType.any](User.Type)
-  }
-
   "EntityModification" in {
-    testPickleAndUnpickle[EntityModification](EntityModification.Add(testUserRedacted))
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testSong))
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testAlbum))
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testArtist))
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testPlaylistEntry))
     testPickleAndUnpickle[EntityModification](EntityModification.Add(testPlayStatus))
-    testPickleAndUnpickle[EntityModification](EntityModification.Update(testUserRedacted))
-    testPickleAndUnpickle[EntityModification](EntityModification.Remove[User](123054))
   }
 
   "GetInitialDataResponse" in {
     testPickleAndUnpickle[GetInitialDataResponse](testGetInitialDataResponse)
-  }
-
-  "GetAllEntitiesResponse" in {
-    testPickleAndUnpickle[GetAllEntitiesResponse](
-      GetAllEntitiesResponse(
-        entitiesMap = Map(User.Type -> Seq(testUserRedacted)),
-        nextUpdateToken = testUpdateToken))
-  }
-
-  "ModificationsWithToken" in {
-    testPickleAndUnpickle[ModificationsWithToken](
-      ModificationsWithToken(modifications = Seq(testModification), nextUpdateToken = testUpdateToken))
   }
 
   private def testPickleAndUnpickle[T: Pickler](value: T) = {
