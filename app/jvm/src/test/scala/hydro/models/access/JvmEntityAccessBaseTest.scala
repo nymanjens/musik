@@ -95,7 +95,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
         EntityModification.Update(user2)
       )
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1, user2)
+      entityAccess.newQuerySync[User]().data() must containTheSameElementsAs(Seq(updatedUser1, user2))
     }
 
     "EntityModification.Remove is idempotent" in new WithApplication {
