@@ -51,12 +51,12 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
     "EntityModification.Update" in new WithApplication {
       val user1 = createUser()
-      val updatedUser1 = user1.copy(name = "other nme")
+      val user1Update = EntityModification.createUpdateAllFields(user1.copy(name = "other nme"))
       entityAccess.persistEntityModifications(EntityModification.Add(user1))
 
-      entityAccess.persistEntityModifications(EntityModification.createUpdateAllFields(updatedUser1))
+      entityAccess.persistEntityModifications(user1Update)
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1)
+      entityAccess.newQuerySync[User]().data() mustEqual Seq(user1Update.updatedEntity)
     }
 
     "EntityModification.Remove" in new WithApplication {
@@ -95,7 +95,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
         EntityModification.Update(user2)
       )
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1)
+      entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1, user2)
     }
 
     "EntityModification.Remove is idempotent" in new WithApplication {
