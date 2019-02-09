@@ -8,6 +8,8 @@ import hydro.models.access.InMemoryEntityDatabase.EntitiesFetcher
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityType
 import app.models.user.User
+import com.google.inject.Guice
+import com.google.inject.Inject
 import hydro.models.Entity
 import hydro.models.access.DbQuery.Sorting
 import hydro.models.access.DbQueryImplicits._
@@ -23,13 +25,15 @@ class InMemoryEntityDatabaseTest extends HookedSpecification {
 
   private val entitiesFetcher = new FakeEntitiesFetcher
 
-  val user1 = createUser(loginName = "login1", name = "name3")
-  val user2 = createUser(loginName = "login2", name = "name2")
-  val user3 = createUser(loginName = "login3", name = "name1")
-  val user4 = createUser(loginName = "login4", name = "name0")
+  implicit private val fakeClock: FakeClock = new FakeClock
+
+  private val user1 = createUser(loginName = "login1", name = "name3")
+  private val user2 = createUser(loginName = "login2", name = "name2")
+  private val user3 = createUser(loginName = "login3", name = "name1")
+  private val user4 = createUser(loginName = "login4", name = "name0")
 
   "queryExecutor()" in {
-    entitiesFetcher.users ++= Seq(user1, user2, user3)
+    entitiesFetcher.setUsers(user1, user2, user3)
 
     implicit val database = new InMemoryEntityDatabase(
       entitiesFetcher,
@@ -52,39 +56,71 @@ class InMemoryEntityDatabaseTest extends HookedSpecification {
 
   "update()" in {
     "Add" in {
-      entitiesFetcher.users ++= Seq(user1, user2)
+      entitiesFetcher.setUsers(user1, user2)
       implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
       triggerLazyFetching(database)
 
-      entitiesFetcher.users += user3
       database.update(EntityModification.Add(user3))
 
       assertDatabaseContainsExactlySorted(user1, user2, user3)
     }
 
     "Remove" in {
-      entitiesFetcher.users ++= Seq(user1, user2, user3, user4)
+      entitiesFetcher.setUsers(user1, user2, user3, user4)
       implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
       triggerLazyFetching(database)
 
-      entitiesFetcher.users -= user4
       database.update(EntityModification.createRemove(user4))
 
       assertDatabaseContainsExactlySorted(user1, user2, user3)
     }
 
     "Update" in {
-      val user2AtCreate = createUser(id = user2.id, loginName = "login9", name = "name99")
+      "Full update" in {
+        entitiesFetcher.setUsers(user1, user2, user3)
+        implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
+        triggerLazyFetching(database)
 
-      entitiesFetcher.users ++= Seq(user1, user2AtCreate, user3)
-      implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
-      triggerLazyFetching(database)
+        val user2Update = EntityModification.createUpdateAllFields(user2.copy(loginName = "login2_update"))
+        database.update(user2Update)
 
-      entitiesFetcher.users -= user2AtCreate
-      entitiesFetcher.users += user2
-      database.update(EntityModification.Update(user2))
+        assertDatabaseContainsExactlySorted(user1, user2Update.updatedEntity, user3)
+      }
+      "Partial update" in {
+        entitiesFetcher.setUsers(user1, user2, user3)
+        implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
+        triggerLazyFetching(database)
 
-      assertDatabaseContainsExactlySorted(user1, user2, user3)
+        val user2UpdateA = EntityModification.createUpdate(
+          user2.copy(loginName = "login2_update"),
+          fieldMask = Seq(ModelFields.User.loginName))
+        val user2UpdateB = EntityModification.createUpdate(
+          user2.copy(name = "name2_update"),
+          fieldMask = Seq(ModelFields.User.name))
+        database.update(user2UpdateA)
+        database.update(user2UpdateB)
+
+        assertDatabaseContainsExactlySorted(
+          user1,
+          user2.copy(
+            loginName = "login2_update",
+            name = "name2_update",
+            lastUpdateTime = user2UpdateA.updatedEntity.lastUpdateTime
+              .merge(user2UpdateB.updatedEntity.lastUpdateTime, forceIncrement = false)
+          ),
+          user3
+        )
+      }
+      "Upsert" in {
+        entitiesFetcher.setUsers(user1, user3)
+        implicit val database = new InMemoryEntityDatabase(entitiesFetcher)
+        triggerLazyFetching(database)
+
+        val user2Update = EntityModification.createUpdateAllFields(user2)
+        database.update(user2Update)
+
+        assertDatabaseContainsExactlySorted(user1, user2Update.updatedEntity, user3)
+      }
     }
   }
 
@@ -120,11 +156,16 @@ class InMemoryEntityDatabaseTest extends HookedSpecification {
   }
 
   private class FakeEntitiesFetcher extends EntitiesFetcher {
-    val users: mutable.Set[User] = mutable.Set()
+    private val users: mutable.Set[User] = mutable.Set()
 
     override def fetch[E <: Entity](entityType: EntityType[E]) = entityType match {
       case User.Type => users.toVector.asInstanceOf[Seq[E]]
       case _         => Seq()
+    }
+
+    def setUsers(users: User*): Unit = {
+      this.users.clear()
+      this.users ++= users
     }
   }
 }
