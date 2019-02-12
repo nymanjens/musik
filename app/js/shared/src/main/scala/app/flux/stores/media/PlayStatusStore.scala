@@ -1,14 +1,17 @@
 package app.flux.stores.media
 
 import app.flux.stores.media.PlayStatusStore.State
+import app.models.access.ModelFields
 import app.models.media.JsPlaylistEntry
 import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import hydro.models.modification.EntityModification
 import app.models.user.User
+import hydro.common.time.Clock
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.models.access.JsEntityAccess
+import hydro.models.access.ModelField
 
 import scala.async.Async.async
 import scala.async.Async.await
@@ -16,7 +19,10 @@ import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, dispatcher: Dispatcher)
+final class PlayStatusStore(implicit entityAccess: JsEntityAccess,
+                            user: User,
+                            dispatcher: Dispatcher,
+                            clock: Clock)
     extends AsyncEntityDerivedStateStore[State] {
 
   private var playWasEverStartedInThisSession: Boolean = false
@@ -83,18 +89,27 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
       case null => fallback
       case v    => v
     }
+    def someIfNonNull(value: Any,
+                      modelField: ModelField[_, PlayStatus]): Option[ModelField[_, PlayStatus]] = {
+      if (value == null) None
+      else Some(modelField)
+    }
     val modifications = await(PlayStatus.get(verifyConsistency = false)) match {
       case Some(playStatus) =>
         Seq(
-          EntityModification.createUpdate(PlayStatus(
-            currentPlaylistEntryId =
-              nonNullLongOrElse(currentPlaylistEntryId, fallback = playStatus.currentPlaylistEntryId),
-            hasStarted = nonNullBooleanOrElse(hasStarted, fallback = playStatus.hasStarted),
-            stopAfterCurrentSong =
-              nonNullBooleanOrElse(stopAfterCurrentSong, fallback = playStatus.stopAfterCurrentSong),
-            userId = user.id,
-            idOption = Some(playStatus.id)
-          )))
+          EntityModification.createUpdate(
+            playStatus.copy(
+              currentPlaylistEntryId =
+                nonNullLongOrElse(currentPlaylistEntryId, fallback = playStatus.currentPlaylistEntryId),
+              hasStarted = nonNullBooleanOrElse(hasStarted, fallback = playStatus.hasStarted),
+              stopAfterCurrentSong =
+                nonNullBooleanOrElse(stopAfterCurrentSong, fallback = playStatus.stopAfterCurrentSong)
+            ),
+            fieldMask = Seq() ++
+              someIfNonNull(currentPlaylistEntryId, ModelFields.PlayStatus.currentPlaylistEntryId) ++
+              someIfNonNull(hasStarted, ModelFields.PlayStatus.hasStarted) ++
+              someIfNonNull(stopAfterCurrentSong, ModelFields.PlayStatus.stopAfterCurrentSong)
+          ))
       case None =>
         val maybeEntryId: Option[Long] =
           if (currentPlaylistEntryId != null) Some(currentPlaylistEntryId)
@@ -143,8 +158,8 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess, user: User, d
       async {
         val userId = user.id
         modifications.collect {
-          case EntityModification.Add(PlayStatus(_, /* hasStarted */ true, _, `userId`, _)) |
-              EntityModification.Update(PlayStatus(_, /* hasStarted */ true, _, `userId`, _)) =>
+          case EntityModification.Add(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) |
+              EntityModification.Update(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) =>
             playWasEverStartedInThisSession = true
         }
       }

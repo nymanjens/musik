@@ -3,6 +3,7 @@ package app.scala2js
 import hydro.models.modification.EntityType
 import app.models.access.ModelFields
 import app.models.media._
+import app.models.modification.EntityTypes
 import app.models.user.User
 import hydro.models.Entity
 import hydro.scala2js.Scala2Js.Converter
@@ -27,16 +28,6 @@ object AppConverters {
     }
     converter.asInstanceOf[MapConverter[E]]
   }
-
-  // **************** General converters **************** //
-  implicit val EntityTypeConverter: Converter[EntityType.any] =
-    StandardConverters.enumConverter(
-      User.Type,
-      Song.Type,
-      Album.Type,
-      Artist.Type,
-      PlaylistEntry.Type,
-      PlayStatus.Type)
 
   // **************** Entity converters **************** //
   implicit val UserConverter: EntityConverter[User] = new EntityConverter(

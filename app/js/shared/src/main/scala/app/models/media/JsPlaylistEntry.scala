@@ -9,22 +9,20 @@ import scala.async.Async.await
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-case class JsPlaylistEntry(song: JsSong, orderToken: OrderToken, userId: Long, id: Long) {
-  def toEntity: PlaylistEntry =
-    PlaylistEntry(songId = song.id, orderToken = orderToken, userId = userId, idOption = Some(id))
+case class JsPlaylistEntry(song: JsSong, entity: PlaylistEntry) {
+  def orderToken: OrderToken = entity.orderToken
+  def id: Long = entity.id
 }
 
 object JsPlaylistEntry {
-  implicit val ordering: Ordering[JsPlaylistEntry] = Ordering.by(_.toEntity)
+  implicit val ordering: Ordering[JsPlaylistEntry] = Ordering.by(_.entity)
 
   def fromEntity(playlistEntry: PlaylistEntry)(implicit entityAccess: EntityAccess): Future[JsPlaylistEntry] =
     async {
       val song = await(JsSong.fromEntityId(playlistEntry.songId))
       media.JsPlaylistEntry(
         song = song,
-        orderToken = playlistEntry.orderToken,
-        userId = playlistEntry.userId,
-        id = playlistEntry.id
+        entity = playlistEntry
       )
     }
 

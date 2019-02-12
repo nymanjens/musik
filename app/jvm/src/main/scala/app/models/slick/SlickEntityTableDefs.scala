@@ -14,6 +14,8 @@ import hydro.models.slick.SlickUtils.dbApi.{Tag => SlickTag}
 import hydro.models.slick.SlickUtils.dbApi._
 import hydro.models.slick.SlickUtils.finiteDurationToMillisMapper
 import hydro.models.slick.SlickUtils.orderTokenToBytesMapper
+import hydro.models.slick.SlickUtils.lastUpdateTimeToBytesMapper
+import hydro.models.UpdatableEntity.LastUpdateTime
 
 import scala.collection.immutable.Seq
 import scala.concurrent.duration.FiniteDuration
@@ -34,9 +36,10 @@ object SlickEntityTableDefs {
       def passwordHash = column[String]("passwordHash")
       def name = column[String]("name")
       def isAdmin = column[Boolean]("isAdmin")
+      def lastUpdateTime = column[LastUpdateTime]("lastUpdateTime")
 
       override def * =
-        (loginName, passwordHash, name, isAdmin, id.?) <> (User.tupled, User.unapply)
+        (loginName, passwordHash, name, isAdmin, id.?, lastUpdateTime) <> (User.tupled, User.unapply)
     }
   }
 
@@ -101,9 +104,10 @@ object SlickEntityTableDefs {
       def songId = column[Long]("songId")
       def orderToken = column[OrderToken]("orderToken")
       def userId = column[Long]("userId")
+      def lastUpdateTime = column[LastUpdateTime]("lastUpdateTime")
 
       override def * =
-        (songId, orderToken, userId, id.?) <> (PlaylistEntry.tupled, PlaylistEntry.unapply)
+        (songId, orderToken, userId, id.?, lastUpdateTime) <> (PlaylistEntry.tupled, PlaylistEntry.unapply)
     }
   }
 
@@ -118,9 +122,10 @@ object SlickEntityTableDefs {
       def hasStarted = column[Boolean]("hasStarted")
       def stopAfterCurrentSong = column[Boolean]("stopAfterCurrentSong")
       def userId = column[Long]("userId")
+      def lastUpdateTime = column[LastUpdateTime]("lastUpdateTime")
 
       override def * =
-        (currentPlaylistEntryId, hasStarted, stopAfterCurrentSong, userId, id.?) <> (PlayStatus.tupled, PlayStatus.unapply)
+        (currentPlaylistEntryId, hasStarted, stopAfterCurrentSong, userId, id.?, lastUpdateTime) <> (PlayStatus.tupled, PlayStatus.unapply)
     }
   }
 }
