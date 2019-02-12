@@ -11,11 +11,10 @@ import app.models.media.Song
 import app.models.user.User
 import app.scala2js.AppConverters._
 import hydro.common.time.LocalDateTime
-import hydro.models.modification.EntityType
 import hydro.scala2js.Scala2Js
 import utest._
 
-object ConvertersTest extends TestSuite {
+object AppConvertersTest extends TestSuite {
   val dateTime = LocalDateTime.of(2022, MARCH, 13, 12, 13)
 
   override def tests = TestSuite {
