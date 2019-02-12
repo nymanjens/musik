@@ -69,76 +69,80 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
       assertPersistedUsersEqual()
     }
 
-    "EntityModification.Add is idempotent" in new WithApplication {
-      val user1 = createUser()
-      val updatedUser1 = user1.copy(name = "other name")
-      val user2 = createUser()
+    "All modifications are idempotent" in {
+      "EntityModification.Add is idempotent" in new WithApplication {
+        val user1 = createUser()
+        val updatedUser1 = user1.copy(name = "other name")
+        val user2 = createUser()
 
-      entityAccess.persistEntityModifications(
-        EntityModification.Add(user1),
-        EntityModification.Add(user1),
-        EntityModification.Add(updatedUser1),
-        EntityModification.Add(user2)
-      )
+        entityAccess.persistEntityModifications(
+          EntityModification.Add(user1),
+          EntityModification.Add(user1),
+          EntityModification.Add(updatedUser1),
+          EntityModification.Add(user2)
+        )
 
-      assertPersistedUsersEqual(user1, user2)
+        assertPersistedUsersEqual(user1, user2)
+      }
+
+      "EntityModification.Update is idempotent" in new WithApplication {
+        val user1 = createUser()
+        val updatedUser1 = user1.copy(name = "other name")
+        val user2 = createUser()
+        entityAccess.persistEntityModifications(EntityModification.Add(user1))
+
+        entityAccess.persistEntityModifications(
+          EntityModification.Update(updatedUser1),
+          EntityModification.Update(updatedUser1),
+          EntityModification.Update(user2)
+        )
+
+        assertPersistedUsersEqual(updatedUser1, user2)
+      }
+
+      "EntityModification.Remove is idempotent" in new WithApplication {
+        val user1 = createUser()
+        val user2 = createUser()
+        val user3 = createUser()
+        entityAccess.persistEntityModifications(EntityModification.Add(user1))
+        entityAccess.persistEntityModifications(EntityModification.Add(user2))
+
+        entityAccess.persistEntityModifications(
+          EntityModification.createRemove(user2),
+          EntityModification.createRemove(user2),
+          EntityModification.createRemove(user3)
+        )
+
+        assertPersistedUsersEqual(user1)
+      }
     }
 
-    "EntityModification.Update is idempotent" in new WithApplication {
-      val user1 = createUser()
-      val updatedUser1 = user1.copy(name = "other name")
-      val user2 = createUser()
-      entityAccess.persistEntityModifications(EntityModification.Add(user1))
+    "Filters duplicates" in {
+      "Filters duplicates: EntityModification.Add" in new WithApplication {
+        val user1 = createUser()
+        val updatedUser1 = user1.copy(name = "other name")
+        entityAccess.persistEntityModifications(EntityModification.Add(user1))
+        entityAccess.persistEntityModifications(EntityModification.Update(updatedUser1))
+        val initialModifications = allEntityModifications()
 
-      entityAccess.persistEntityModifications(
-        EntityModification.Update(updatedUser1),
-        EntityModification.Update(updatedUser1),
-        EntityModification.Update(user2)
-      )
+        entityAccess.persistEntityModifications(EntityModification.Add(user1), EntityModification.Add(user1))
 
-      assertPersistedUsersEqual(updatedUser1, user2)
-    }
+        assertPersistedUsersEqual(updatedUser1)
+        allEntityModifications() mustEqual initialModifications
+      }
+      "Filters duplicates: EntityModification.Update" in new WithApplication {
+        val user1 = createUser()
+        val updatedUser1 = user1.copy(name = "other name")
 
-    "EntityModification.Remove is idempotent" in new WithApplication {
-      val user1 = createUser()
-      val user2 = createUser()
-      val user3 = createUser()
-      entityAccess.persistEntityModifications(EntityModification.Add(user1))
-      entityAccess.persistEntityModifications(EntityModification.Add(user2))
+        entityAccess.persistEntityModifications(EntityModification.Add(user1))
+        entityAccess.persistEntityModifications(EntityModification.createRemove(user1))
+        val initialModifications = allEntityModifications()
 
-      entityAccess.persistEntityModifications(
-        EntityModification.createRemove(user2),
-        EntityModification.createRemove(user2),
-        EntityModification.createRemove(user3)
-      )
+        entityAccess.persistEntityModifications(EntityModification.Update(updatedUser1))
 
-      assertPersistedUsersEqual(user1)
-    }
-
-    "Filters duplicates: EntityModification.Add" in new WithApplication {
-      val user1 = createUser()
-      val updatedUser1 = user1.copy(name = "other name")
-      entityAccess.persistEntityModifications(EntityModification.Add(user1))
-      entityAccess.persistEntityModifications(EntityModification.Update(updatedUser1))
-      val initialModifications = allEntityModifications()
-
-      entityAccess.persistEntityModifications(EntityModification.Add(user1), EntityModification.Add(user1))
-
-      assertPersistedUsersEqual(updatedUser1)
-      allEntityModifications() mustEqual initialModifications
-    }
-    "Filters duplicates: EntityModification.Update" in new WithApplication {
-      val user1 = createUser()
-      val updatedUser1 = user1.copy(name = "other name")
-
-      entityAccess.persistEntityModifications(EntityModification.Add(user1))
-      entityAccess.persistEntityModifications(EntityModification.createRemove(user1))
-      val initialModifications = allEntityModifications()
-
-      entityAccess.persistEntityModifications(EntityModification.Update(updatedUser1))
-
-      assertPersistedUsersEqual()
-      allEntityModifications() mustEqual initialModifications
+        assertPersistedUsersEqual()
+        allEntityModifications() mustEqual initialModifications
+      }
     }
   }
 
