@@ -4,6 +4,7 @@ import app.models.slick.SlickEntityTableDefs.UserDef
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.testing.TestObjects._
 import app.common.testing._
+import app.models.access.ModelFields
 import hydro.common.testing._
 import hydro.models.modification.EntityModification
 import hydro.models.modification.EntityModificationEntity
@@ -11,6 +12,7 @@ import hydro.models.slick.StandardSlickEntityTableDefs.EntityModificationEntityD
 import hydro.models.slick.SlickUtils.dbRun
 import app.models.user.User
 import com.google.inject._
+import hydro.models.UpdatableEntity.LastUpdateTime
 import org.junit.runner._
 import org.specs2.runner._
 import play.api.test._
@@ -50,14 +52,57 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
       assertPersistedUsersEqual(user)
     }
 
-    "EntityModification.Update" in new WithApplication {
+    "EntityModification.Update" in {
       val user1 = createUser()
-      val user1Update = EntityModification.createUpdateAllFields(user1.copy(name = "other nme"))
-      entityAccess.persistEntityModifications(EntityModification.Add(user1))
+      val user2 = createUser()
+      val user3 = createUser()
+      val user4 = createUser()
 
-      entityAccess.persistEntityModifications(user1Update)
+      "Full update" in new WithApplication {
+        entityAccess.persistEntityModifications(
+          EntityModification.Add(user1),
+          EntityModification.Add(user2),
+          EntityModification.Add(user3))
 
-      assertPersistedUsersEqual(user1Update.updatedEntity)
+        val user2Update = EntityModification.createUpdateAllFields(user2.copy(name = "other name"))
+        entityAccess.persistEntityModifications(user2Update)
+
+        assertPersistedUsersEqual(user1, user2Update.updatedEntity, user3)
+      }
+      "Partial update" in new WithApplication {
+        entityAccess.persistEntityModifications(
+          EntityModification.Add(user1),
+          EntityModification.Add(user2),
+          EntityModification.Add(user3))
+
+        val user2UpdateA = EntityModification.createUpdate(
+          user2.copy(loginName = "login2_update"),
+          fieldMask = Seq(ModelFields.User.loginName))
+        val user2UpdateB = EntityModification.createUpdate(
+          user2.copy(name = "name2_update"),
+          fieldMask = Seq(ModelFields.User.name))
+        entityAccess.persistEntityModifications(user2UpdateA)
+        entityAccess.persistEntityModifications(user2UpdateB)
+
+        assertPersistedUsersEqual(
+          user1,
+          user2.copy(
+            loginName = "login2_update",
+            name = "name2_update",
+            lastUpdateTime = user2UpdateA.updatedEntity.lastUpdateTime
+              .merge(user2UpdateB.updatedEntity.lastUpdateTime, forceIncrement = false)
+          ),
+          user3
+        )
+      }
+      "Upsert" in new WithApplication {
+        entityAccess.persistEntityModifications(EntityModification.Add(user1), EntityModification.Add(user3))
+
+        val user2Update = EntityModification.createUpdateAllFields(user2)
+        entityAccess.persistEntityModifications(user2Update)
+
+        assertPersistedUsersEqual(user1, user2Update.updatedEntity, user3)
+      }
     }
 
     "EntityModification.Remove" in new WithApplication {
@@ -87,17 +132,19 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       "EntityModification.Update is idempotent" in new WithApplication {
         val user1 = createUser()
-        val updatedUser1 = user1.copy(name = "other name")
-        val user2 = createUser()
+        val updatedUserA =
+          user1.copy(name = "A", lastUpdateTime = LastUpdateTime.allFieldsUpdated(testInstantA))
+        val updatedUserB =
+          user1.copy(name = "B", lastUpdateTime = LastUpdateTime.allFieldsUpdated(testInstantB))
         entityAccess.persistEntityModifications(EntityModification.Add(user1))
 
         entityAccess.persistEntityModifications(
-          EntityModification.Update(updatedUser1),
-          EntityModification.Update(updatedUser1),
-          EntityModification.Update(user2)
+          EntityModification.Update(updatedUserB),
+          EntityModification.Update(updatedUserA),
+          EntityModification.Update(updatedUserB),
         )
 
-        assertPersistedUsersEqual(updatedUser1, user2)
+        assertPersistedUsersEqual(updatedUserB)
       }
 
       "EntityModification.Remove is idempotent" in new WithApplication {
