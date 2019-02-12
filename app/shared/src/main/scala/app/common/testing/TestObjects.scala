@@ -21,22 +21,22 @@ import scala.concurrent.duration._
 
 object TestObjects {
 
-  val orderTokenA: OrderToken = OrderToken.middleBetween(None, Some(OrderToken.middle))
-  val orderTokenB: OrderToken = OrderToken.middleBetween(Some(OrderToken.middle), None)
-  val orderTokenC: OrderToken = OrderToken.middleBetween(Some(orderTokenB), None)
-  val orderTokenD: OrderToken = OrderToken.middleBetween(Some(orderTokenC), None)
-  val orderTokenE: OrderToken = OrderToken.middleBetween(Some(orderTokenD), None)
+  def orderTokenA: OrderToken = OrderToken.middleBetween(None, Some(OrderToken.middle))
+  def orderTokenB: OrderToken = OrderToken.middleBetween(Some(OrderToken.middle), None)
+  def orderTokenC: OrderToken = OrderToken.middleBetween(Some(orderTokenB), None)
+  def orderTokenD: OrderToken = OrderToken.middleBetween(Some(orderTokenC), None)
+  def orderTokenE: OrderToken = OrderToken.middleBetween(Some(orderTokenD), None)
   def testOrderToken: OrderToken = orderTokenC
 
-  val testDate: LocalDateTime = LocalDateTimes.createDateTime(2008, MARCH, 13)
-  val testInstantA: Instant = Instant.ofEpochMilli(999000001)
-  val testInstantB: Instant = Instant.ofEpochMilli(999000002)
-  val testInstantC: Instant = Instant.ofEpochMilli(999000003)
-  val testInstantD: Instant = Instant.ofEpochMilli(999000004)
+  def testDate: LocalDateTime = LocalDateTimes.createDateTime(2008, MARCH, 13)
+  def testInstantA: Instant = Instant.ofEpochMilli(999000001)
+  def testInstantB: Instant = Instant.ofEpochMilli(999000002)
+  def testInstantC: Instant = Instant.ofEpochMilli(999000003)
+  def testInstantD: Instant = Instant.ofEpochMilli(999000004)
   def testInstant: Instant = testInstantA
-  val testUpdateToken: UpdateToken = s"123782:12378"
+  def testUpdateToken: UpdateToken = s"123782:12378"
 
-  val testLastUpdateTime = LastUpdateTime.allFieldsUpdated(testInstant)
+  def testLastUpdateTime = LastUpdateTime.allFieldsUpdated(testInstant)
 
   def testUserA: User = User(
     loginName = "testUserA",
@@ -48,7 +48,7 @@ object TestObjects {
     idOption = Option(918273),
     lastUpdateTime = testLastUpdateTime,
   )
-  val testUserB: User = User(
+  def testUserB: User = User(
     loginName = "testUserB",
     passwordHash =
       "be196838736ddfd0007dd8b2e8f46f22d440d4c5959925cb49135abc9cdb01e84961aa43dd0ddb6ee59975eb649280d9f44088840af37451828a6412b9b574fc",
@@ -61,21 +61,21 @@ object TestObjects {
   def testUser: User = testUserA
   def testUserRedacted: User = testUser.copy(passwordHash = "<redacted>")
 
-  val testUserPrototype = UserPrototype.create(
+  def testUserPrototype = UserPrototype.create(
     id = testUser.id,
     loginName = testUser.loginName,
     plainTextPassword = "dlkfjasfd",
     name = testUser.name,
     isAdmin = testUser.isAdmin)
 
-  val testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
-  val testAlbum = Album(
+  def testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
+  def testAlbum = Album(
     relativePath = "folderA/folderB",
     title = "Test Album",
     artistId = Some(testArtist.id),
     year = Some(1999),
     idOption = Some(91723969))
-  val testSong = Song(
+  def testSong = Song(
     filename = "test-song.mp3",
     title = "Test Song",
     albumId = testAlbum.id,
@@ -85,13 +85,13 @@ object TestObjects {
     disc = 1,
     idOption = Some(7646464),
   )
-  val testPlaylistEntry = PlaylistEntry(
+  def testPlaylistEntry = PlaylistEntry(
     songId = testSong.id,
     orderToken = orderTokenA,
     userId = testUser.id,
     idOption = Some(28316982172874774L),
   )
-  val testPlayStatus = PlayStatus(
+  def testPlayStatus = PlayStatus(
     currentPlaylistEntryId = testPlaylistEntry.id,
     hasStarted = true,
     stopAfterCurrentSong = true,
@@ -100,12 +100,12 @@ object TestObjects {
     lastUpdateTime = testLastUpdateTime,
   )
 
-  val testModificationA: EntityModification = EntityModification.Add(testArtist)
-  val testModificationB: EntityModification =
+  def testModificationA: EntityModification = EntityModification.Add(testArtist)
+  def testModificationB: EntityModification =
     EntityModification.Add(testUserB.copy(passwordHash = "<redacted>"))
   def testModification: EntityModification = testModificationA
 
-  val testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
+  def testGetInitialDataResponse: GetInitialDataResponse = GetInitialDataResponse(
     user = testUserRedacted,
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken

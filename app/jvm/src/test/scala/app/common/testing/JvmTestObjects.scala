@@ -6,7 +6,7 @@ import scala.concurrent.duration._
 
 object JvmTestObjects {
 
-  val testMediaFile: MediaFile = MediaFile(
+  def testMediaFile: MediaFile = MediaFile(
     relativePath = "test-relative-path",
     title = Some("test-title"),
     album = Some("test-album"),
