@@ -1,5 +1,6 @@
 package hydro.models.access
 
+import app.models.slick.SlickEntityTableDefs.UserDef
 import hydro.common.GuavaReplacement.Iterables.getOnlyElement
 import app.common.testing.TestObjects._
 import app.common.testing._
@@ -46,7 +47,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       entityAccess.persistEntityModifications(EntityModification.Add(user))
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(user)
+      assertPersistedUsersEqual(user)
     }
 
     "EntityModification.Update" in new WithApplication {
@@ -56,7 +57,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       entityAccess.persistEntityModifications(user1Update)
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(user1Update.updatedEntity)
+      assertPersistedUsersEqual(user1Update.updatedEntity)
     }
 
     "EntityModification.Remove" in new WithApplication {
@@ -65,7 +66,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       entityAccess.persistEntityModifications(EntityModification.createRemove(user1))
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq()
+      assertPersistedUsersEqual()
     }
 
     "EntityModification.Add is idempotent" in new WithApplication {
@@ -80,7 +81,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
         EntityModification.Add(user2)
       )
 
-      entityAccess.newQuerySync[User]().data().toSet mustEqual Set(user1, user2)
+      assertPersistedUsersEqual(user1, user2)
     }
 
     "EntityModification.Update is idempotent" in new WithApplication {
@@ -95,7 +96,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
         EntityModification.Update(user2)
       )
 
-      entityAccess.newQuerySync[User]().data() must containTheSameElementsAs(Seq(updatedUser1, user2))
+      assertPersistedUsersEqual(updatedUser1, user2)
     }
 
     "EntityModification.Remove is idempotent" in new WithApplication {
@@ -111,7 +112,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
         EntityModification.createRemove(user3)
       )
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(user1)
+      assertPersistedUsersEqual(user1)
     }
 
     "Filters duplicates: EntityModification.Add" in new WithApplication {
@@ -123,7 +124,7 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       entityAccess.persistEntityModifications(EntityModification.Add(user1), EntityModification.Add(user1))
 
-      entityAccess.newQuerySync[User]().data() mustEqual Seq(updatedUser1)
+      assertPersistedUsersEqual(updatedUser1)
       allEntityModifications() mustEqual initialModifications
     }
     "Filters duplicates: EntityModification.Update" in new WithApplication {
@@ -136,9 +137,14 @@ class JvmEntityAccessBaseTest extends HookedSpecification {
 
       entityAccess.persistEntityModifications(EntityModification.Update(updatedUser1))
 
-      entityAccess.newQuerySync[User]().data() must beEmpty
+      assertPersistedUsersEqual()
       allEntityModifications() mustEqual initialModifications
     }
+  }
+
+  private def assertPersistedUsersEqual(users: User*) = {
+    entityAccess.newQuerySync[User]().data() must containTheSameElementsAs(users)
+    dbRun(entityAccess.newSlickQuery[User]()) must containTheSameElementsAs(users)
   }
 
   private def allEntityModifications(): Seq[EntityModificationEntity] =
