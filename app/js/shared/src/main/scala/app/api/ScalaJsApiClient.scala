@@ -11,7 +11,6 @@ import app.api.Picklers._
 import hydro.api.PicklableDbQuery
 import hydro.api.ScalaJsApiRequest
 import hydro.common.LoggingUtils.logExceptions
-import hydro.common.websocket.SerialWebsocketClientParallelizer
 import hydro.models.Entity
 import hydro.models.access.DbQuery
 import org.scalajs.dom
@@ -40,7 +39,7 @@ object ScalaJsApiClient {
     }
 
     override def getAllEntities(types: Seq[EntityType.any]) = {
-      WebsocketAutowireClient[ScalaJsApi].getAllEntities(types).call()
+      HttpPostAutowireClient[ScalaJsApi].getAllEntities(types).call()
     }
 
     override def persistEntityModifications(modifications: Seq[EntityModification]) = {
@@ -49,7 +48,7 @@ object ScalaJsApiClient {
 
     override def executeDataQuery[E <: Entity](dbQuery: DbQuery[E]) = {
       val picklableDbQuery = PicklableDbQuery.fromRegular(dbQuery)
-      WebsocketAutowireClient[ScalaJsApi]
+      HttpPostAutowireClient[ScalaJsApi]
         .executeDataQuery(picklableDbQuery)
         .call()
         .map(_.asInstanceOf[Seq[E]])
@@ -57,11 +56,15 @@ object ScalaJsApiClient {
 
     override def executeCountQuery(dbQuery: DbQuery[_ <: Entity]) = {
       val picklableDbQuery = PicklableDbQuery.fromRegular(dbQuery)
-      WebsocketAutowireClient[ScalaJsApi].executeCountQuery(picklableDbQuery).call()
+      HttpPostAutowireClient[ScalaJsApi].executeCountQuery(picklableDbQuery).call()
     }
 
     override def upsertUser(userPrototype: UserPrototype) = {
-      WebsocketAutowireClient[ScalaJsApi].upsertUser(userPrototype).call()
+      HttpPostAutowireClient[ScalaJsApi].upsertUser(userPrototype).call()
+    }
+
+    override def updateDocuments(documents: Seq[DocumentEntity]): Future[Unit] = {
+      HttpPostAutowireClient[ScalaJsApi].updateDocuments(documents).call()
     }
 
     private object HttpPostAutowireClient extends autowire.Client[ByteBuffer, Pickler, Pickler] {
@@ -90,18 +93,6 @@ object ScalaJsApiClient {
             headers = Map("Content-Type" -> "application/octet-stream")
           )
           .map(r => TypedArrayBuffer.wrap(r.response.asInstanceOf[ArrayBuffer]))
-      }
-
-      override def read[Result: Pickler](p: ByteBuffer) = Unpickle[Result].fromBytes(p)
-      override def write[Result: Pickler](r: Result) = Pickle.intoBytes(r)
-    }
-
-    private object WebsocketAutowireClient extends autowire.Client[ByteBuffer, Pickler, Pickler] {
-      private val serialWebsocketClient: SerialWebsocketClientParallelizer =
-        new SerialWebsocketClientParallelizer(websocketPath = "websocket/scalajsapi/", numWebsockets = 6)
-
-      override def doCall(req: Request): Future[ByteBuffer] = logExceptions {
-        serialWebsocketClient.sendAndReceive(Pickle.intoBytes(ScalaJsApiRequest(req.path.last, req.args)))
       }
 
       override def read[Result: Pickler](p: ByteBuffer) = Unpickle[Result].fromBytes(p)
