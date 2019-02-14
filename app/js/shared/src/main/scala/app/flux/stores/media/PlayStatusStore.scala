@@ -27,8 +27,6 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess,
 
   private var playWasEverStartedInThisSession: Boolean = false
 
-  entityAccess.registerListener(EntityAccessListener)
-
   // **************** Public mutating API **************** //
   def play(playlistEntryId: Long): Future[Unit] = {
     upsertPlayStatus(currentPlaylistEntryId = playlistEntryId, hasStarted = true)
@@ -40,6 +38,9 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess,
         val state = await(stateFuture)
         !state.hasStarted
       case bool => bool
+    }
+    if (newHasStarted) {
+      playWasEverStartedInThisSession = true
     }
     await(upsertPlayStatus(hasStarted = newHasStarted))
   }
@@ -152,18 +153,6 @@ final class PlayStatusStore(implicit entityAccess: JsEntityAccess,
                                                   state: State): Boolean =
     entityModification.entityType == PlayStatus.Type ||
       entityModification.entityType == PlaylistEntry.Type
-
-  object EntityAccessListener extends JsEntityAccess.Listener {
-    override def modificationsAddedOrPendingStateChanged(modifications: Seq[EntityModification]): Unit =
-      async {
-        val userId = user.id
-        modifications.collect {
-          case EntityModification.Add(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) |
-              EntityModification.Update(PlayStatus(_, /* hasStarted */ true, _, `userId`, _, _)) =>
-            playWasEverStartedInThisSession = true
-        }
-      }
-  }
 }
 object PlayStatusStore {
   case class State(currentPlaylistEntry: Option[JsPlaylistEntry],
