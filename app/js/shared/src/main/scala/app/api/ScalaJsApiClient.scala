@@ -63,10 +63,6 @@ object ScalaJsApiClient {
       HttpPostAutowireClient[ScalaJsApi].upsertUser(userPrototype).call()
     }
 
-    override def updateDocuments(documents: Seq[DocumentEntity]): Future[Unit] = {
-      HttpPostAutowireClient[ScalaJsApi].updateDocuments(documents).call()
-    }
-
     private object HttpPostAutowireClient extends autowire.Client[ByteBuffer, Pickler, Pickler] {
       override def doCall(req: Request): Future[ByteBuffer] = {
         dom.ext.Ajax
