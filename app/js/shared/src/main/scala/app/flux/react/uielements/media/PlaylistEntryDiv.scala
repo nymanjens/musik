@@ -36,50 +36,26 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
 
     override def render(props: Props, state: State): VdomElement = {
       implicit val router = props.router
-      val song = props.playlistEntry.song
 
-      <.div(
+      val buttons = <.div(
+        Bootstrap.FontAwesomeIcon("play-circle-o")(
+          ^.onClick --> {
+            playStatusStore.play(playlistEntryId = props.playlistEntry.id)
+            Callback.empty
+          },
+        ),
+        " ",
+        Bootstrap.FontAwesomeIcon("times-circle-o")(
+          ^.onClick --> {
+            dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(props.playlistEntry.id)))
+            Callback.empty
+          },
+        )
+      )
+
+      SongWithButtonsDiv(router = router, song = props.playlistEntry.song, buttons = buttons)(
         ^.className := "playlist-entry-div",
         ^^.ifThen(props.isCurrentSong)(^.className := "active"),
-        <.div(
-          ^.className := "main-info",
-          Bootstrap.Glyphicon("music"),
-          " ",
-          song.title,
-        ),
-        <.div(
-          ^.className := "buttons",
-          Bootstrap.FontAwesomeIcon("play-circle-o")(
-            ^.onClick --> {
-              playStatusStore.play(playlistEntryId = props.playlistEntry.id)
-              Callback.empty
-            },
-          ),
-          " ",
-          Bootstrap.FontAwesomeIcon("times-circle-o")(
-            ^.onClick --> {
-              dispatcher.dispatch(AppActions.RemoveEntriesFromPlaylist(Seq(props.playlistEntry.id)))
-              Callback.empty
-            },
-          )
-        ),
-        <.div(
-          ^.className := "extra-info",
-          <<.ifThen(song.artist) { artist =>
-            <.span(
-              ^.className := "artist",
-              Bootstrap.FontAwesomeIcon("user"),
-              " ",
-              router.anchorWithHrefTo(AppPages.Artist(artist.id))(artist.name),
-            )
-          },
-          <.span(
-            ^.className := "album",
-            Bootstrap.Glyphicon("cd"),
-            " ",
-            router.anchorWithHrefTo(AppPages.Album(song.album.id))(song.album.title),
-          )
-        ),
       )
     }
   }

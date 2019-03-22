@@ -110,17 +110,32 @@ table.table-bordered {
   }
 }
 
-/****** artist-div ******/
-.artist-div {
+/****** song-with-buttons ******/
+.song-with-buttons {
+  width: 100%;
+  max-width: 600px;
+
   .main-info {
+    float: left;
     font-size: 1.35em;
   }
+  .buttons {
+    float: right;
+    font-size: 1.5em;
+    i:hover {
+      color: orange;
+      cursor: pointer;
+    }
+  }
   .extra-info {
+    clear: both;
     padding-left: 21px;
     height: 35px;
-    color: #AAA;
+    &, a {
+      color: #AAA;
+    }
 
-    .count {
+    .artist {
       padding-right: 20px;
     }
   }
@@ -133,9 +148,6 @@ table.table-bordered {
       color: orange;
     }
     .playlist-entry-div {
-      width: 100%;
-      max-width: 600px;
-
       &.active {
         .main-info {
           font-weight: bold;
@@ -147,30 +159,22 @@ table.table-bordered {
           color: orange;
         }
       }
-      .main-info {
-        float: left;
-        font-size: 1.35em;
-      }
-      .buttons {
-        float: right;
-        font-size: 1.5em;
-        i:hover {
-          color: orange;
-          cursor: pointer;
-        }
-      }
-      .extra-info {
-        clear: both;
-        padding-left: 21px;
-        height: 35px;
-        &, a {
-          color: #AAA;
-        }
+    }
+  }
+}
 
-        .artist {
-          padding-right: 20px;
-        }
-      }
+/****** artist-div ******/
+.artist-div {
+  .main-info {
+    font-size: 1.35em;
+  }
+  .extra-info {
+    padding-left: 21px;
+    height: 35px;
+    color: #AAA;
+
+    .count {
+      padding-right: 20px;
     }
   }
 }
