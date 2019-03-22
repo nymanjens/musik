@@ -13,6 +13,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 import scala.collection.immutable.Seq
+import scala.concurrent.duration._
 
 private[media] object SongWithButtonsDiv {
 
@@ -39,7 +40,7 @@ private[media] object SongWithButtonsDiv {
         <<.ifThen(showArtist) {
           <<.ifThen(song.artist) { artist =>
             <.span(
-              ^.className := "artist",
+              ^.className := "piece-of-info",
               Bootstrap.FontAwesomeIcon("user"),
               " ",
               router.anchorWithHrefTo(AppPages.Artist(artist.id))(artist.name),
@@ -48,13 +49,26 @@ private[media] object SongWithButtonsDiv {
         },
         <<.ifThen(showAlbum) {
           <.span(
-            ^.className := "album",
+            ^.className := "piece-of-info",
             Bootstrap.Glyphicon("cd"),
             " ",
             router.anchorWithHrefTo(AppPages.Album(song.album.id))(song.album.title),
           )
-        }
+        },
+        <.span(
+          ^.className := "piece-of-info",
+          Bootstrap.Glyphicon("time"),
+          " ",
+          durationToShortString(song.duration),
+        )
       ),
     )
+  }
+
+  // **************** private helper methods ****************//
+  private def durationToShortString(duration: FiniteDuration): String = {
+    val minutes = duration.toMinutes
+    val secondsInMinute = (duration - minutes.minutes).toSeconds
+    "%d:%02d".format(minutes, secondsInMinute)
   }
 }
