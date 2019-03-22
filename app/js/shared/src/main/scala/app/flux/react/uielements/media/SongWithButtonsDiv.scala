@@ -22,15 +22,22 @@ private[media] object SongWithButtonsDiv {
             song: JsSong,
             buttons: VdomTag,
             songTitleSpan: VdomTag = <.span,
+            isCurrentSong: Boolean,
+            isNowPlaying: Boolean,
             showArtist: Boolean = true,
             showAlbum: Boolean = true): VdomTag = {
     <.div(
       ^.className := "song-with-buttons",
+      ^^.ifThen(isCurrentSong)(^.className := "current-song"),
+      ^^.ifThen(isNowPlaying)(^.className := "now-playing"),
       <.div(
         ^.className := "main-info",
         Bootstrap.Glyphicon("music"),
         " ",
-        songTitleSpan(song.title),
+        songTitleSpan(
+          ^.className := "song-title",
+          song.title,
+        ),
       ),
       buttons(
         ^.className := "buttons",

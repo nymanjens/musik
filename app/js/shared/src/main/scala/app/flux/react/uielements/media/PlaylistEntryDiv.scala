@@ -53,9 +53,13 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
         )
       )
 
-      SongWithButtonsDiv(router = router, song = props.playlistEntry.song, buttons = buttons)(
+      SongWithButtonsDiv(
+        router = router,
+        song = props.playlistEntry.song,
+        buttons = buttons,
+        isCurrentSong = props.isCurrentSong,
+        isNowPlaying = false)( // TODO: Set isNowPlaying
         ^.className := "playlist-entry-div",
-        ^^.ifThen(props.isCurrentSong)(^.className := "active"),
       )
     }
   }
