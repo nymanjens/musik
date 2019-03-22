@@ -36,20 +36,24 @@ private[media] object SongWithButtonsDiv {
       ),
       <.div(
         ^.className := "extra-info",
-        <<.ifThen(song.artist) { artist =>
-          <.span(
-            ^.className := "artist",
-            Bootstrap.FontAwesomeIcon("user"),
-            " ",
-            router.anchorWithHrefTo(AppPages.Artist(artist.id))(artist.name),
-          )
+        <<.ifThen(showArtist) {
+          <<.ifThen(song.artist) { artist =>
+            <.span(
+              ^.className := "artist",
+              Bootstrap.FontAwesomeIcon("user"),
+              " ",
+              router.anchorWithHrefTo(AppPages.Artist(artist.id))(artist.name),
+            )
+          }
         },
-        <.span(
-          ^.className := "album",
-          Bootstrap.Glyphicon("cd"),
-          " ",
-          router.anchorWithHrefTo(AppPages.Album(song.album.id))(song.album.title),
-        )
+        <<.ifThen(showAlbum) {
+          <.span(
+            ^.className := "album",
+            Bootstrap.Glyphicon("cd"),
+            " ",
+            router.anchorWithHrefTo(AppPages.Album(song.album.id))(song.album.title),
+          )
+        }
       ),
     )
   }

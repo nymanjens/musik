@@ -41,7 +41,7 @@ private[app] final class AlbumDetail(implicit pageHeader: PageHeader,
             <.div("Loading...")
           case Some(storeState) =>
             storeState.songs.map { song =>
-              enqueueableSongDiv(song, key = song.id)
+              enqueueableSongDiv(song, showArtist = true, showAlbum = false, key = song.id)
             }.toVdomArray
         }
       )

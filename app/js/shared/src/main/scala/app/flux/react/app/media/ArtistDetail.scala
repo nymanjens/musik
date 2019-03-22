@@ -46,7 +46,7 @@ private[app] final class ArtistDetail(implicit pageHeader: PageHeader,
                 uielements.media.AlbumDiv(album, key = album.id)
               }.toVdomArray,
               storeState.songsWithoutAlbum.map { song =>
-                enqueueableSongDiv(song, key = song.id)
+                enqueueableSongDiv(song, showArtist = false, showAlbum = true, key = song.id)
               }.toVdomArray
             )
         }

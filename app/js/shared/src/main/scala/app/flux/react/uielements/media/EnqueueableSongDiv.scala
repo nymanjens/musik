@@ -43,7 +43,10 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher) {
         router = router,
         song = props.song,
         buttons = buttons,
-        songTitleSpan = songTitleSpan)(
+        songTitleSpan = songTitleSpan,
+        showArtist = props.showArtist,
+        showAlbum = props.showAlbum,
+      )(
         ^.className := "enqueueable-song-div",
 //        ^^.ifThen(props.isCurrentSong)(^.className := "active"),
       )
@@ -51,8 +54,9 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher) {
     .build
 
   // **************** API ****************//
-  def apply(song: JsSong, key: Any)(implicit router: RouterContext): VdomElement = {
-    component.withKey(key.toString).apply(Props(song))
+  def apply(song: JsSong, showArtist: Boolean, showAlbum: Boolean, key: Any)(
+      implicit router: RouterContext): VdomElement = {
+    component.withKey(key.toString).apply(Props(song, showArtist, showAlbum))
   }
 
   // **************** Private methods ****************//
@@ -61,5 +65,6 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher) {
   }
 
   // **************** Private inner types ****************//
-  private case class Props(song: JsSong)(implicit val router: RouterContext)
+  private case class Props(song: JsSong, showArtist: Boolean, showAlbum: Boolean)(
+      implicit val router: RouterContext)
 }
