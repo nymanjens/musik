@@ -24,11 +24,28 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher) {
     .builder[Props](getClass.getSimpleName)
     .renderP((_, props) => {
       implicit val router = props.router
-      <.div(
-        Bootstrap.Button(size = Size.xl)(
-          ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd),
-          props.song.title
+
+      val buttons = <.div(
+        Bootstrap.Glyphicon("plus-sign")(
+          ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AfterCurrentSong)
+        ),
+        " ",
+        Bootstrap.Glyphicon("circle-arrow-down")(
+          ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd)
         )
+      )
+
+      val songTitleSpan = <.a(
+        ^.href := "javascript:void(0)",
+        ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd))
+
+      SongWithButtonsDiv(
+        router = router,
+        song = props.song,
+        buttons = buttons,
+        songTitleSpan = songTitleSpan)(
+        ^.className := "enqueueable-song-div",
+//        ^^.ifThen(props.isCurrentSong)(^.className := "active"),
       )
     })
     .build

@@ -20,6 +20,7 @@ private[media] object SongWithButtonsDiv {
   def apply(router: RouterContext,
             song: JsSong,
             buttons: VdomTag,
+            songTitleSpan: VdomTag = <.span,
             showArtist: Boolean = true,
             showAlbum: Boolean = true): VdomTag = {
     <.div(
@@ -28,7 +29,7 @@ private[media] object SongWithButtonsDiv {
         ^.className := "main-info",
         Bootstrap.Glyphicon("music"),
         " ",
-        song.title,
+        songTitleSpan(song.title),
       ),
       buttons(
         ^.className := "buttons",
