@@ -34,7 +34,7 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
-    def render(props: Props, state: State): VdomElement = {
+    override def render(props: Props, state: State): VdomElement = {
       implicit val router = props.router
       val song = props.playlistEntry.song
 

@@ -33,7 +33,7 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
-    def render(props: Props, state: State): VdomElement = {
+    override def render(props: Props, state: State): VdomElement = {
       implicit val router = props.router
 
       <.div(
