@@ -38,6 +38,11 @@ private[media] object SongWithButtonsDiv {
           ^.className := "song-title",
           song.title,
         ),
+        <<.ifThen(isNowPlaying) {
+          Bootstrap.Glyphicon("volume-up") {
+            ^.className := "now-playing-indicator"
+          }
+        },
       ),
       buttons(
         ^.className := "buttons",
