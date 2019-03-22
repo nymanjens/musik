@@ -10,7 +10,7 @@ import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class ArtistDetail(implicit pageHeader: PageHeader,
-                                      songDiv: uielements.media.SongDiv,
+                                      enqueueableSongDiv: uielements.media.EnqueueableSongDiv,
                                       artistDetailStoreFactory: ArtistDetailStoreFactory)
     extends HydroReactComponent {
 
@@ -46,7 +46,7 @@ private[app] final class ArtistDetail(implicit pageHeader: PageHeader,
                 uielements.media.AlbumDiv(album, key = album.id)
               }.toVdomArray,
               storeState.songsWithoutAlbum.map { song =>
-                songDiv(song, key = song.id)
+                enqueueableSongDiv(song, key = song.id)
               }.toVdomArray
             )
         }

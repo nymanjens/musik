@@ -34,7 +34,7 @@ final class Module(implicit i18n: I18n,
   implicit private lazy val sbadminLayout = hydroUielementsModule.sbadminLayout
 
   private val fluxUielementsModule = new app.flux.react.uielements.Module
-  implicit private val songDiv = fluxUielementsModule.songDiv
+  implicit private val enqueueableSongDiv = fluxUielementsModule.enqueueableSongDiv
   implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
   implicit private val artistDiv = fluxUielementsModule.artistDiv
   implicit private val playlistEntryDiv = fluxUielementsModule.playlistEntryDiv

@@ -18,7 +18,7 @@ import hydro.flux.react.uielements.Bootstrap
 
 import scala.collection.immutable.Seq
 
-final class SongDiv(implicit dispatcher: Dispatcher) {
+final class EnqueueableSongDiv(implicit dispatcher: Dispatcher) {
 
   private val component = ScalaComponent
     .builder[Props](getClass.getSimpleName)
