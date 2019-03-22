@@ -20,16 +20,16 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
     extends HydroReactComponent.Stateless {
 
   // **************** API ****************//
-  def apply(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean)(
+  def apply(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean, isNowPlaying: Boolean)(
       implicit router: RouterContext): VdomElement = {
-    component.apply(Props(playlistEntry, isCurrentSong))
+    component.apply(Props(playlistEntry, isCurrentSong = isCurrentSong, isNowPlaying = isNowPlaying))
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
 
   // **************** Implementation of HydroReactComponent types ****************//
-  protected case class Props(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean)(
+  protected case class Props(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean, isNowPlaying: Boolean)(
       implicit val router: RouterContext)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
@@ -58,7 +58,7 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
         song = props.playlistEntry.song,
         buttons = buttons,
         isCurrentSong = props.isCurrentSong,
-        isNowPlaying = false)( // TODO: Set isNowPlaying
+        isNowPlaying = props.isNowPlaying)(
         ^.className := "playlist-entry-div",
       )
     }

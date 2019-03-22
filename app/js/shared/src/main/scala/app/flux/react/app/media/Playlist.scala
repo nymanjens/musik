@@ -64,6 +64,9 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                     rawTagMod("ref", provided.innerRef),
                     entries.zipWithIndex.map {
                       case (entry, index) =>
+                        val isCurrentSong =
+                          state.playStatusStoreState.currentPlaylistEntry.map(_.id) == Some(entry.id)
+
                         ReactBeautifulDnd.Draggable(
                           key = entry.id,
                           draggableId = entry.id.toString,
@@ -77,9 +80,8 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                               rawTagMod("ref", provided.innerRef),
                               playlistEntryDiv(
                                 entry,
-                                isCurrentSong =
-                                  state.playStatusStoreState.currentPlaylistEntry.map(_.id) ==
-                                    Some(entry.id)),
+                                isCurrentSong = isCurrentSong,
+                                isNowPlaying = isCurrentSong && state.playStatusStoreState.hasStarted),
                             )
                         }
                     }.toVdomArray
