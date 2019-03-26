@@ -129,6 +129,11 @@ table.table-bordered {
     .title {
       color: black;
     }
+
+    .now-playing-indicator {
+      padding-left: 13px;
+      color: black;
+    }
   }
   .buttons {
     float: right;
@@ -150,17 +155,7 @@ table.table-bordered {
       padding-right: 20px;
     }
   }
-}
-
-/****** song-with-buttons ******/
-.song-with-buttons {
-  .main-info {
-    .now-playing-indicator {
-      padding-left: 13px;
-      color: black;
-    }
-  }
-  &.current-song {
+  &.current-object {
     .main-info {
       color: blueviolet;
       .title {

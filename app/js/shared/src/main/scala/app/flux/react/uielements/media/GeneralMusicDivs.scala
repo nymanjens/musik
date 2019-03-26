@@ -25,9 +25,12 @@ private[media] object GeneralMusicDivs {
                                titleSuffix: Option[VdomNode] = None,
                                extraPiecesOfInfo: Seq[VdomTag] = Seq(),
                                buttons: Option[VdomTag] = None,
+                               isCurrentObject: Boolean = false,
+                               isNowPlaying: Boolean = false,
   ): VdomTag = {
     <.div(
       ^.className := "musical-object-with-buttons",
+      ^^.ifThen(isCurrentObject)(^.className := "current-object"),
       <.div(
         ^.className := "main-info",
         icon,
@@ -35,7 +38,11 @@ private[media] object GeneralMusicDivs {
         title(
           ^.className := "title",
         ),
-        <<.ifThen(titleSuffix)(identity),
+        <<.ifThen(isNowPlaying) {
+          Bootstrap.Glyphicon("volume-up") {
+            ^.className := "now-playing-indicator"
+          }
+        },
       ),
       <<.ifThen(buttons) { buttonsTag =>
         buttonsTag(
@@ -63,9 +70,6 @@ private[media] object GeneralMusicDivs {
                       isNowPlaying: Boolean,
                       showArtist: Boolean = true,
                       showAlbum: Boolean = true): VdomTag = {
-    def nowPlayingIndicator = Bootstrap.Glyphicon("volume-up") {
-      ^.className := "now-playing-indicator"
-    }
     val extraPiecesOfInfo: Seq[VdomTag] = Seq() ++
       song.artist.flatMap { artist =>
         ifThenOption(showArtist) {
@@ -92,13 +96,12 @@ private[media] object GeneralMusicDivs {
     musicalObjectWithButtons(
       icon = Bootstrap.Glyphicon("music"),
       title = songTitleSpan(song.title),
-      titleSuffix = ifThenOption(isNowPlaying)(nowPlayingIndicator),
       extraPiecesOfInfo = extraPiecesOfInfo,
       buttons = Some(buttons),
+      isCurrentObject = isCurrentSong,
+      isNowPlaying = isNowPlaying,
     )(
       ^.className := "song-with-buttons",
-      ^^.ifThen(isCurrentSong)(^.className := "current-song"),
-      ^^.ifThen(isNowPlaying)(^.className := "now-playing"),
     )
   }
 
