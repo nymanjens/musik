@@ -4,6 +4,7 @@ import scala.collection.immutable.Seq
 import app.flux.router.AppPages
 import app.flux.stores.media.ArtistDetailStoreFactory
 import app.models.media.JsArtist
+import hydro.common.ScalaUtils.ifThenOption
 import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.HydroReactComponent
@@ -36,25 +37,19 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
     override def render(props: Props, state: State): VdomElement = {
       implicit val router = props.router
 
-      <.div(
+      GeneralMusicDivs.musicalObjectWithButtons(
+        icon = Bootstrap.FontAwesomeIcon("user"),
+        title = router.anchorWithHrefTo(AppPages.Artist(props.artist.id))(props.artist.name),
+        extraPiecesOfInfo = state.maybeStoreState.map(albumAndSongsCount) getOrElse Seq(),
+      )(
         ^.className := "artist-div",
-        <.div(
-          ^.className := "main-info",
-          Bootstrap.FontAwesomeIcon("user"),
-          " ",
-          router.anchorWithHrefTo(AppPages.Artist(props.artist.id))(props.artist.name),
-        ),
-        <.div(
-          ^.className := "extra-info",
-          <<.ifThen(state.maybeStoreState)(albumAndSongsCount),
-        ),
       )
     }
 
-    private def albumAndSongsCount(storeState: ArtistDetailStoreFactory.State): VdomElement = {
-      def countIfNonEmpty(icon: VdomTag, seq: Seq[_]): Option[VdomElement] = {
+    private def albumAndSongsCount(storeState: ArtistDetailStoreFactory.State): Seq[VdomTag] = {
+      def countIfNonEmpty(icon: VdomTag, seq: Seq[_]): Option[VdomTag] = {
         if (seq.nonEmpty) {
-          Some[VdomElement](
+          Some[VdomTag](
             <.span(
               ^.className := "count",
               icon,
@@ -67,10 +62,10 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
         }
       }
 
-      <.span(
-        <<.ifThen(countIfNonEmpty(Bootstrap.Glyphicon("cd"), storeState.albums))(identity),
-        <<.ifThen(countIfNonEmpty(Bootstrap.Glyphicon("music"), storeState.songsWithoutAlbum))(identity),
-      )
+      Seq() ++
+        countIfNonEmpty(Bootstrap.Glyphicon("cd"), storeState.albums) ++
+        countIfNonEmpty(Bootstrap.Glyphicon("music"), storeState.songsWithoutAlbum)
+
     }
   }
 }

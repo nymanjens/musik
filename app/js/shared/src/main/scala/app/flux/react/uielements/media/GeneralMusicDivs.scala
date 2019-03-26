@@ -4,6 +4,8 @@ import app.flux.action.AppActions
 import app.flux.router.AppPages
 import app.models.media.JsAlbum
 import app.models.media.JsSong
+import hydro.common.ScalaUtils
+import hydro.common.ScalaUtils.ifThenOption
 import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.ReactVdomUtils.<<
@@ -20,8 +22,8 @@ private[media] object GeneralMusicDivs {
   // **************** Public API ****************//
   def musicalObjectWithButtons(icon: VdomNode,
                                title: VdomTag,
-                               titleSuffix: Option[VdomNode],
-                               extraPiecesOfInfo: Seq[VdomTag],
+                               titleSuffix: Option[VdomNode] = None,
+                               extraPiecesOfInfo: Seq[VdomTag] = Seq(),
                                buttons: Option[VdomTag] = None,
   ): VdomTag = {
     <.div(
@@ -65,12 +67,14 @@ private[media] object GeneralMusicDivs {
       ^.className := "now-playing-indicator"
     }
     val extraPiecesOfInfo: Seq[VdomTag] = Seq() ++
-      ifThenOption(showArtist && song.artist.isDefined) {
-        <.span(
-          Bootstrap.FontAwesomeIcon("user"),
-          " ",
-          router.anchorWithHrefTo(AppPages.Artist(song.artist.get.id))(song.artist.get.name),
-        )
+      song.artist.flatMap { artist =>
+        ifThenOption(showArtist) {
+          <.span(
+            Bootstrap.FontAwesomeIcon("user"),
+            " ",
+            router.anchorWithHrefTo(AppPages.Artist(artist.id))(artist.name),
+          )
+        }
       } ++
       ifThenOption(showAlbum) {
         <.span(
@@ -103,9 +107,5 @@ private[media] object GeneralMusicDivs {
     val minutes = duration.toMinutes
     val secondsInMinute = (duration - minutes.minutes).toSeconds
     "%d:%02d".format(minutes, secondsInMinute)
-  }
-
-  private def ifThenOption[T](boolean: Boolean)(valueIfTrue: => T): Option[T] = {
-    if (boolean) Some(valueIfTrue) else None
   }
 }
