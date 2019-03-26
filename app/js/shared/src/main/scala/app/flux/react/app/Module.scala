@@ -37,6 +37,7 @@ final class Module(implicit i18n: I18n,
   implicit private val enqueueableSongDiv = fluxUielementsModule.enqueueableSongDiv
   implicit private val musicPlayerDiv = fluxUielementsModule.musicPlayerDiv
   implicit private val artistDiv = fluxUielementsModule.artistDiv
+  implicit private val albumDiv = fluxUielementsModule.albumDiv
   implicit private val playlistEntryDiv = fluxUielementsModule.playlistEntryDiv
 
   private val userManagementModule = new hydro.flux.react.uielements.usermanagement.Module

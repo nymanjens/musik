@@ -2,6 +2,7 @@ package app.flux.react.app.media
 
 import hydro.common.I18n
 import app.flux.react.uielements
+import app.flux.react.uielements.media.AlbumDiv
 import app.flux.react.uielements.media.ArtistDiv
 import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.react.uielements.media.PlaylistEntryDiv
@@ -23,6 +24,7 @@ final class Module(implicit i18n: I18n,
                    enqueueableSongDiv: uielements.media.EnqueueableSongDiv,
                    musicPlayerDiv: MusicPlayerDiv,
                    artistDiv: ArtistDiv,
+                   albumDiv: AlbumDiv,
                    playlistEntryDiv: PlaylistEntryDiv,
                    playlistStore: PlaylistStore,
                    playStatusStore: PlayStatusStore,

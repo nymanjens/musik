@@ -1,5 +1,6 @@
 package app.flux.react.uielements
 
+import app.flux.react.uielements.media.AlbumDiv
 import app.flux.react.uielements.media.ArtistDiv
 import hydro.common.I18n
 import app.flux.react.uielements.media.MusicPlayerDiv
@@ -19,5 +20,6 @@ final class Module(implicit i18n: I18n,
   implicit lazy val enqueueableSongDiv = new EnqueueableSongDiv
   implicit lazy val musicPlayerDiv = new MusicPlayerDiv
   implicit lazy val artistDiv = new ArtistDiv
+  implicit lazy val albumDiv = new AlbumDiv
   implicit lazy val playlistEntryDiv = new PlaylistEntryDiv
 }
