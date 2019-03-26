@@ -11,8 +11,8 @@ import japgolly.scalajs.react.vdom.html_<^._
 
 private[app] final class AlbumDetail(implicit pageHeader: PageHeader,
                                      enqueueableSongDiv: uielements.media.EnqueueableSongDiv,
-                                     albumDetailStoreFactory: AlbumDetailStoreFactory)
-    extends HydroReactComponent {
+                                     albumDetailStoreFactory: AlbumDetailStoreFactory,
+) extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(albumId: Long, router: RouterContext): VdomElement = {

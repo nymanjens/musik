@@ -1,27 +1,28 @@
 package app.flux.react.uielements.media
 
-import hydro.flux.react.ReactVdomUtils.<<
-import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.action.AppActions
 import app.flux.action.AppActions.AddSongsToPlaylist.Placement
-import app.flux.react.uielements.media.GeneralMusicDivs.durationToShortString
 import app.flux.router.AppPages
+import app.flux.stores.media.AlbumDetailStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsAlbum
 import app.models.media.JsSong
-import hydro.common.LoggingUtils.LogExceptionsCallback
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.uielements.Bootstrap
-import hydro.flux.react.uielements.Bootstrap.Size
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
 
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
-final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatusStore)
-    extends HydroReactComponent {
+final class AlbumDiv(implicit dispatcher: Dispatcher,
+                     playStatusStore: PlayStatusStore,
+                     albumDetailStoreFactory: AlbumDetailStoreFactory,
+) extends HydroReactComponent {
 
   // **************** API ****************//
   def apply(album: JsAlbum, key: Any)(implicit router: RouterContext): VdomElement = {
@@ -49,7 +50,9 @@ final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatu
 
   // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(album: JsAlbum)(implicit val router: RouterContext)
-  protected case class State(isCurrentSong: Boolean = false, isNowPlaying: Boolean = false)
+  protected case class State(songs: Seq[JsSong] = Seq(),
+                             isCurrentSong: Boolean = false,
+                             isNowPlaying: Boolean = false)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
     override def render(props: Props, state: State): VdomElement = {
@@ -57,11 +60,13 @@ final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatu
 
       val buttons = <.div(
         Bootstrap.Glyphicon("plus-sign")(
-//          ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AfterCurrentSong)
+          ^.onClick --> addSongsToPlaylistCallback(
+            albumId = props.album.id,
+            placement = Placement.AfterCurrentSong)
         ),
         " ",
         Bootstrap.Glyphicon("circle-arrow-down")(
-//          ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd)
+          ^.onClick --> addSongsToPlaylistCallback(albumId = props.album.id, placement = Placement.AtEnd)
         )
       )
 
@@ -72,11 +77,17 @@ final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatu
           year
         )
       }
+      val pathInfo: VdomTag =
+        <.span(
+          Bootstrap.FontAwesomeIcon("thumb-tack"),
+          " ",
+          props.album.relativePath
+        )
 
       GeneralMusicDivs.musicalObjectWithButtons(
         icon = Bootstrap.Glyphicon("cd"),
         title = router.anchorWithHrefTo(AppPages.Album(props.album.id))(props.album.title),
-        extraPiecesOfInfo = Seq() ++ yearInfo,
+        extraPiecesOfInfo = Seq() ++ yearInfo :+ pathInfo,
         buttons = Some(buttons),
       )(
         ^.className := "album-div",
@@ -84,9 +95,16 @@ final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatu
     }
 
     // **************** Private helper methods ****************//
-    private def addToPlaylistCallback(song: JsSong, placement: Placement): Callback = LogExceptionsCallback {
-      dispatcher.dispatch(AppActions.AddSongsToPlaylist(songIds = Seq(song.id), placement = placement))
-    }
+    private def addSongsToPlaylistCallback(albumId: Long, placement: Placement): Callback =
+      Callback.future(async {
+        // Force wait until the state has been loaded
+        val albumState = await(albumDetailStoreFactory.get(albumId).stateFuture)
+        await(
+          dispatcher.dispatch(
+            AppActions.AddSongsToPlaylist(songIds = albumState.songs.map(_.id), placement = placement)))
+        Callback.empty
+      })
+
   }
 
 }

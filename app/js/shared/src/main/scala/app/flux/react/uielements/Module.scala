@@ -6,6 +6,7 @@ import hydro.common.I18n
 import app.flux.react.uielements.media.MusicPlayerDiv
 import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.react.uielements.media.EnqueueableSongDiv
+import app.flux.stores.media.AlbumDetailStoreFactory
 import app.flux.stores.media.ArtistDetailStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import hydro.flux.action.Dispatcher
@@ -15,7 +16,9 @@ final class Module(implicit i18n: I18n,
                    entityAccess: EntityAccess,
                    dispatcher: Dispatcher,
                    playStatusStore: PlayStatusStore,
-                   artistDetailStoreFactory: ArtistDetailStoreFactory) {
+                   artistDetailStoreFactory: ArtistDetailStoreFactory,
+                   albumDetailStoreFactory: AlbumDetailStoreFactory,
+) {
 
   implicit lazy val enqueueableSongDiv = new EnqueueableSongDiv
   implicit lazy val musicPlayerDiv = new MusicPlayerDiv
