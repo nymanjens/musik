@@ -51,7 +51,6 @@ final class ArtistDiv(implicit artistDetailStoreFactory: ArtistDetailStoreFactor
         if (seq.nonEmpty) {
           Some[VdomTag](
             <.span(
-              ^.className := "count",
               icon,
               " ",
               seq.size,

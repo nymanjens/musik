@@ -7,6 +7,8 @@ import app.flux.stores.media.AlbumDetailStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsAlbum
 import app.models.media.JsSong
+import hydro.common.ScalaUtils
+import hydro.common.ScalaUtils.ifThenOption
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.uielements.Bootstrap
 import hydro.flux.react.HydroReactComponent
@@ -86,6 +88,13 @@ final class AlbumDiv(implicit dispatcher: Dispatcher,
         )
       )
 
+      val numberOfSongs: Option[VdomTag] = ifThenOption(state.songs.nonEmpty) {
+        <.span(
+          Bootstrap.Glyphicon("music"),
+          " ",
+          state.songs.size
+        )
+      }
       val yearInfo: Option[VdomTag] = props.album.year map { year =>
         <.span(
           Bootstrap.FontAwesomeIcon("microphone"),
@@ -103,7 +112,7 @@ final class AlbumDiv(implicit dispatcher: Dispatcher,
       GeneralMusicDivs.musicalObjectWithButtons(
         icon = Bootstrap.Glyphicon("cd"),
         title = router.anchorWithHrefTo(AppPages.Album(props.album.id))(props.album.title),
-        extraPiecesOfInfo = Seq() ++ yearInfo :+ pathInfo,
+        extraPiecesOfInfo = Seq() ++ numberOfSongs ++ yearInfo :+ pathInfo,
         buttons = Some(buttons),
         isCurrentObject = state.isCurrentAlbum,
         isNowPlaying = state.isNowPlaying,
