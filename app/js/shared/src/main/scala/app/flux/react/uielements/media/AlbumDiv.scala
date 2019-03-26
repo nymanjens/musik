@@ -1,7 +1,10 @@
 package app.flux.react.uielements.media
 
+import hydro.flux.react.ReactVdomUtils.<<
+import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.action.AppActions
 import app.flux.action.AppActions.AddSongsToPlaylist.Placement
+import app.flux.react.uielements.media.GeneralMusicDivs.durationToShortString
 import app.flux.router.AppPages
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsAlbum
@@ -62,10 +65,18 @@ final class AlbumDiv(implicit dispatcher: Dispatcher, playStatusStore: PlayStatu
         )
       )
 
+      val yearInfo: Option[VdomTag] = props.album.year map { year =>
+        <.span(
+          Bootstrap.FontAwesomeIcon("microphone"),
+          " ",
+          year
+        )
+      }
+
       GeneralMusicDivs.musicalObjectWithButtons(
         icon = Bootstrap.Glyphicon("cd"),
         title = router.anchorWithHrefTo(AppPages.Album(props.album.id))(props.album.title),
-        extraPiecesOfInfo = Seq(),
+        extraPiecesOfInfo = Seq() ++ yearInfo,
         buttons = Some(buttons),
       )(
         ^.className := "album-div",
