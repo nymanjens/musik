@@ -1,5 +1,7 @@
 package app.flux.react.app.media
 
+import hydro.flux.react.ReactVdomUtils.<<
+import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.react.uielements
 import app.flux.stores.media.ArtistDetailStoreFactory
 import hydro.common.LoggingUtils.logExceptions
@@ -42,9 +44,15 @@ private[app] final class ArtistDetail(implicit pageHeader: PageHeader,
             <.div("Loading...")
           case Some(storeState) =>
             <.div(
+              <<.ifThen(storeState.albums.nonEmpty) {
+                <.h2("Albums")
+              },
               storeState.albums.map { album =>
                 uielements.media.AlbumDiv(album, key = album.id)
               }.toVdomArray,
+              <<.ifThen(storeState.songsWithoutAlbum.nonEmpty) {
+                <.h2("Songs")
+              },
               storeState.songsWithoutAlbum.map { song =>
                 enqueueableSongDiv(song, showArtist = false, showAlbum = true, key = song.id)
               }.toVdomArray
