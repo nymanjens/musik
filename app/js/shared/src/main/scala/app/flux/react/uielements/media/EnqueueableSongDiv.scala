@@ -66,7 +66,7 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher, playStatusStore:
         ^.href := "javascript:void(0)",
         ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd))
 
-      SongWithButtonsDiv(
+      GeneralMusicDivs.songWithButtons(
         router = router,
         song = props.song,
         buttons = buttons,

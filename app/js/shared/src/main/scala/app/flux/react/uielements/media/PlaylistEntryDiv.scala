@@ -53,7 +53,7 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
         )
       )
 
-      SongWithButtonsDiv(
+      GeneralMusicDivs.songWithButtons(
         router = router,
         song = props.playlistEntry.song,
         buttons = buttons,

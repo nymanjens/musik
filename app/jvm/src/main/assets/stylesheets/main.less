@@ -117,8 +117,8 @@ table.table-bordered {
   }
 }
 
-/****** song-with-buttons ******/
-.song-with-buttons {
+/****** musical-object-with-buttons ******/
+.musical-object-with-buttons {
   width: 100%;
   max-width: 600px;
 
@@ -126,11 +126,7 @@ table.table-bordered {
     float: left;
     font-size: 1.35em;
 
-    .song-title {
-      color: black;
-    }
-    .now-playing-indicator {
-      padding-left: 13px;
+    .title {
       color: black;
     }
   }
@@ -154,11 +150,20 @@ table.table-bordered {
       padding-right: 20px;
     }
   }
+}
 
+/****** song-with-buttons ******/
+.song-with-buttons {
+  .main-info {
+    .now-playing-indicator {
+      padding-left: 13px;
+      color: black;
+    }
+  }
   &.current-song {
     .main-info {
       color: blueviolet;
-      .song-title {
+      .title {
         font-weight: bold;
         color: blueviolet;
       }
