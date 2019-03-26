@@ -20,8 +20,8 @@ import scala.collection.immutable.Seq
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 final class AlbumDiv(implicit dispatcher: Dispatcher,
-                     playStatusStore: PlayStatusStore,
                      albumDetailStoreFactory: AlbumDetailStoreFactory,
+                     playStatusStore: PlayStatusStore,
 ) extends HydroReactComponent {
 
   // **************** API ****************//
@@ -31,27 +31,43 @@ final class AlbumDiv(implicit dispatcher: Dispatcher,
 
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val config = ComponentConfig(backendConstructor = new Backend(_), initialState = State())
-//    .withStateStoresDependencyFromProps { props =>
-//      StateStoresDependency(
-//        playStatusStore,
-//        oldState => {
-//          val maybeResult: Option[State] = for {
-//            state <- playStatusStore.state
-//            currentEntry <- state.currentPlaylistEntry
-//          } yield {
-//            val isCurrentSong = currentEntry.song.id == props.song.id
-//            oldState.copy(isCurrentSong = isCurrentSong, isNowPlaying = isCurrentSong && state.hasStarted)
-//          }
-//
-//          maybeResult getOrElse oldState
-//        }
-//      )
-//    }
+    .withStateStoresDependencyFromProps { props =>
+      StateStoresDependency(
+        albumDetailStoreFactory.get(props.album.id),
+        _ => getNewStateFromStores(props)
+      )
+    }
+    .withStateStoresDependencyFromProps { props =>
+      StateStoresDependency(
+        playStatusStore,
+        _ => getNewStateFromStores(props)
+      )
+    }
+
+  private def getNewStateFromStores(props: Props): State = {
+    val albumDetailState = albumDetailStoreFactory.get(props.album.id).state
+    val playStatusState = playStatusStore.state
+
+    val songs = albumDetailState.map(_.songs) getOrElse Seq()
+    val isCurrentAlbum = {
+      for {
+        state <- playStatusState
+        currentEntry <- state.currentPlaylistEntry
+      } yield songs.exists(_.id == currentEntry.song.id)
+    } getOrElse false
+    val isNowPlaying = isCurrentAlbum && playStatusState.get.hasStarted
+
+    State(
+      songs = songs,
+      isCurrentAlbum = isCurrentAlbum,
+      isNowPlaying = isNowPlaying,
+    )
+  }
 
   // **************** Implementation of HydroReactComponent types ****************//
   protected case class Props(album: JsAlbum)(implicit val router: RouterContext)
   protected case class State(songs: Seq[JsSong] = Seq(),
-                             isCurrentSong: Boolean = false,
+                             isCurrentAlbum: Boolean = false,
                              isNowPlaying: Boolean = false)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
@@ -89,6 +105,8 @@ final class AlbumDiv(implicit dispatcher: Dispatcher,
         title = router.anchorWithHrefTo(AppPages.Album(props.album.id))(props.album.title),
         extraPiecesOfInfo = Seq() ++ yearInfo :+ pathInfo,
         buttons = Some(buttons),
+        isCurrentObject = state.isCurrentAlbum,
+        isNowPlaying = state.isNowPlaying,
       )(
         ^.className := "album-div",
       )
