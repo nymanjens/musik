@@ -62,29 +62,32 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                   <.div(
                     ^.className := "playlist",
                     rawTagMod("ref", provided.innerRef),
-                    entries.zipWithIndex.map {
-                      case (entry, index) =>
-                        val isCurrentSong =
-                          state.playStatusStoreState.currentPlaylistEntry.map(_.id) == Some(entry.id)
+                    entries
+                      .zip(calculateColorClasses(entries))
+                      .zipWithIndex
+                      .map {
+                        case ((entry, colorClass), index) =>
+                          val isCurrentSong =
+                            state.playStatusStoreState.currentPlaylistEntry.map(_.id) == Some(entry.id)
 
-                        ReactBeautifulDnd.Draggable(
-                          key = entry.id,
-                          draggableId = entry.id.toString,
-                          index = index) {
-                          (provided, snapshot) =>
-                            <.div(
-                              toTagMods(provided.draggableProps) ++ toTagMods(provided.dragHandleProps): _*)(
-                              ^.className := "draggable",
-                              ^^.ifThen(snapshot.isDragging)(^.className := "dragging"),
-                              ^.key := entry.id,
-                              rawTagMod("ref", provided.innerRef),
-                              playlistEntryDiv(
-                                entry,
-                                isCurrentSong = isCurrentSong,
-                                isNowPlaying = isCurrentSong && state.playStatusStoreState.hasStarted),
-                            )
-                        }
-                    }.toVdomArray
+                          ReactBeautifulDnd
+                            .Draggable(key = entry.id, draggableId = entry.id.toString, index = index) {
+                              (provided, snapshot) =>
+                                <.div(toTagMods(provided.draggableProps) ++ toTagMods(
+                                  provided.dragHandleProps): _*)(
+                                  ^.className := "draggable",
+                                  ^.className := colorClass,
+                                  ^^.ifThen(snapshot.isDragging)(^.className := "dragging"),
+                                  ^.key := entry.id,
+                                  rawTagMod("ref", provided.innerRef),
+                                  playlistEntryDiv(
+                                    entry,
+                                    isCurrentSong = isCurrentSong,
+                                    isNowPlaying = isCurrentSong && state.playStatusStoreState.hasStarted),
+                                )
+                            }
+                      }
+                      .toVdomArray
                   )
               }
             )
@@ -109,6 +112,19 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
             oldState.copy(maybeEntries = Some(newStoreState.entries))
           }.runNow()
         }
+    }
+
+    private def calculateColorClasses(entries: Seq[JsPlaylistEntry]): Seq[String] = {
+      val colors = Seq("color-a", "color-b")
+      var colorsIndex: Int = 0
+      var lastAlbumId: Long = entries.headOption.map(_.song.album.id) getOrElse -1L
+      for (entry <- entries) yield {
+        if (entry.song.album.id != lastAlbumId) {
+          lastAlbumId = entry.song.album.id
+          colorsIndex = (colorsIndex + 1) % colors.size
+        }
+        colors(colorsIndex)
+      }
     }
 
     private def toTagMods(props: js.Dictionary[js.Object]): Seq[TagMod] = {

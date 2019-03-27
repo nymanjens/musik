@@ -181,13 +181,28 @@ table.table-bordered {
   .draggable {
     &.dragging {
       color: orange;
-    }
-    .playlist-entry-div {
-      &:hover {
-        .main-info {
+      .main-info {
+        color: orange;
+        .title {
           color: orange;
         }
       }
     }
+    .playlist-entry-div {
+      padding: 7px 18px 0px 12px;
+      border-radius: 13px;
+      margin: 6px;
+
+      &:hover {
+        .main-info {
+          color: orange;
+          .title {
+            color: orange;
+          }
+        }
+      }
+    }
+    &.color-a { .playlist-entry-div{ background-color: #F8F8FF; } }
+    &.color-b { .playlist-entry-div{ background-color: #EEF; } }
   }
 }
