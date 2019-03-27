@@ -44,7 +44,7 @@ private[media] object GeneralMusicDivs {
           }
         },
       ),
-      <<.ifThen(buttons) { buttonsTag =>
+      <<.ifDefined(buttons) { buttonsTag =>
         buttonsTag(
           ^.className := "buttons",
         )

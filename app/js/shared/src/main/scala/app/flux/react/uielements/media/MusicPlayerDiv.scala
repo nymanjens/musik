@@ -54,7 +54,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
                   ^.className := "title",
                   playlistEntry.song.title,
                 ),
-                ^^.ifThen(playlistEntry.song.artist) { artist =>
+                ^^.ifDefined(playlistEntry.song.artist) { artist =>
                   router.anchorWithHrefTo(AppPages.Artist(artist.id))(
                     ^.className := "artist",
                     artist.name,
