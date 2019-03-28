@@ -1,31 +1,26 @@
 package app.flux.stores.media.helpers
 
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.FilterPairFactory
-
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.async.Async.async
-import scala.async.Async.await
-import hydro.common.GuavaReplacement.Splitter
-import hydro.common.ScalaUtils.visibleForTesting
-import app.flux.stores.media.helpers.ComplexQueryFilterFactory.Prefix
-import app.flux.stores.media.helpers.ComplexQueryFilterFactory.QueryFilterPair
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.QueryPart
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.splitInParts
 import app.models.access.ModelFields
 import app.models.media.Album
 import app.models.media.Artist
 import app.models.media.Song
-import hydro.models.access.DbQueryImplicits._
+import hydro.common.GuavaReplacement.Splitter
+import hydro.common.ScalaUtils.visibleForTesting
 import hydro.models.access.DbQuery
+import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.JsEntityAccess
 import hydro.models.access.ModelField
 
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.collection.mutable
 import scala.concurrent.Future
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.util.Try
-import scala.util.Success
-import scala.util.Failure
 
 final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
 
@@ -36,6 +31,10 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
   final class ComplexQueryFilter(query: String) {
 
     // **************** Public API **************** //
+    def toArtistFilter(): Future[DbQuery.Filter[Artist]] = async {
+      parseQuery[Artist](
+        filterPairFactory = FilterPairFactory.ArtistPrefix ifUnsupported FilterPairFactory.ArtistFallback)
+    }
     def toSongFilter(): Future[DbQuery.Filter[Song]] = async {
       val pureSongFilter = parseQuery[Song](
         filterPairFactory = FilterPairFactory.SongPrefix ifUnsupported FilterPairFactory.SongFallback)
@@ -46,7 +45,7 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
         ModelFields.Song.albumId isAnyOf albums.map(_.id)
       }
 
-      DbQuery.Filter.And(Seq(pureSongFilter) ++ albumIdFilter ++ artistIdFilter)
+      DbQuery.Filter.And(Seq(pureSongFilter) ++ artistIdFilter ++ albumIdFilter)
     }
 
     // **************** Private helper methods **************** //
@@ -160,6 +159,13 @@ object ComplexQueryFilterFactory {
         positiveFilter = negativeFilter,
         negativeFilter = positiveFilter,
         estimatedExecutionCost = estimatedExecutionCost)
+
+    def or(that: QueryFilterPair[E]): QueryFilterPair[E] =
+      QueryFilterPair(
+        positiveFilter = this.positiveFilter || that.positiveFilter,
+        negativeFilter = this.negativeFilter && that.negativeFilter,
+        estimatedExecutionCost = estimatedExecutionCost
+      )
   }
 
   private object QueryFilterPair {
@@ -204,14 +210,14 @@ object ComplexQueryFilterFactory {
   }
   @visibleForTesting private[helpers] object Prefix {
     def all: Seq[Prefix] =
-      Seq(ArtistName, AlbumTitle, SongTitle, RelativePath, Year)
+      Seq(ArtistName, AlbumTitle, AlbumRelativePath, AlbumYear, SongTitle)
 
     // Artist prefixes
     object ArtistName extends Prefix(Seq("artist", "art", "a"))
     // Album prefixes
     object AlbumTitle extends Prefix(Seq("album", "alb", "b"))
-    object RelativePath extends Prefix(Seq("path", "p"))
-    object Year extends Prefix(Seq("year", "y"))
+    object AlbumRelativePath extends Prefix(Seq("path", "p"))
+    object AlbumYear extends Prefix(Seq("year", "y"))
     // Song prefixes
     object SongTitle extends Prefix(Seq("song", "s"))
   }
@@ -244,6 +250,12 @@ object ComplexQueryFilterFactory {
             prefix match {
               case Prefix.AlbumTitle =>
                 Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.title, suffix))
+              case Prefix.AlbumRelativePath =>
+                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.relativePath, suffix))
+              case Prefix.AlbumYear =>
+                Try(suffix.toInt).toOption map { year =>
+                  QueryFilterPair.isEqualTo(ModelFields.Album.year, Some(year))
+                }
               case _ => None
             }
         }
@@ -261,9 +273,23 @@ object ComplexQueryFilterFactory {
         }
       }
     }
+    object ArtistFallback extends FilterPairFactory[Artist] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        Some(QueryFilterPair.containsIgnoreCase(ModelFields.Artist.name, singlePartWithoutNegation))
+      }
+    }
+    object AlbumFallback extends FilterPairFactory[Album] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        Some(
+          QueryFilterPair.containsIgnoreCase(ModelFields.Album.title, singlePartWithoutNegation) or
+            QueryFilterPair.containsIgnoreCase(ModelFields.Album.relativePath, singlePartWithoutNegation))
+      }
+    }
     object SongFallback extends FilterPairFactory[Song] {
       override def createIfSupported(singlePartWithoutNegation: String) = {
-        Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, singlePartWithoutNegation))
+        Some(
+          QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, singlePartWithoutNegation) or
+            QueryFilterPair.containsIgnoreCase(ModelFields.Song.filename, singlePartWithoutNegation))
       }
     }
   }
