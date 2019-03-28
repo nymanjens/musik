@@ -61,20 +61,22 @@ object TestObjects {
   def testUser: User = testUserA
   def testUserRedacted: User = testUser.copy(passwordHash = "<redacted>")
 
-  def testUserPrototype = UserPrototype.create(
-    id = testUser.id,
-    loginName = testUser.loginName,
-    plainTextPassword = "dlkfjasfd",
-    name = testUser.name,
-    isAdmin = testUser.isAdmin)
+  def testUserPrototype =
+    UserPrototype.create(
+      id = testUser.id,
+      loginName = testUser.loginName,
+      plainTextPassword = "dlkfjasfd",
+      name = testUser.name,
+      isAdmin = testUser.isAdmin)
 
   def testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
-  def testAlbum = Album(
-    relativePath = "folderA/folderB",
-    title = "Test Album",
-    artistId = Some(testArtist.id),
-    year = Some(1999),
-    idOption = Some(91723969))
+  def testAlbum =
+    Album(
+      relativePath = "folderA/folderB",
+      title = "Test Album",
+      artistId = Some(testArtist.id),
+      year = Some(1999),
+      idOption = Some(91723969))
   def testSong = Song(
     filename = "test-song.mp3",
     title = "Test Song",
