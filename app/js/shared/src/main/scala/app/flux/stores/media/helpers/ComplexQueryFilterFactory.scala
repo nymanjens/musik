@@ -35,6 +35,15 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
       parseQuery[Artist](
         filterPairFactory = FilterPairFactory.ArtistPrefix ifUnsupported FilterPairFactory.ArtistFallback)
     }
+    def toAlbumFilter(): Future[DbQuery.Filter[Album]] = async {
+      val pureAlbumFilter = parseQuery[Album](
+        filterPairFactory = FilterPairFactory.AlbumPrefix ifUnsupported FilterPairFactory.AlbumFallback)
+      val artistIdFilter = await(prefixMatchedArtists) map { artists =>
+        ModelFields.Album.artistId isAnyOf artists.map(a => Some(a.id))
+      }
+
+      DbQuery.Filter.And(Seq(pureAlbumFilter) ++ artistIdFilter)
+    }
     def toSongFilter(): Future[DbQuery.Filter[Song]] = async {
       val pureSongFilter = parseQuery[Song](
         filterPairFactory = FilterPairFactory.SongPrefix ifUnsupported FilterPairFactory.SongFallback)
