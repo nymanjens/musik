@@ -40,4 +40,5 @@ final class Module(implicit i18n: I18n,
   implicit lazy val allArtists = new AllArtists
   implicit lazy val artistDetail = new ArtistDetail
   implicit lazy val albumDetail = new AlbumDetail
+  implicit lazy val searchResults = new SearchResults
 }
