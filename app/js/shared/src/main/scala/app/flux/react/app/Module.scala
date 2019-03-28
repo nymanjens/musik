@@ -24,6 +24,7 @@ final class Module(implicit i18n: I18n,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
                    artistDetailStoreFactory: ArtistDetailStoreFactory,
+                   complexQueryStoreFactory: ComplexQueryStoreFactory,
                    dispatcher: Dispatcher,
                    clock: Clock) {
 
