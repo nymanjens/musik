@@ -10,7 +10,10 @@ import hydro.common.ScalaUtils.visibleForTesting
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.Prefix
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.QueryFilterPair
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.QueryPart
+import app.flux.stores.media.helpers.ComplexQueryFilterFactory.splitInParts
 import app.models.access.ModelFields
+import app.models.media.Album
+import app.models.media.Artist
 import app.models.media.Song
 import hydro.models.access.DbQueryImplicits._
 import hydro.models.access.DbQuery
@@ -34,11 +37,46 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
 
     // **************** Public API **************** //
     def toSongFilter(): Future[DbQuery.Filter[Song]] = async {
+      val pureSongFilter = parseQuery[Song](
+        filterPairFactory = FilterPairFactory.SongPrefix ifUnsupported FilterPairFactory.SongFallback)
+      val artistIdFilter = await(prefixMatchedArtists) map { artists =>
+        ModelFields.Song.artistId isAnyOf artists.map(a => Some(a.id))
+      }
+      val albumIdFilter = await(prefixMatchedAlbums) map { albums =>
+        ModelFields.Song.albumId isAnyOf albums.map(_.id)
+      }
 
-      parseQuery(filterPairFactory = SongPrefixFilterPairFactory ifUnsupported SongFallbackFilterPairFactory)
+      DbQuery.Filter.And(Seq(pureSongFilter) ++ albumIdFilter ++ artistIdFilter)
     }
 
     // **************** Private helper methods **************** //
+    private lazy val prefixMatchedArtists: Future[Option[Seq[Artist]]] = async {
+      parseQuery[Artist](filterPairFactory = FilterPairFactory.ArtistPrefix) match {
+        case DbQuery.Filter.NullFilter() => None
+        case filter =>
+          Some(
+            await(
+              entityAccess
+                .newQuery[Artist]()
+                .filter(filter)
+                .limit(20)
+                .data()))
+      }
+    }
+    private lazy val prefixMatchedAlbums: Future[Option[Seq[Album]]] = async {
+      parseQuery[Album](filterPairFactory = FilterPairFactory.AlbumPrefix) match {
+        case DbQuery.Filter.NullFilter() => None
+        case filter =>
+          Some(
+            await(
+              entityAccess
+                .newQuery[Album]()
+                .filter(filter)
+                .limit(20)
+                .data()))
+      }
+    }
+
     private def parseQuery[E](filterPairFactory: FilterPairFactory[E]): DbQuery.Filter[E] = {
       val filters: Seq[DbQuery.Filter[E]] =
         splitInParts(query)
@@ -63,82 +101,57 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
         DbQuery.Filter.NullFilter()
       }
     }
-
-    private object SongPrefixFilterPairFactory extends FilterPairFactory[Song] {
-      override def createIfSupported(singlePartWithoutNegation: String): Option[QueryFilterPair[Song]] = {
-        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
-          case (prefix, suffix) =>
-            prefix match {
-              case Prefix.SongTitle =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, suffix))
-              case _ => None
-            }
-        }
-      }
-    }
-    private object SongFallbackFilterPairFactory extends FilterPairFactory[Song] {
-      override def createIfSupported(singlePartWithoutNegation: String): Option[QueryFilterPair[Song]] = {
-        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
-          case (prefix, suffix) =>
-            prefix match {
-              case Prefix.SongTitle =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, suffix))
-              case _ => None
-            }
-        }
-      }
-    }
-
-    @visibleForTesting private[helpers] def parsePrefixAndSuffix(string: String): Option[(Prefix, String)] = {
-      val prefixStringToPrefix: Map[String, Prefix] = {
-        for {
-          prefix <- Prefix.all
-          prefixString <- prefix.prefixStrings
-        } yield prefixString -> prefix
-      }.toMap
-
-      val split = Splitter.on(':').split(string).toList
-      split match {
-        case prefix :: suffix if (prefixStringToPrefix contains prefix) && suffix.mkString(":").nonEmpty =>
-          Some((prefixStringToPrefix(prefix), suffix.mkString(":")))
-        case _ => None
-      }
-    }
-    @visibleForTesting private[helpers] def splitInParts(query: String): Seq[QueryPart] = {
-      val quotes = Seq('"', '\'')
-      val parts = mutable.Buffer[QueryPart]()
-      val nextPart = new StringBuilder
-      var currentQuote: Option[Char] = None
-      var negated = false
-
-      for (char <- query) char match {
-        case '-' if nextPart.isEmpty && currentQuote.isEmpty && !negated =>
-          negated = true
-        case _
-            if (quotes contains char) && (nextPart.isEmpty || nextPart
-              .endsWith(":")) && currentQuote.isEmpty =>
-          currentQuote = Some(char)
-        case _ if currentQuote contains char =>
-          currentQuote = None
-        case ' ' if currentQuote.isEmpty && nextPart.nonEmpty =>
-          parts += QueryPart(nextPart.result().trim, negated = negated)
-          nextPart.clear()
-          negated = false
-        case ' ' if currentQuote.isEmpty && nextPart.isEmpty =>
-        // do nothing
-        case _ =>
-          nextPart += char
-      }
-      if (nextPart.nonEmpty) {
-        parts += QueryPart(nextPart.result().trim, negated = negated)
-      }
-      Seq(parts: _*)
-    }
-
   }
 }
 
 object ComplexQueryFilterFactory {
+
+  @visibleForTesting private[helpers] def parsePrefixAndSuffix(string: String): Option[(Prefix, String)] = {
+    val prefixStringToPrefix: Map[String, Prefix] = {
+      for {
+        prefix <- Prefix.all
+        prefixString <- prefix.prefixStrings
+      } yield prefixString -> prefix
+    }.toMap
+
+    val split = Splitter.on(':').split(string).toList
+    split match {
+      case prefix :: suffix if (prefixStringToPrefix contains prefix) && suffix.mkString(":").nonEmpty =>
+        Some((prefixStringToPrefix(prefix), suffix.mkString(":")))
+      case _ => None
+    }
+  }
+  @visibleForTesting private[helpers] def splitInParts(query: String): Seq[QueryPart] = {
+    val quotes = Seq('"', '\'')
+    val parts = mutable.Buffer[QueryPart]()
+    val nextPart = new StringBuilder
+    var currentQuote: Option[Char] = None
+    var negated = false
+
+    for (char <- query) char match {
+      case '-' if nextPart.isEmpty && currentQuote.isEmpty && !negated =>
+        negated = true
+      case _
+          if (quotes contains char) && (nextPart.isEmpty || nextPart
+            .endsWith(":")) && currentQuote.isEmpty =>
+        currentQuote = Some(char)
+      case _ if currentQuote contains char =>
+        currentQuote = None
+      case ' ' if currentQuote.isEmpty && nextPart.nonEmpty =>
+        parts += QueryPart(nextPart.result().trim, negated = negated)
+        nextPart.clear()
+        negated = false
+      case ' ' if currentQuote.isEmpty && nextPart.isEmpty =>
+      // do nothing
+      case _ =>
+        nextPart += char
+    }
+    if (nextPart.nonEmpty) {
+      parts += QueryPart(nextPart.result().trim, negated = negated)
+    }
+    Seq(parts: _*)
+  }
+
   private case class QueryFilterPair[E](positiveFilter: DbQuery.Filter[E],
                                         negativeFilter: DbQuery.Filter[E],
                                         estimatedExecutionCost: Int) {
@@ -209,6 +222,49 @@ object ComplexQueryFilterFactory {
     def ifUnsupported(that: FilterPairFactory[E]): FilterPairFactory[E] = { singlePartWithoutNegation =>
       this.createIfSupported(singlePartWithoutNegation) orElse
         that.createIfSupported(singlePartWithoutNegation)
+    }
+  }
+  private object FilterPairFactory {
+    object ArtistPrefix extends FilterPairFactory[Artist] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
+          case (prefix, suffix) =>
+            prefix match {
+              case Prefix.ArtistName =>
+                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Artist.name, suffix))
+              case _ => None
+            }
+        }
+      }
+    }
+    object AlbumPrefix extends FilterPairFactory[Album] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
+          case (prefix, suffix) =>
+            prefix match {
+              case Prefix.AlbumTitle =>
+                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.title, suffix))
+              case _ => None
+            }
+        }
+      }
+    }
+    object SongPrefix extends FilterPairFactory[Song] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
+          case (prefix, suffix) =>
+            prefix match {
+              case Prefix.SongTitle =>
+                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, suffix))
+              case _ => None
+            }
+        }
+      }
+    }
+    object SongFallback extends FilterPairFactory[Song] {
+      override def createIfSupported(singlePartWithoutNegation: String) = {
+        Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, singlePartWithoutNegation))
+      }
     }
   }
 }
