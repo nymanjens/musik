@@ -112,4 +112,23 @@ object TestObjects {
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken
   )
+
+  def createSong(
+      filename: String = null,
+      title: String = null,
+      albumId: Long = -1,
+      artistId: Long = -1,
+      trackNumber: Int = 91263,
+  ): Song = {
+    Song(
+      filename = Option(filename) getOrElse "test-song.mp3",
+      title = Option(title) getOrElse "Test Song",
+      albumId = if (albumId == -1) testAlbum.id else albumId,
+      artistId = if (artistId == -1) None else Some(artistId),
+      trackNumber = trackNumber,
+      duration = 2.minutes,
+      disc = 1,
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
 }
