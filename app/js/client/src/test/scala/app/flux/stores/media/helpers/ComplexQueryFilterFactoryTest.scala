@@ -63,10 +63,12 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
         "album title filter" - {
           val album1 = createAlbum(title = "berries")
           val album2 = createAlbum(title = "apples")
-          val song1 = createSong(title = "abc", albumId = album1.id)
-          val song2 = createSong(title = "abc", albumId = album2.id)
+          val song1 = createSong(title = "abc1", albumId = album1.id)
+          val song2 = createSong(title = "abc2", albumId = album2.id)
 
-          withPersisted(song1, song2).assertThatQuery("album:PPLE song:abc").containsExactlySongs(song1)
+          withPersisted(album1, album2, song1, song2)
+            .assertThatQuery("album:PPLE song:abc")
+            .containsExactlySongs(song2)
         }
 
 //      "filter without prefix" - {
