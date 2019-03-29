@@ -1,20 +1,24 @@
 package app.flux.stores.media.helpers
 
-import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.async.Async.async
-import scala.async.Async.await
+import app.models.media.Album
+import app.models.media.Artist
+import app.models.media.Song
 import app.common.testing.TestObjects._
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.Prefix
 import app.flux.stores.media.helpers.ComplexQueryFilterFactory.QueryPart
 import app.models.media.Song
+import app.scala2js.AppConverters
+import hydro.common.testing.FakeJsEntityAccess
 import hydro.models.access.DbQuery
-import hydro.models.access.EntityAccess
-import hydro.models.access.JsEntityAccess
+import hydro.models.Entity
 import utest._
 
+import scala.async.Async.async
+import scala.async.Async.await
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 object ComplexQueryFilterFactoryTest extends TestSuite {
 
@@ -28,25 +32,27 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
 
     "fromQuery()" - {
       "getSongFilter()" - {
-        "empty filter" - async {
+        "empty filter" - {
           val song1 = createSong()
           val song2 = createSong()
 
-          val filter: DbQuery.Filter[Song] = await(complexQueryFilterFactory.fromQuery(" ").getSongFilter())
-
-          filter(song1) ==> true
-          filter(song2) ==> true
+          withPersisted(song1, song2).assertThatQuery(" ").containsExactlySongs(song1, song2)
         }
 
-        "song title filter" - async {
+        "song title filter" - {
           val song1 = createSong(title = "abcd")
           val song2 = createSong(title = "defg")
 
-          val filter: DbQuery.Filter[Song] =
-            await(complexQueryFilterFactory.fromQuery("song:BCD").getSongFilter())
+          withPersisted(song1, song2).assertThatQuery("song:BCD").containsExactlySongs(song1)
+        }
 
-          filter(song1) ==> true
-          filter(song2) ==> false
+        "album title filter" - {
+          val album1 = createAlbum(title = "berries")
+          val album2 = createAlbum(title = "apples")
+          val song1 = createSong(title = "abc", albumId = album1.id)
+          val song2 = createSong(title = "abc", albumId = album2.id)
+
+          withPersisted(song1, song2).assertThatQuery("album:PPLE song:abc").containsExactlySongs(song1)
         }
 
 //      "filter without prefix" - {
@@ -147,6 +153,39 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
       "quote inside text" - {
         ComplexQueryFilterFactory
           .splitInParts("-don't won't") ==> Seq(QueryPart.not("don't"), QueryPart("won't"))
+      }
+    }
+  }
+
+  private def withPersisted(storedEntities: Entity*)(
+      implicit complexQueryFilterFactory: ComplexQueryFilterFactory,
+      entityAccess: FakeJsEntityAccess) = {
+    storedEntities map {
+      case e: Artist => entityAccess.addRemotelyAddedEntities(e)
+      case e: Album  => entityAccess.addRemotelyAddedEntities(e)
+      case e: Song   => entityAccess.addRemotelyAddedEntities(e)
+    }
+
+    new Object {
+      def assertThatQuery(query: String) = new Object {
+        def containsExactlySongs(expected: Song*): Future[Unit] = async {
+          val filter = await(complexQueryFilterFactory.fromQuery(query).getSongFilter())
+          assertContainSameElements[Song](
+            entityAccess.newQuerySync[Song]().filter(filter).data(),
+            expected,
+            properties = Seq(_.title))
+        }
+      }
+
+      private def assertContainSameElements[E](iterable1: Iterable[E],
+                                               iterable2: Iterable[E],
+                                               properties: Seq[E => Any] = Seq()): Unit = {
+        val set1 = iterable1.toSet
+        val set2 = iterable2.toSet
+        for (propertyFunc <- properties) {
+          set1.map(propertyFunc) ==> set2.map(propertyFunc)
+        }
+        set1 ==> set2
       }
     }
   }

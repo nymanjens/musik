@@ -113,17 +113,32 @@ object TestObjects {
     nextUpdateToken = testUpdateToken
   )
 
+  def createAlbum(
+      relativePath: String = "folderA/111",
+      title: String = "Random Test Album",
+      artistId: Long = -1,
+      year: Int = -1,
+  ): Album = {
+    Album(
+      relativePath = relativePath,
+      title = title,
+      artistId = if (artistId == -1) None else Some(artistId),
+      year = if (year == -1) None else Some(year),
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
+
   def createSong(
-      filename: String = null,
-      title: String = null,
-      albumId: Long = -1,
+      filename: String = "test-song.mp3",
+      title: String = "Test Song",
+      albumId: Long = 129380,
       artistId: Long = -1,
       trackNumber: Int = 91263,
   ): Song = {
     Song(
-      filename = Option(filename) getOrElse "test-song.mp3",
-      title = Option(title) getOrElse "Test Song",
-      albumId = if (albumId == -1) testAlbum.id else albumId,
+      filename = filename,
+      title = title,
+      albumId = albumId,
       artistId = if (artistId == -1) None else Some(artistId),
       trackNumber = trackNumber,
       duration = 2.minutes,
