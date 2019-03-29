@@ -39,6 +39,13 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
           withPersisted(song1, song2).assertThatQuery(" ").containsExactlySongs(song1, song2)
         }
 
+        "filter without tag" - {
+          val song1 = createSong(title = "abcd")
+          val song2 = createSong(title = "defg")
+
+          withPersisted(song1, song2).assertThatQuery("BCD").containsExactlySongs(song1)
+        }
+
         "unrecognized tag" - {
           val song1 = createSong(title = "ay:ad")
           val song2 = createSong(title = "defg")
