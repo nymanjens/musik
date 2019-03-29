@@ -67,11 +67,12 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
               entityAccess
                 .newQuery[Artist]()
                 .filter(filter)
-                .limit(20)
+                // Result must potentially encompass all artists in the case of a negative search (e.g. -art:apples)
+                .limit(10 * 1000)
                 .data()))
       }
     }
-    private lazy val prefixMatchedAlbums: Future[Option[Seq[Album]]] = async {
+    private def prefixMatchedAlbums: Future[Option[Seq[Album]]] = async {
       parseQuery[Album](filterPairFactory = FilterPairFactory.AlbumPrefix) match {
         case DbQuery.Filter.NullFilter() => None
         case filter =>
@@ -80,7 +81,8 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
               entityAccess
                 .newQuery[Album]()
                 .filter(filter)
-                .limit(20)
+                // Result must potentially encompass all albums in the case of a negative search (e.g. -alb:apples)
+                .limit(50 * 1000)
                 .data()))
       }
     }

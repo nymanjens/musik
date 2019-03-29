@@ -39,19 +39,55 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
           withPersisted(song1, song2).assertThatQuery(" ").containsExactlySongs(song1, song2)
         }
 
-        "filter without tag" - {
+        "filter without prefix" - {
           val song1 = createSong(title = "abcd")
           val song2 = createSong(title = "defg")
 
           withPersisted(song1, song2).assertThatQuery("BCD").containsExactlySongs(song1)
         }
 
-        "unrecognized tag" - {
+        "unrecognized prefix" - {
           val song1 = createSong(title = "ax:ad")
           val song2 = createSong(title = "defg")
 
           withPersisted(song1, song2).assertThatQuery("x:ad").containsExactlySongs(song1)
         }
+
+        "filter with negation" - {
+          val album1 = createAlbum(title = "berries")
+          val album2 = createAlbum(title = "apples")
+          val song1 = createSong(title = "abc1 X Y", albumId = album1.id)
+          val song2A = createSong(title = "abc2A X Z", albumId = album2.id)
+          val song2B = createSong(title = "abc2B X X", albumId = album2.id)
+          val asserter = withPersisted(album1, album2, song1, song2A, song2B)
+
+          "with prefix" - {
+            "relevant to song" - {
+              asserter.assertThatQuery("-song:abc2").containsExactlySongs(song1)
+            }
+            "relevant to album" - {
+              asserter.assertThatQuery("-album:berries").containsExactlySongs(song2A, song2B)
+            }
+          }
+          "witout prefix" - {
+            asserter.assertThatQuery("-abc2").containsExactlySongs(song1)
+          }
+          "with quotes" - {
+            asserter.assertThatQuery(""" -"X Z" """).containsExactlySongs(song1, song2B)
+          }
+        }
+//        "filter with multiple parts" - {
+//          val transaction1 = createTransaction(description = "cat dog fish", tags = Seq("monkey"))
+//          val transaction2 = createTransaction(description = "fish")
+//          val transaction3 = createTransaction(description = "cat", tags = Seq("monkey"))
+//
+//          withTransactions(transaction1, transaction2, transaction3)
+//            .assertThatQuery("fish tag:monkey")
+//            .containsExactly(transaction1)
+//          withTransactions(transaction1, transaction2, transaction3)
+//            .assertThatQuery("fish -tag:monkey")
+//            .containsExactly(transaction2)
+//        }
 
         "song title filter" - {
           val song1 = createSong(title = "abcd")
@@ -70,40 +106,6 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
             .assertThatQuery("album:PPLE song:abc")
             .containsExactlySongs(song2)
         }
-
-//      "filter without prefix" - {
-//        val transaction1 = createTransaction(description = "cat dog fish")
-//        val transaction2 = createTransaction(description = "fish")
-//        val transaction3 = createTransaction(description = "cat")
-//
-//        withTransactions(transaction1, transaction2, transaction3)
-//          .assertThatQuery("  fish  ")
-//          .containsExactly(transaction1, transaction2)
-//      }
-//      "filter with negation" - {
-//        val transaction1 = createTransaction(description = "cat dog fish")
-//        val transaction2 = createTransaction(description = "fish")
-//        val transaction3 = createTransaction(description = "cat")
-//
-//        withTransactions(transaction1, transaction2, transaction3)
-//          .assertThatQuery("-description:fish")
-//          .containsExactly(transaction3)
-//        withTransactions(transaction1, transaction2, transaction3)
-//          .assertThatQuery(""" -"dog f" """)
-//          .containsExactly(transaction2, transaction3)
-//      }
-//      "filter with multiple parts" - {
-//        val transaction1 = createTransaction(description = "cat dog fish", tags = Seq("monkey"))
-//        val transaction2 = createTransaction(description = "fish")
-//        val transaction3 = createTransaction(description = "cat", tags = Seq("monkey"))
-//
-//        withTransactions(transaction1, transaction2, transaction3)
-//          .assertThatQuery("fish tag:monkey")
-//          .containsExactly(transaction1)
-//        withTransactions(transaction1, transaction2, transaction3)
-//          .assertThatQuery("fish -tag:monkey")
-//          .containsExactly(transaction2)
-//      }
       }
     }
 
