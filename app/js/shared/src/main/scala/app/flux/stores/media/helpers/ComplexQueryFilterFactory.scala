@@ -33,11 +33,11 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
     // **************** Public API **************** //
     def getArtistFilter(): Future[DbQuery.Filter[Artist]] = async {
       parseQuery[Artist](
-        filterPairFactory = FilterPairFactory.ArtistPrefix ifUnsupported FilterPairFactory.ArtistFallback)
+        filterPairFactory = FilterPairFactory.ArtistPrefix ifNoPrefix FilterPairFactory.ArtistFallback)
     }
     def getAlbumFilter(): Future[DbQuery.Filter[Album]] = async {
       val pureAlbumFilter = parseQuery[Album](
-        filterPairFactory = FilterPairFactory.AlbumPrefix ifUnsupported FilterPairFactory.AlbumFallback)
+        filterPairFactory = FilterPairFactory.AlbumPrefix ifNoPrefix FilterPairFactory.AlbumFallback)
       val artistIdFilter = await(prefixMatchedArtists) map { artists =>
         ModelFields.Album.artistId isAnyOf artists.map(a => Some(a.id))
       }
@@ -46,7 +46,7 @@ final class ComplexQueryFilterFactory(implicit entityAccess: JsEntityAccess) {
     }
     def getSongFilter(): Future[DbQuery.Filter[Song]] = async {
       val pureSongFilter = parseQuery[Song](
-        filterPairFactory = FilterPairFactory.SongPrefix ifUnsupported FilterPairFactory.SongFallback)
+        filterPairFactory = FilterPairFactory.SongPrefix ifNoPrefix FilterPairFactory.SongFallback)
       val artistIdFilter = await(prefixMatchedArtists) map { artists =>
         ModelFields.Song.artistId isAnyOf artists.map(a => Some(a.id))
       }
@@ -233,52 +233,55 @@ object ComplexQueryFilterFactory {
 
   private trait FilterPairFactory[E] {
     def createIfSupported(singlePartWithoutNegation: String): Option[QueryFilterPair[E]]
-
-    def ifUnsupported(that: FilterPairFactory[E]): FilterPairFactory[E] = { singlePartWithoutNegation =>
-      this.createIfSupported(singlePartWithoutNegation) orElse
-        that.createIfSupported(singlePartWithoutNegation)
-    }
   }
   private object FilterPairFactory {
-    object ArtistPrefix extends FilterPairFactory[Artist] {
-      override def createIfSupported(singlePartWithoutNegation: String) = {
+    abstract class PrefixOnlyBase[E] extends FilterPairFactory[E] {
+      final override def createIfSupported(singlePartWithoutNegation: String) = {
         parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
-          case (prefix, suffix) =>
-            prefix match {
-              case Prefix.ArtistName =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Artist.name, suffix))
-              case _ => None
-            }
+          case (prefix, suffix) => createIfSupportedPrefix(prefix, suffix)
+        }
+      }
+
+      protected def createIfSupportedPrefix(prefix: Prefix, suffix: String): Option[QueryFilterPair[E]]
+
+      final def ifNoPrefix(that: FilterPairFactory[E]): FilterPairFactory[E] = { singlePartWithoutNegation =>
+        parsePrefixAndSuffix(singlePartWithoutNegation) match {
+          case Some((prefix, suffix)) => createIfSupportedPrefix(prefix, suffix)
+          case None                   => that.createIfSupported(singlePartWithoutNegation)
         }
       }
     }
-    object AlbumPrefix extends FilterPairFactory[Album] {
-      override def createIfSupported(singlePartWithoutNegation: String) = {
-        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
-          case (prefix, suffix) =>
-            prefix match {
-              case Prefix.AlbumTitle =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.title, suffix))
-              case Prefix.AlbumRelativePath =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.relativePath, suffix))
-              case Prefix.AlbumYear =>
-                Try(suffix.toInt).toOption map { year =>
-                  QueryFilterPair.isEqualTo(ModelFields.Album.year, Some(year))
-                }
-              case _ => None
-            }
+
+    object ArtistPrefix extends PrefixOnlyBase[Artist] {
+      override protected def createIfSupportedPrefix(prefix: Prefix, suffix: String) = {
+        prefix match {
+          case Prefix.ArtistName =>
+            Some(QueryFilterPair.containsIgnoreCase(ModelFields.Artist.name, suffix))
+          case _ => None
         }
       }
     }
-    object SongPrefix extends FilterPairFactory[Song] {
-      override def createIfSupported(singlePartWithoutNegation: String) = {
-        parsePrefixAndSuffix(singlePartWithoutNegation) flatMap {
-          case (prefix, suffix) =>
-            prefix match {
-              case Prefix.SongTitle =>
-                Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, suffix))
-              case _ => None
+    object AlbumPrefix extends PrefixOnlyBase[Album] {
+      override protected def createIfSupportedPrefix(prefix: Prefix, suffix: String) = {
+        prefix match {
+          case Prefix.AlbumTitle =>
+            Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.title, suffix))
+          case Prefix.AlbumRelativePath =>
+            Some(QueryFilterPair.containsIgnoreCase(ModelFields.Album.relativePath, suffix))
+          case Prefix.AlbumYear =>
+            Try(suffix.toInt).toOption map { year =>
+              QueryFilterPair.isEqualTo(ModelFields.Album.year, Some(year))
             }
+          case _ => None
+        }
+      }
+    }
+    object SongPrefix extends PrefixOnlyBase[Song] {
+      override protected def createIfSupportedPrefix(prefix: Prefix, suffix: String) = {
+        prefix match {
+          case Prefix.SongTitle =>
+            Some(QueryFilterPair.containsIgnoreCase(ModelFields.Song.title, suffix))
+          case _ => None
         }
       }
     }
