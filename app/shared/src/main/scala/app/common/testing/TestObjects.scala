@@ -113,6 +113,15 @@ object TestObjects {
     nextUpdateToken = testUpdateToken
   )
 
+  def createArtist(
+      name: String = "test artist",
+  ): Artist = {
+    Artist(
+      name = name,
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
+
   def createAlbum(
       relativePath: String = "folderA/111",
       title: String = "Random Test Album",

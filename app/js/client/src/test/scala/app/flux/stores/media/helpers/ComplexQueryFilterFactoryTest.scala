@@ -102,6 +102,17 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
             .assertThatQuery("album:PPLE song:abc")
             .containsExactlySongs(song2)
         }
+
+        "artist name filter" - {
+          val artist1 = createArtist("oranges")
+          val artist2 = createArtist("pears")
+          val song1 = createSong(title = "abc1", artistId = artist1.id)
+          val song2 = createSong(title = "abc2", artistId = artist2.id)
+
+          withPersisted(artist1, artist2, song1, song2)
+            .assertThatQuery("artist:PEAR song:abc")
+            .containsExactlySongs(song2)
+        }
       }
     }
 
