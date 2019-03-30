@@ -42,8 +42,9 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
         "filter without prefix" - {
           val song1 = createSong(title = "abcd")
           val song2 = createSong(title = "defg")
+          val song3 = createSong(title = "xxx", filename = "xbcdx.mp3")
 
-          withPersisted(song1, song2).assertThatQuery("BCD").containsExactlySongs(song1)
+          withPersisted(song1, song2, song3).assertThatQuery("BCD").containsExactlySongs(song1, song3)
         }
 
         "unrecognized prefix" - {
@@ -76,18 +77,13 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
             asserter.assertThatQuery(""" -"X Z" """).containsExactlySongs(song1, song2B)
           }
         }
-//        "filter with multiple parts" - {
-//          val transaction1 = createTransaction(description = "cat dog fish", tags = Seq("monkey"))
-//          val transaction2 = createTransaction(description = "fish")
-//          val transaction3 = createTransaction(description = "cat", tags = Seq("monkey"))
-//
-//          withTransactions(transaction1, transaction2, transaction3)
-//            .assertThatQuery("fish tag:monkey")
-//            .containsExactly(transaction1)
-//          withTransactions(transaction1, transaction2, transaction3)
-//            .assertThatQuery("fish -tag:monkey")
-//            .containsExactly(transaction2)
-//        }
+        "filter with multiple parts" - {
+          val song1 = createSong(title = "AAA XBBBX")
+          val song2 = createSong(title = "CCC XDDDX")
+          val song3 = createSong(title = "AAA XEEEX")
+
+          withPersisted(song1, song2).assertThatQuery("aaa bbb").containsExactlySongs(song1)
+        }
 
         "song title filter" - {
           val song1 = createSong(title = "abcd")
