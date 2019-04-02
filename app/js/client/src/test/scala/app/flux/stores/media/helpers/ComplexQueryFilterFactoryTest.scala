@@ -31,6 +31,133 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
     implicit val complexQueryFilterFactory = new ComplexQueryFilterFactory
 
     "fromQuery()" - {
+
+      "getArtistFilter()" - {
+        "empty filter" - {
+          val artist1 = persisted(createArtist())
+          val artist2 = persisted(createArtist())
+
+          assertThatQuery(" ").containsExactlyArtists(artist1, artist2)
+        }
+
+        "filter without prefix" - {
+          val artist1 = persisted(createArtist(name = "abcd"))
+          val artist2 = persisted(createArtist(name = "defg"))
+
+          assertThatQuery("BCD").containsExactlyArtists(artist1)
+        }
+
+        "unrecognized prefix" - {
+          val artist1 = persisted(createArtist(name = "ax:ad"))
+          val artist2 = persisted(createArtist(name = "defg"))
+
+          assertThatQuery("x:ad").containsExactlyArtists(artist1)
+        }
+
+        "filter with negation" - {
+          val artist1 = persisted(createArtist(name = "abc1 X Y"))
+          val artist2A = persisted(createArtist(name = "abc2A X Z"))
+          val artist2B = persisted(createArtist(name = "abc2B X X"))
+
+          "with prefix" - {
+            assertThatQuery("-artist:abc2").containsExactlyArtists(artist1)
+          }
+          "witout prefix" - {
+            assertThatQuery("-abc2").containsExactlyArtists(artist1)
+          }
+          "with quotes" - {
+            assertThatQuery(""" -"X Z" """).containsExactlyArtists(artist1, artist2B)
+          }
+        }
+        "filter with multiple parts" - {
+          val artist1 = persisted(createArtist(name = "AAA XBBBX"))
+          val artist2 = persisted(createArtist(name = "CCC XDDDX"))
+          val artist3 = persisted(createArtist(name = "AAA XEEEX"))
+
+          assertThatQuery("aaa bbb").containsExactlyArtists(artist1)
+        }
+
+        "artist name filter" - {
+          val artist1 = persisted(createArtist(name = "abcd"))
+          val artist2 = persisted(createArtist(name = "defg"))
+
+          assertThatQuery("artist:BCD").containsExactlyArtists(artist1)
+        }
+      }
+
+      "getAlbumFilter()" - {
+        "empty filter" - {
+          val album1 = persisted(createAlbum())
+          val album2 = persisted(createAlbum())
+
+          assertThatQuery(" ").containsExactlyAlbums(album1, album2)
+        }
+
+        "filter without prefix" - {
+          val album1 = persisted(createAlbum(title = "abcd"))
+          val album2 = persisted(createAlbum(title = "defg"))
+          val album3 = persisted(createAlbum(title = "xxx", relativePath = "xbcdx/zzz"))
+
+          assertThatQuery("BCD").containsExactlyAlbums(album1, album3)
+        }
+
+        "unrecognized prefix" - {
+          val album1 = persisted(createAlbum(title = "ax:ad"))
+          val album2 = persisted(createAlbum(title = "defg"))
+
+          assertThatQuery("x:ad").containsExactlyAlbums(album1)
+        }
+
+        "filter with negation" - {
+          val artist1 = persisted(createArtist(name = "berries"))
+          val artist2 = persisted(createArtist(name = "apples"))
+          val album1 = persisted(createAlbum(title = "abc1 X Y", artistId = artist1.id))
+          val album2A = persisted(createAlbum(title = "abc2A X Z", artistId = artist2.id))
+          val album2B = persisted(createAlbum(title = "abc2B X X", artistId = artist2.id))
+
+          "with prefix" - {
+            "relevant to album" - {
+              assertThatQuery("-album:abc2").containsExactlyAlbums(album1)
+            }
+            "relevant to artist" - {
+              assertThatQuery("-artist:berries").containsExactlyAlbums(album2A, album2B)
+            }
+          }
+          "witout prefix" - {
+            persisted(createAlbum(title = "zzzz", relativePath = "x_abc2_x"))
+
+            assertThatQuery("-abc2").containsExactlyAlbums(album1)
+          }
+          "with quotes" - {
+            assertThatQuery(""" -"X Z" """).containsExactlyAlbums(album1, album2B)
+          }
+        }
+        "filter with multiple parts" - {
+          val album1 = persisted(createAlbum(title = "AAA XBBBX"))
+          val album2 = persisted(createAlbum(title = "CCC XDDDX"))
+          val album3 = persisted(createAlbum(title = "AAA XEEEX"))
+
+          assertThatQuery("aaa bbb").containsExactlyAlbums(album1)
+        }
+
+        "album title filter" - {
+          val album1 = persisted(createAlbum(title = "abcd"))
+          val album2 = persisted(createAlbum(title = "defg"))
+
+          assertThatQuery("album:BCD").containsExactlyAlbums(album1)
+        }
+
+        "artist name filter" - {
+          val artist1 = persisted(createArtist(name = "berries"))
+          val artist2 = persisted(createArtist(name = "apples"))
+          val album1 = persisted(createAlbum(title = "abc1", artistId = artist1.id))
+          val album2 = persisted(createAlbum(title = "abc2", artistId = artist2.id))
+
+          assertThatQuery("artist:PPLE album:abc")
+            .containsExactlyAlbums(album2)
+        }
+      }
+
       "getSongFilter()" - {
         "empty filter" - {
           val song1 = persisted(createSong())
@@ -112,79 +239,6 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
           assertThatQuery("artist:PEAR song:abc")
             .containsExactlySongs(song2)
         }
-      }
-    }
-
-    "getAlbumFilter()" - {
-      "empty filter" - {
-        val album1 = persisted(createAlbum())
-        val album2 = persisted(createAlbum())
-
-        assertThatQuery(" ").containsExactlyAlbums(album1, album2)
-      }
-
-      "filter without prefix" - {
-        val album1 = persisted(createAlbum(title = "abcd"))
-        val album2 = persisted(createAlbum(title = "defg"))
-        val album3 = persisted(createAlbum(title = "xxx", relativePath = "xbcdx/zzz"))
-
-        assertThatQuery("BCD").containsExactlyAlbums(album1, album3)
-      }
-
-      "unrecognized prefix" - {
-        val album1 = persisted(createAlbum(title = "ax:ad"))
-        val album2 = persisted(createAlbum(title = "defg"))
-
-        assertThatQuery("x:ad").containsExactlyAlbums(album1)
-      }
-
-      "filter with negation" - {
-        val artist1 = persisted(createArtist(name = "berries"))
-        val artist2 = persisted(createArtist(name = "apples"))
-        val album1 = persisted(createAlbum(title = "abc1 X Y", artistId = artist1.id))
-        val album2A = persisted(createAlbum(title = "abc2A X Z", artistId = artist2.id))
-        val album2B = persisted(createAlbum(title = "abc2B X X", artistId = artist2.id))
-
-        "with prefix" - {
-          "relevant to album" - {
-            assertThatQuery("-album:abc2").containsExactlyAlbums(album1)
-          }
-          "relevant to artist" - {
-            assertThatQuery("-artist:berries").containsExactlyAlbums(album2A, album2B)
-          }
-        }
-        "witout prefix" - {
-          persisted(createAlbum(title = "zzzz", relativePath = "x_abc2_x"))
-
-          assertThatQuery("-abc2").containsExactlyAlbums(album1)
-        }
-        "with quotes" - {
-          assertThatQuery(""" -"X Z" """).containsExactlyAlbums(album1, album2B)
-        }
-      }
-      "filter with multiple parts" - {
-        val album1 = persisted(createAlbum(title = "AAA XBBBX"))
-        val album2 = persisted(createAlbum(title = "CCC XDDDX"))
-        val album3 = persisted(createAlbum(title = "AAA XEEEX"))
-
-        assertThatQuery("aaa bbb").containsExactlyAlbums(album1)
-      }
-
-      "album title filter" - {
-        val album1 = persisted(createAlbum(title = "abcd"))
-        val album2 = persisted(createAlbum(title = "defg"))
-
-        assertThatQuery("album:BCD").containsExactlyAlbums(album1)
-      }
-
-      "artist name filter" - {
-        val artist1 = persisted(createArtist(name = "berries"))
-        val artist2 = persisted(createArtist(name = "apples"))
-        val album1 = persisted(createAlbum(title = "abc1", artistId = artist1.id))
-        val album2 = persisted(createAlbum(title = "abc2", artistId = artist2.id))
-
-        assertThatQuery("artist:PPLE album:abc")
-          .containsExactlyAlbums(album2)
       }
     }
 
