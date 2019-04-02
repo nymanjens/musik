@@ -33,84 +33,81 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
     "fromQuery()" - {
       "getSongFilter()" - {
         "empty filter" - {
-          val song1 = createSong()
-          val song2 = createSong()
+          val song1 = persisted(createSong())
+          val song2 = persisted(createSong())
 
-          withPersisted(song1, song2).assertThatQuery(" ").containsExactlySongs(song1, song2)
+          assertThatQuery(" ").containsExactlySongs(song1, song2)
         }
 
         "filter without prefix" - {
-          val song1 = createSong(title = "abcd")
-          val song2 = createSong(title = "defg")
-          val song3 = createSong(title = "xxx", filename = "xbcdx.mp3")
+          val song1 = persisted(createSong(title = "abcd"))
+          val song2 = persisted(createSong(title = "defg"))
+          val song3 = persisted(createSong(title = "xxx", filename = "xbcdx.mp3"))
 
-          withPersisted(song1, song2, song3).assertThatQuery("BCD").containsExactlySongs(song1, song3)
+          assertThatQuery("BCD").containsExactlySongs(song1, song3)
         }
 
         "unrecognized prefix" - {
-          val song1 = createSong(title = "ax:ad")
-          val song2 = createSong(title = "defg")
+          val song1 = persisted(createSong(title = "ax:ad"))
+          val song2 = persisted(createSong(title = "defg"))
 
-          withPersisted(song1, song2).assertThatQuery("x:ad").containsExactlySongs(song1)
+          assertThatQuery("x:ad").containsExactlySongs(song1)
         }
 
         "filter with negation" - {
-          val album1 = createAlbum(title = "berries")
-          val album2 = createAlbum(title = "apples")
-          val song1 = createSong(title = "abc1 X Y", albumId = album1.id)
-          val song2A = createSong(title = "abc2A X Z", albumId = album2.id)
-          val song2B = createSong(title = "abc2B X X", albumId = album2.id)
-          val asserter = withPersisted(album1, album2, song1, song2A, song2B)
+          val album1 = persisted(createAlbum(title = "berries"))
+          val album2 = persisted(createAlbum(title = "apples"))
+          val song1 = persisted(createSong(title = "abc1 X Y", albumId = album1.id))
+          val song2A = persisted(createSong(title = "abc2A X Z", albumId = album2.id))
+          val song2B = persisted(createSong(title = "abc2B X X", albumId = album2.id))
 
           "with prefix" - {
             "relevant to song" - {
-              asserter.assertThatQuery("-song:abc2").containsExactlySongs(song1)
+              assertThatQuery("-song:abc2").containsExactlySongs(song1)
             }
             "relevant to album" - {
-              asserter.assertThatQuery("-album:berries").containsExactlySongs(song2A, song2B)
+              assertThatQuery("-album:berries").containsExactlySongs(song2A, song2B)
             }
           }
           "witout prefix" - {
-            asserter.assertThatQuery("-abc2").containsExactlySongs(song1)
+            assertThatQuery("-abc2").containsExactlySongs(song1)
           }
           "with quotes" - {
-            asserter.assertThatQuery(""" -"X Z" """).containsExactlySongs(song1, song2B)
+            assertThatQuery(""" -"X Z" """).containsExactlySongs(song1, song2B)
           }
         }
         "filter with multiple parts" - {
-          val song1 = createSong(title = "AAA XBBBX")
-          val song2 = createSong(title = "CCC XDDDX")
-          val song3 = createSong(title = "AAA XEEEX")
+          val song1 = persisted(createSong(title = "AAA XBBBX"))
+          val song2 = persisted(createSong(title = "CCC XDDDX"))
+          val song3 = persisted(createSong(title = "AAA XEEEX"))
 
-          withPersisted(song1, song2).assertThatQuery("aaa bbb").containsExactlySongs(song1)
+          assertThatQuery("aaa bbb").containsExactlySongs(song1)
         }
 
         "song title filter" - {
-          val song1 = createSong(title = "abcd")
-          val song2 = createSong(title = "defg")
+          val song1 = persisted(createSong(title = "abcd"))
+          val song2 = persisted(createSong(title = "defg"))
 
-          withPersisted(song1, song2).assertThatQuery("song:BCD").containsExactlySongs(song1)
+          assertThatQuery("song:BCD").containsExactlySongs(song1)
         }
 
         "album title filter" - {
-          val album1 = createAlbum(title = "berries")
-          val album2 = createAlbum(title = "apples")
-          val song1 = createSong(title = "abc1", albumId = album1.id)
-          val song2 = createSong(title = "abc2", albumId = album2.id)
+          val album1 = persisted(createAlbum(title = "berries"))
+          val album2 = persisted(createAlbum(title = "apples"))
+          val song1 = persisted(createSong(title = "abc1", albumId = album1.id))
+          val song2 = persisted(createSong(title = "abc2", albumId = album2.id))
 
-          withPersisted(album1, album2, song1, song2)
-            .assertThatQuery("album:PPLE song:abc")
+          assertThatQuery("album:PPLE song:abc")
             .containsExactlySongs(song2)
         }
 
         "artist name filter" - {
-          val artist1 = createArtist("oranges")
-          val artist2 = createArtist("pears")
-          val song1 = createSong(title = "abc1", artistId = artist1.id)
-          val song2 = createSong(title = "abc2", artistId = artist2.id)
+          val artist1 = persisted(createArtist("oranges"))
+          val artist2 = persisted(createArtist("pears"))
+          val song1 = persisted(createSong(title = "abc1", artistId = artist1.id))
+          val song2 = persisted(createSong(title = "abc2", artistId = artist2.id))
 
-          withPersisted(artist1, artist2, song1, song2)
-            .assertThatQuery("artist:PEAR song:abc")
+          assertThatQuery("artist:PEAR song:abc")
             .containsExactlySongs(song2)
         }
       }
@@ -182,24 +179,24 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
     }
   }
 
-  private def withPersisted(storedEntities: Entity*)(
-      implicit complexQueryFilterFactory: ComplexQueryFilterFactory,
-      entityAccess: FakeJsEntityAccess) = {
-    storedEntities map {
+  private def persisted[E <: Entity](entity: E)(implicit entityAccess: FakeJsEntityAccess): E = {
+    entity match {
       case e: Artist => entityAccess.addRemotelyAddedEntities(e)
       case e: Album  => entityAccess.addRemotelyAddedEntities(e)
       case e: Song   => entityAccess.addRemotelyAddedEntities(e)
     }
+    entity
+  }
 
+  private def assertThatQuery(query: String)(implicit complexQueryFilterFactory: ComplexQueryFilterFactory,
+                                             entityAccess: FakeJsEntityAccess) = {
     new Object {
-      def assertThatQuery(query: String) = new Object {
-        def containsExactlySongs(expected: Song*): Future[Unit] = async {
-          val filter = await(complexQueryFilterFactory.fromQuery(query).getSongFilter())
-          assertContainSameElements[Song](
-            entityAccess.newQuerySync[Song]().filter(filter).data(),
-            expected,
-            properties = Seq(_.title))
-        }
+      def containsExactlySongs(expected: Song*): Future[Unit] = async {
+        val filter = await(complexQueryFilterFactory.fromQuery(query).getSongFilter())
+        assertContainSameElements[Song](
+          entityAccess.newQuerySync[Song]().filter(filter).data(),
+          expected,
+          properties = Seq(_.title))
       }
 
       private def assertContainSameElements[E](iterable1: Iterable[E],
