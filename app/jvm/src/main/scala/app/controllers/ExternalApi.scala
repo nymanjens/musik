@@ -35,7 +35,15 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
 
     rescanMediaLibraryAsync()
 
-    Ok(s"OK")
+    Ok(s"""
+         |OK
+         |
+         |Parsing has started asynchronously.
+         |
+         |View progress with the following command:
+         |
+         |  tail -f /tmp/musik-logs
+       """.stripMargin.trim)
   }
 
   private def rescanMediaLibraryAsync(): Future[_] = Future {
@@ -47,13 +55,22 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
         .data()
         .map(song => joinPaths(albumIdToRelativePath(song.albumId), song.filename))
     }
+    println(s"  Found ${oldRelativePaths.size} existing songs.")
+
     val addedAndRemovedMedia =
       mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)
+    println(
+      s"  Found ${oldRelativePaths.size} existing songs, " +
+        s"${addedAndRemovedMedia.added.size} added files " +
+        s"and ${addedAndRemovedMedia.removedRelativePaths.size} removed files.")
+
     val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(addedAndRemovedMedia.added)
     val parsedAlbums = albumParser.parse(addedAndRemovedMedia.added, artistAssigner)
+    println(s"  Parsed ${parsedAlbums.size} albums.")
 
     storedMediaSyncer.addEntitiesFromParsedAlbums(parsedAlbums)
     storedMediaSyncer.removeEntitiesFromRelativeSongPaths(addedAndRemovedMedia.removedRelativePaths)
+    println(s"  Done! Added ${parsedAlbums.size} albums.")
   }
 
   // ********** private helper methods ********** //
