@@ -35,7 +35,6 @@ final class Module(implicit i18n: I18n,
                    complexQueryStoreFactory: ComplexQueryStoreFactory,
 ) {
 
-  implicit lazy val home = new Home
   implicit lazy val playlist = new Playlist
   implicit lazy val allArtists = new AllArtists
   implicit lazy val artistDetail = new ArtistDetail

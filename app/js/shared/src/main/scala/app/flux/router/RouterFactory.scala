@@ -54,7 +54,7 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
         (emptyRule
 
           | staticRoute(RouterFactory.pathPrefix, StandardPages.Root)
-            ~> redirectToPage(AppPages.Home)(Redirect.Replace)
+            ~> redirectToPage(AppPages.Playlist)(Redirect.Replace)
 
           | staticRuleFromPage(StandardPages.UserProfile, reactAppModule.userProfile.apply)
 
@@ -63,8 +63,6 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
           | dynamicRuleFromPage(_ ~ query.caseClass[StandardPages.Search]) { (page, ctl) =>
             reactAppModule.searchResults(page.query, ctl)
           }
-
-          | staticRuleFromPage(AppPages.Home, reactAppModule.home.apply)
 
           | staticRuleFromPage(AppPages.Playlist, reactAppModule.playlist.apply)
 

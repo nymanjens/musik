@@ -22,7 +22,6 @@ private[app] final class Menu(implicit playStatusStore: PlayStatusStore, sbadmin
     sbadminMenu(
       menuItems = Seq(
         Seq(
-          MenuItem("<u>H</u>ome", AppPages.Home, shortcuts = Seq("shift+alt+h")),
           MenuItem("<u>P</u>laylist", AppPages.Playlist, shortcuts = Seq("shift+alt+p")),
           MenuItem("<u>A</u>rtists", AppPages.Artists, shortcuts = Seq("shift+alt+a")),
         ),

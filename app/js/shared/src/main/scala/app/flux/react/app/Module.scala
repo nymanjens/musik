@@ -51,7 +51,6 @@ final class Module(implicit i18n: I18n,
   implicit lazy val userProfile = userManagementModule.userProfile
   implicit lazy val userAdministration = userManagementModule.userAdministration
 
-  implicit lazy val home = mediaModule.home
   implicit lazy val playlist = mediaModule.playlist
   implicit lazy val allArtists = mediaModule.allArtists
   implicit lazy val artistDetail = mediaModule.artistDetail
