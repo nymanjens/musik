@@ -147,6 +147,20 @@ object ComplexQueryFilterFactoryTest extends TestSuite {
           assertThatQuery("album:BCD").containsExactlyAlbums(album1)
         }
 
+        "album year filter" - {
+          val album1 = persisted(createAlbum(year = 1990))
+          val album2 = persisted(createAlbum(year = 1991))
+
+          assertThatQuery("y:1991").containsExactlyAlbums(album2)
+        }
+
+        "album path filter" - {
+          val album1 = persisted(createAlbum(relativePath = "/a/b/c"))
+          val album2 = persisted(createAlbum(relativePath = "/x/y/z"))
+
+          assertThatQuery("path:Y/Z").containsExactlyAlbums(album2)
+        }
+
         "artist name filter" - {
           val artist1 = persisted(createArtist(name = "berries"))
           val artist2 = persisted(createArtist(name = "apples"))
