@@ -61,20 +61,22 @@ object TestObjects {
   def testUser: User = testUserA
   def testUserRedacted: User = testUser.copy(passwordHash = "<redacted>")
 
-  def testUserPrototype = UserPrototype.create(
-    id = testUser.id,
-    loginName = testUser.loginName,
-    plainTextPassword = "dlkfjasfd",
-    name = testUser.name,
-    isAdmin = testUser.isAdmin)
+  def testUserPrototype =
+    UserPrototype.create(
+      id = testUser.id,
+      loginName = testUser.loginName,
+      plainTextPassword = "dlkfjasfd",
+      name = testUser.name,
+      isAdmin = testUser.isAdmin)
 
   def testArtist = Artist(name = "Test Artist", idOption = Some(128902378))
-  def testAlbum = Album(
-    relativePath = "folderA/folderB",
-    title = "Test Album",
-    artistId = Some(testArtist.id),
-    year = Some(1999),
-    idOption = Some(91723969))
+  def testAlbum =
+    Album(
+      relativePath = "folderA/folderB",
+      title = "Test Album",
+      artistId = Some(testArtist.id),
+      year = Some(1999),
+      idOption = Some(91723969))
   def testSong = Song(
     filename = "test-song.mp3",
     title = "Test Song",
@@ -110,4 +112,47 @@ object TestObjects {
     i18nMessages = Map("abc" -> "def"),
     nextUpdateToken = testUpdateToken
   )
+
+  def createArtist(
+      name: String = "test artist",
+  ): Artist = {
+    Artist(
+      name = name,
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
+
+  def createAlbum(
+      relativePath: String = "folderA/111",
+      title: String = "Random Test Album",
+      artistId: Long = -1,
+      year: Int = -1,
+  ): Album = {
+    Album(
+      relativePath = relativePath,
+      title = title,
+      artistId = if (artistId == -1) None else Some(artistId),
+      year = if (year == -1) None else Some(year),
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
+
+  def createSong(
+      filename: String = "test-song.mp3",
+      title: String = "Test Song",
+      albumId: Long = 129380,
+      artistId: Long = -1,
+      trackNumber: Int = 91263,
+  ): Song = {
+    Song(
+      filename = filename,
+      title = title,
+      albumId = albumId,
+      artistId = if (artistId == -1) None else Some(artistId),
+      trackNumber = trackNumber,
+      duration = 2.minutes,
+      disc = 1,
+      idOption = Some(EntityModification.generateRandomId()),
+    )
+  }
 }

@@ -9,6 +9,7 @@ import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.stores.media.AlbumDetailStoreFactory
 import app.flux.stores.media.AllArtistsStore
 import app.flux.stores.media.ArtistDetailStoreFactory
+import app.flux.stores.media.ComplexQueryStoreFactory
 import app.flux.stores.media.PlayStatusStore
 import app.flux.stores.media.PlaylistStore
 import hydro.common.time.Clock
@@ -30,11 +31,14 @@ final class Module(implicit i18n: I18n,
                    playStatusStore: PlayStatusStore,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
-                   artistDetailStoreFactory: ArtistDetailStoreFactory) {
+                   artistDetailStoreFactory: ArtistDetailStoreFactory,
+                   complexQueryStoreFactory: ComplexQueryStoreFactory,
+) {
 
   implicit lazy val home = new Home
   implicit lazy val playlist = new Playlist
   implicit lazy val allArtists = new AllArtists
   implicit lazy val artistDetail = new ArtistDetail
   implicit lazy val albumDetail = new AlbumDetail
+  implicit lazy val searchResults = new SearchResults
 }

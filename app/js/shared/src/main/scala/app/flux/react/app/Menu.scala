@@ -27,7 +27,7 @@ private[app] final class Menu(implicit playStatusStore: PlayStatusStore, sbadmin
           MenuItem("<u>A</u>rtists", AppPages.Artists, shortcuts = Seq("shift+alt+a")),
         ),
       ),
-      enableSearch = false,
+      enableSearch = true,
       router = router,
       configureAdditionalKeyboardShortcuts = () => configureAdditionalKeyboardShortcuts(),
     )

@@ -40,6 +40,7 @@ final class ClientAppModule(implicit getInitialDataResponse: GetInitialDataRespo
   implicit private val allArtistsStore = fluxStoresModule.allArtistsStore
   implicit private val albumDetailStoreFactory = fluxStoresModule.albumDetailStoreFactory
   implicit private val artistDetailStoreFactory = fluxStoresModule.artistDetailStoreFactory
+  implicit private val complexQueryStoreFactory = fluxStoresModule.complexQueryStoreFactory
 
   // Create other Flux modules
   implicit private val reactAppModule = new app.flux.react.app.Module

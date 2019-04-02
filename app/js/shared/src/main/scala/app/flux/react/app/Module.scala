@@ -24,6 +24,7 @@ final class Module(implicit i18n: I18n,
                    allArtistsStore: AllArtistsStore,
                    albumDetailStoreFactory: AlbumDetailStoreFactory,
                    artistDetailStoreFactory: ArtistDetailStoreFactory,
+                   complexQueryStoreFactory: ComplexQueryStoreFactory,
                    dispatcher: Dispatcher,
                    clock: Clock) {
 
@@ -55,4 +56,5 @@ final class Module(implicit i18n: I18n,
   implicit lazy val allArtists = mediaModule.allArtists
   implicit lazy val artistDetail = mediaModule.artistDetail
   implicit lazy val albumDetail = mediaModule.albumDetail
+  implicit lazy val searchResults = mediaModule.searchResults
 }

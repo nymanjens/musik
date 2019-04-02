@@ -35,6 +35,7 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
     RouterConfigDsl[Page]
       .buildConfig { dsl =>
         import dsl._
+        val query: RouteB[String] = "?q=" ~ string(".+")
 
         def staticRuleFromPage(page: Page, renderer: RouterContext => VdomElement): dsl.Rule = {
           val path = RouterFactory.pathPrefix + page.getClass.getSimpleName.toLowerCase
@@ -58,6 +59,10 @@ private[router] final class RouterFactory(implicit reactAppModule: app.flux.reac
           | staticRuleFromPage(StandardPages.UserProfile, reactAppModule.userProfile.apply)
 
           | staticRuleFromPage(StandardPages.UserAdministration, reactAppModule.userAdministration.apply)
+
+          | dynamicRuleFromPage(_ ~ query.caseClass[StandardPages.Search]) { (page, ctl) =>
+            reactAppModule.searchResults(page.query, ctl)
+          }
 
           | staticRuleFromPage(AppPages.Home, reactAppModule.home.apply)
 

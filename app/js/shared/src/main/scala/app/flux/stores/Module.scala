@@ -4,6 +4,7 @@ import app.api.ScalaJsApi.GetInitialDataResponse
 import app.api.ScalaJsApiClient
 import hydro.common.I18n
 import app.flux.stores.media._
+import app.flux.stores.media.helpers.ComplexQueryFilterFactory
 import app.models.user.User
 import hydro.common.time.Clock
 import hydro.flux.action.Dispatcher
@@ -28,9 +29,12 @@ final class Module(implicit i18n: I18n,
   implicit val pendingModificationsStore = new PendingModificationsStore
   implicit val applicationIsOnlineStore = new ApplicationIsOnlineStore
 
+  implicit private val complexQueryFilterFactory = new ComplexQueryFilterFactory
+
   implicit val playlistStore = new PlaylistStore
   implicit val playStatusStore = new PlayStatusStore
   implicit val allArtistsStore = new AllArtistsStore
   implicit val albumDetailStoreFactory = new AlbumDetailStoreFactory
   implicit val artistDetailStoreFactory = new ArtistDetailStoreFactory
+  implicit val complexQueryStoreFactory = new ComplexQueryStoreFactory
 }
