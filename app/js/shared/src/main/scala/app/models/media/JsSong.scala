@@ -17,9 +17,7 @@ case class JsSong(filename: String,
                   trackNumber: Int,
                   duration: FiniteDuration,
                   disc: Int,
-                  id: Long) {
-  def relativePath: String = RelativePaths.joinPaths(album.relativePath, filename)
-}
+                  id: Long)
 
 object JsSong {
   def fromEntityId(songId: Long)(implicit entityAccess: EntityAccess): Future[JsSong] = async {

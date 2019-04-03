@@ -92,7 +92,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
               ),
               uielements.media.RawMusicPlayer(
                 ref = musicPlayerRef,
-                src = s"/media/${playlistEntry.song.relativePath}",
+                src = s"/media/song/${playlistEntry.song.id}/",
                 playing = state.storeState.hasStarted,
                 onEnded = () => playStatusStore.indicateSongEnded(),
                 onPlayingChanged = playing => playStatusStore.togglePlay(playing),

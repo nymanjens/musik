@@ -5,10 +5,13 @@ import java.nio.file.Paths
 
 import akka.stream.scaladsl.StreamConverters
 import app.api.ScalaJsApiServerFactory
+import app.common.RelativePaths
 import app.models.access.JvmEntityAccess
+import app.models.media.Album
+import app.models.media.Song
 import com.google.inject.Inject
-import hydro.controllers.helpers.AuthenticatedAction
 import hydro.common.time.Clock
+import hydro.controllers.helpers.AuthenticatedAction
 import play.api.i18n.I18nSupport
 import play.api.i18n.MessagesApi
 import play.api.mvc._
@@ -24,14 +27,18 @@ final class Application @Inject()(implicit override val messagesApi: MessagesApi
     extends AbstractController(components)
     with I18nSupport {
 
-  def mediaAssets(relativePath: String) = AuthenticatedAction { implicit user => implicit request =>
+  def songFile(songId: Long) = AuthenticatedAction { implicit user => implicit request =>
+    val song = entityAccess.newQuerySync[Song]().findById(songId)
+    val album = entityAccess.newQuerySync[Album]().findById(song.albumId)
+    val relativePath = RelativePaths.joinPaths(album.relativePath, song.filename)
+
     val mediaFolderPath =
       Paths.get(
         playConfiguration
           .get[String]("app.media.mediaFolder")
           .replaceFirst("^~", System.getProperty("user.home")))
 
-    val assetPath = mediaFolderPath resolve UriEncoding.decodePath(relativePath, "utf-8")
+    val assetPath = mediaFolderPath resolve relativePath
 
     if (!Files.exists(assetPath)) {
       NotFound(s"Could not find $assetPath")
