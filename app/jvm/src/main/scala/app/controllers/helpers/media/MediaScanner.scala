@@ -102,7 +102,7 @@ final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configur
 
     def proceedAndMaybePrint(someStringToPrint: String): Unit = {
       if (currentStep % printEveryNSteps == 0) {
-        print(s"  Scanning file ${currentStep + 1} of $total: $someStringToPrint")
+        println(s"  Scanning file ${currentStep + 1} of $total: $someStringToPrint")
       }
       currentStep += 1
     }
