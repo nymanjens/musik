@@ -38,50 +38,55 @@ final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configur
       } yield mediaFolder.relativize(path).toString
     }.toVector
 
-    val addedMedia: Seq[MediaFile] = for {
-      relativePath <- scannedRelativePaths
-      if !(oldRelativePaths contains relativePath)
-    } yield {
-      val path = mediaFolder resolve relativePath
-      try {
-        val audioFile = AudioFileIO.read(path.toFile)
-        val maybeTag = Option(audioFile.getTag)
-        val audioHeader = audioFile.getAudioHeader
+    val newRelativePaths = scannedRelativePaths.filterNot(oldRelativePaths)
 
-        def getFirstInTag(fieldKey: FieldKey): Option[String] = maybeTag flatMap { tag =>
-          tag.getFirst(fieldKey) match {
-            case "" => None
-            case v  => Some(v)
+    println(s"  Starting to scan ${newRelativePaths.size} non-indexed files.")
+    val progressPrinter = new ProgressPrinter(total = newRelativePaths.size, printEveryNSteps = 100)
+
+    val addedMedia: Seq[MediaFile] =
+      for (relativePath <- newRelativePaths) yield {
+        progressPrinter.proceedAndMaybePrint(relativePath)
+
+        val path = mediaFolder resolve relativePath
+        try {
+          val audioFile = AudioFileIO.read(path.toFile)
+          val maybeTag = Option(audioFile.getTag)
+          val audioHeader = audioFile.getAudioHeader
+
+          def getFirstInTag(fieldKey: FieldKey): Option[String] = maybeTag flatMap { tag =>
+            tag.getFirst(fieldKey) match {
+              case "" => None
+              case v  => Some(v)
+            }
           }
-        }
 
-        MediaFile(
-          relativePath = relativePath,
-          title = getFirstInTag(FieldKey.TITLE),
-          album = getFirstInTag(FieldKey.ALBUM),
-          artist = getFirstInTag(FieldKey.ARTIST),
-          trackNumber = getFirstInTag(FieldKey.TRACK),
-          duration = audioHeader.getTrackLength.seconds,
-          year = getFirstInTag(FieldKey.YEAR),
-          disc = getFirstInTag(FieldKey.DISC_NO),
-          albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
-        )
-      } catch {
-        case _: CannotReadException | _: IOException | _: TagException | _: ReadOnlyFileException |
-            _: InvalidAudioFrameException =>
           MediaFile(
             relativePath = relativePath,
-            title = None,
-            album = None,
-            artist = None,
-            trackNumber = None,
-            duration = defaultDuration,
-            year = None,
-            disc = None,
-            albumartist = None
+            title = getFirstInTag(FieldKey.TITLE),
+            album = getFirstInTag(FieldKey.ALBUM),
+            artist = getFirstInTag(FieldKey.ARTIST),
+            trackNumber = getFirstInTag(FieldKey.TRACK),
+            duration = audioHeader.getTrackLength.seconds,
+            year = getFirstInTag(FieldKey.YEAR),
+            disc = getFirstInTag(FieldKey.DISC_NO),
+            albumartist = getFirstInTag(FieldKey.ALBUM_ARTIST)
           )
+        } catch {
+          case _: CannotReadException | _: IOException | _: TagException | _: ReadOnlyFileException |
+              _: InvalidAudioFrameException =>
+            MediaFile(
+              relativePath = relativePath,
+              title = None,
+              album = None,
+              artist = None,
+              trackNumber = None,
+              duration = defaultDuration,
+              year = None,
+              disc = None,
+              albumartist = None
+            )
+        }
       }
-    }
 
     AddedAndRemovedMedia(
       added = addedMedia,
@@ -90,6 +95,17 @@ final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configur
 
   private def getLowercaseExtension(path: Path): String = {
     Splitter.on('.').split(path.getFileName.toString).last.toLowerCase
+  }
+
+  private class ProgressPrinter(total: Int, printEveryNSteps: Int) {
+    private var currentStep = 0
+
+    def proceedAndMaybePrint(someStringToPrint: String): Unit = {
+      if (currentStep % printEveryNSteps == 0) {
+        print(s"  Scanning file ${currentStep + 1} of $total: $someStringToPrint")
+      }
+      currentStep += 1
+    }
   }
 }
 object MediaScanner {

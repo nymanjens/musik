@@ -47,30 +47,37 @@ final class ExternalApi @Inject()(implicit override val messagesApi: MessagesApi
   }
 
   private def rescanMediaLibraryAsync(): Future[_] = Future {
-    val oldRelativePaths = {
-      val albumIdToRelativePath =
-        entityAccess.newQuerySync[Album]().data().map(album => album.id -> album.relativePath).toMap
-      entityAccess
-        .newQuerySync[Song]()
-        .data()
-        .map(song => joinPaths(albumIdToRelativePath(song.albumId), song.filename))
+    try {
+
+      val oldRelativePaths = {
+        val albumIdToRelativePath =
+          entityAccess.newQuerySync[Album]().data().map(album => album.id -> album.relativePath).toMap
+        entityAccess
+          .newQuerySync[Song]()
+          .data()
+          .map(song => joinPaths(albumIdToRelativePath(song.albumId), song.filename))
+      }
+      println(s"  Found ${oldRelativePaths.size} existing songs.")
+
+      val addedAndRemovedMedia =
+        mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)
+      println(
+        s"  Found ${oldRelativePaths.size} existing songs, " +
+          s"${addedAndRemovedMedia.added.size} added files " +
+          s"and ${addedAndRemovedMedia.removedRelativePaths.size} removed files.")
+
+      val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(addedAndRemovedMedia.added)
+      val parsedAlbums = albumParser.parse(addedAndRemovedMedia.added, artistAssigner)
+      println(s"  Parsed ${parsedAlbums.size} albums.")
+
+      storedMediaSyncer.addEntitiesFromParsedAlbums(parsedAlbums)
+      storedMediaSyncer.removeEntitiesFromRelativeSongPaths(addedAndRemovedMedia.removedRelativePaths)
+      println(s"  Done! Added ${parsedAlbums.size} albums.")
+    } catch {
+      case throwable: Throwable =>
+        println(s"  Caught exception: $throwable")
+        throwable.printStackTrace()
     }
-    println(s"  Found ${oldRelativePaths.size} existing songs.")
-
-    val addedAndRemovedMedia =
-      mediaScanner.scanAddedAndRemovedMedia(oldRelativePaths = oldRelativePaths.toSet)
-    println(
-      s"  Found ${oldRelativePaths.size} existing songs, " +
-        s"${addedAndRemovedMedia.added.size} added files " +
-        s"and ${addedAndRemovedMedia.removedRelativePaths.size} removed files.")
-
-    val artistAssigner = artistAssignerFactory.fromDbAndMediaFiles(addedAndRemovedMedia.added)
-    val parsedAlbums = albumParser.parse(addedAndRemovedMedia.added, artistAssigner)
-    println(s"  Parsed ${parsedAlbums.size} albums.")
-
-    storedMediaSyncer.addEntitiesFromParsedAlbums(parsedAlbums)
-    storedMediaSyncer.removeEntitiesFromRelativeSongPaths(addedAndRemovedMedia.removedRelativePaths)
-    println(s"  Done! Added ${parsedAlbums.size} albums.")
   }
 
   // ********** private helper methods ********** //
