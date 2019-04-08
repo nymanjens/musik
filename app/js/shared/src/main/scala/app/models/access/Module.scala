@@ -8,6 +8,7 @@ import app.models.media.PlayStatus
 import app.models.media.PlaylistEntry
 import app.models.media.Song
 import app.models.user.User
+import hydro.common.time.Clock
 import hydro.models.access.EntityModificationPushClientFactory
 import hydro.models.access.HybridRemoteDatabaseProxy
 import hydro.models.access.JsEntityAccess
@@ -18,6 +19,7 @@ import hydro.models.access.LocalDatabaseImpl.SecondaryIndexFunction
 import scala.collection.immutable.Seq
 
 final class Module(implicit user: User,
+                   clock: Clock,
                    scalaJsApiClient: ScalaJsApiClient,
                    getInitialDataResponse: GetInitialDataResponse) {
 
