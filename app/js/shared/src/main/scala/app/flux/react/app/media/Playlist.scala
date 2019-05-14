@@ -121,16 +121,22 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
     }
 
     private def calculateColorClasses(entries: Seq[JsPlaylistEntry]): Seq[String] = {
-      val colors = Seq("color-a", "color-b")
-      var colorsIndex: Int = 0
-      var lastAlbumId: Long = entries.headOption.map(_.song.album.id) getOrElse -1L
-      for (entry <- entries) yield {
-        if (entry.song.album.id != lastAlbumId) {
-          lastAlbumId = entry.song.album.id
-          colorsIndex = (colorsIndex + 1) % colors.size
+      def inner(entries: Seq[JsPlaylistEntry]): Seq[String] = {
+        val colors = Seq("color-a", "color-b")
+        var colorsIndex: Int = 0
+        var lastAlbumId: Long = entries.headOption.map(_.song.album.id) getOrElse -1L
+        for (entry <- entries) yield {
+          if (entry.song.album.id != lastAlbumId) {
+            lastAlbumId = entry.song.album.id
+            colorsIndex = (colorsIndex + 1) % colors.size
+          }
+          colors(colorsIndex)
         }
-        colors(colorsIndex)
       }
+
+      // Choose colors from end to start (reverse list) so that the colors don't change when the already
+      // played entries get truncated
+      inner(entries.reverse).reverse
     }
 
     private def truncatePlayedSongs(entries: Seq[JsPlaylistEntry],
