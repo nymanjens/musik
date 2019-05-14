@@ -1,5 +1,7 @@
 package app.flux.react.app.media
 
+import java.lang.Math.max
+
 import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.stores.media.PlaylistStore
 import app.flux.stores.media.PlayStatusStore
@@ -52,7 +54,11 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
 
       <.span(
         pageHeader(router.currentPage),
-        state.maybeEntries match {
+        state.maybeEntries.map(
+          entries =>
+            truncatePlayedSongs(
+              entries = entries,
+              maybeCurrentEntry = state.playStatusStoreState.currentPlaylistEntry)) match {
           case None =>
             <.div("Loading...")
           case Some(entries) =>
@@ -124,6 +130,20 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
           colorsIndex = (colorsIndex + 1) % colors.size
         }
         colors(colorsIndex)
+      }
+    }
+
+    private def truncatePlayedSongs(entries: Seq[JsPlaylistEntry],
+                                    maybeCurrentEntry: Option[JsPlaylistEntry]): Seq[JsPlaylistEntry] = {
+      val maxAmountOfPlayedSongs = 3
+
+      maybeCurrentEntry match {
+        case None => entries
+        case Some(currentEntry) =>
+          entries.indexWhere(_.id == currentEntry.id) match {
+            case -1           => entries
+            case currentIndex => entries.drop(max(0, currentIndex - maxAmountOfPlayedSongs))
+          }
       }
     }
 
