@@ -23,7 +23,8 @@ final class Module(implicit user: User,
                    scalaJsApiClient: ScalaJsApiClient,
                    getInitialDataResponse: GetInitialDataResponse) {
 
-  implicit val secondaryIndexFunction = Module.secondaryIndexFunction
+  implicit private val secondaryIndexFunction = Module.secondaryIndexFunction
+
   implicit val entityModificationPushClientFactory: EntityModificationPushClientFactory =
     new EntityModificationPushClientFactory()
 
