@@ -5,7 +5,7 @@ import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import app.flux.react.uielements
 import app.flux.stores.media.AlbumDetailStoreFactory
 import hydro.common.I18n
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.uielements.Bootstrap

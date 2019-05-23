@@ -3,8 +3,8 @@ package app.flux.react.uielements.media
 import app.flux.react.uielements
 import app.flux.router.AppPages
 import app.flux.stores.media.PlayStatusStore
-import hydro.common.LoggingUtils.LogExceptionsCallback
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.LogExceptionsCallback
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.^^
 import hydro.flux.react.uielements.Bootstrap

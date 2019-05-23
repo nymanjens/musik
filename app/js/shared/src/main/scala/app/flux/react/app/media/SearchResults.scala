@@ -2,7 +2,7 @@ package app.flux.react.app.media
 
 import app.flux.react.uielements
 import app.flux.stores.media.ComplexQueryStoreFactory
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.uielements.PageHeader

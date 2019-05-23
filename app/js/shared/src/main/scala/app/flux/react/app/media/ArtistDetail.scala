@@ -4,7 +4,7 @@ import hydro.flux.react.ReactVdomUtils.<<
 import hydro.flux.react.ReactVdomUtils.^^
 import app.flux.react.uielements
 import app.flux.stores.media.ArtistDetailStoreFactory
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext

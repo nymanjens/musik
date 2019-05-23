@@ -2,7 +2,7 @@ package app.flux.react.app
 
 import app.flux.router.AppPages
 import app.flux.stores.media.PlayStatusStore
-import hydro.common.LoggingUtils.LogExceptionsCallback
+import hydro.common.JsLoggingUtils.LogExceptionsCallback
 import hydro.flux.react.uielements.SbadminMenu
 import hydro.flux.react.uielements.SbadminMenu.MenuItem
 import hydro.flux.router.RouterContext

@@ -6,7 +6,7 @@ import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.stores.media.PlaylistStore
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsPlaylistEntry
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.common.OrderToken
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent

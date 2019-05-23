@@ -3,7 +3,7 @@ package app.flux.react.app.media
 import app.flux.react.uielements.media.ArtistDiv
 import app.flux.stores.media.AllArtistsStore
 import app.models.media.JsArtist
-import hydro.common.LoggingUtils.logExceptions
+import hydro.common.JsLoggingUtils.logExceptions
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext
