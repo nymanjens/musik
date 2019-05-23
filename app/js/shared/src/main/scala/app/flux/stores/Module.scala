@@ -9,6 +9,7 @@ import app.models.user.User
 import hydro.common.time.Clock
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.ApplicationIsOnlineStore
+import hydro.flux.stores.LocalDatabaseHasBeenLoadedStore
 import hydro.flux.stores.PageLoadingStateStore
 import hydro.flux.stores.UserStore
 import hydro.models.access.EntityModificationPushClientFactory
@@ -28,6 +29,7 @@ final class Module(implicit i18n: I18n,
   implicit val pageLoadingStateStore = new PageLoadingStateStore
   implicit val pendingModificationsStore = new PendingModificationsStore
   implicit val applicationIsOnlineStore = new ApplicationIsOnlineStore
+  implicit val localDatabaseHasBeenLoadedStore = new LocalDatabaseHasBeenLoadedStore
 
   implicit private val complexQueryFilterFactory = new ComplexQueryFilterFactory
 
