@@ -5,10 +5,8 @@ import hydro.flux.react.uielements.SbadminLayout
 import hydro.flux.router.RouterContext
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.html_<^._
-import hydro.flux.react.uielements.Bootstrap.Variant
-import hydro.flux.react.uielements.Bootstrap.Size
-import hydro.flux.react.uielements.Bootstrap
 
+import scala.collection.immutable.Seq
 import scala.scalajs.js
 
 final class Layout(implicit menu: Menu,
@@ -22,11 +20,8 @@ final class Layout(implicit menu: Menu,
       sbadminLayout(
         title = "Playlist Keeper",
         leftMenu = menu(),
-        pageContent = <.span(
-          children,
-          <.hr(),
-          <.span(^.dangerouslySetInnerHtml := "&copy;"),
-          " 2018 Jens Nyman",
+        pageContent = <.span(children),
+        extraFooter = Seq(
           musicPlayerDiv(),
           // Add extra whitespace to make sure the MusicPlayerDiv isn't blocking any content
           <.div(^.style := js.Dictionary("paddingTop" -> "200px")),
