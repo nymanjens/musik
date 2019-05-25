@@ -22,11 +22,8 @@ final class Layout(implicit menu: Menu,
       sbadminLayout(
         title = "Playlist Keeper",
         leftMenu = menu(),
-        pageContent = <.span(
-          children,
-          <.hr(),
-          <.span(^.dangerouslySetInnerHtml := "&copy;"),
-          " 2018 Jens Nyman",
+        pageContent = <.span(children),
+        extraFooter = Seq(
           musicPlayerDiv(),
           // Add extra whitespace to make sure the MusicPlayerDiv isn't blocking any content
           <.div(^.style := js.Dictionary("paddingTop" -> "200px")),
