@@ -73,7 +73,7 @@ final class MediaScanner @Inject()(implicit playConfiguration: play.api.Configur
           )
         } catch {
           case _: CannotReadException | _: IOException | _: TagException | _: ReadOnlyFileException |
-              _: InvalidAudioFrameException | _ : UnsupportedOperationException =>
+              _: InvalidAudioFrameException | _: UnsupportedOperationException =>
             MediaFile(
               relativePath = relativePath,
               title = None,
