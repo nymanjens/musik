@@ -26,6 +26,8 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
     extends RemoteDatabaseProxy {
 
   override def queryExecutor[E <: Entity: EntityType]() = {
+    // TODO(partial-sync): Add hook for partially synced types
+
     futureLocalDatabase.option() match {
       case None =>
         new DbQueryExecutor.Async[E] {
@@ -106,6 +108,8 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
 
   override def startCheckingForModifiedEntityUpdates(
       maybeNewEntityModificationsListener: Seq[EntityModification] => Future[Unit]): Unit = {
+    // TODO(partial-sync): Add hook to filter away irrelevant partially synced modifications
+
     val temporaryPushClient = hydroPushSocketClientFactory.createClient(
       name = "HydroPushSocket[temporary]",
       updateToken = getInitialDataResponse.nextUpdateToken,
@@ -198,7 +202,7 @@ object HybridRemoteDatabaseProxy {
         await(db.setSingletonValue(VersionKey, localDatabaseAndEntityVersion))
 
         // Add all entities
-        val allEntitiesResponse = await(apiClient.getAllEntities(EntityTypes.all))
+        val allEntitiesResponse = await(apiClient.getAllEntities(EntityTypes.fullySyncedLocally))
         val _ = await(Future.sequence {
           for (entityType <- allEntitiesResponse.entityTypes) yield {
             def addAllToDb[E <: Entity](implicit entityType: EntityType[E]) =
@@ -206,6 +210,7 @@ object HybridRemoteDatabaseProxy {
             addAllToDb(entityType)
           }
         })
+        // TODO(partial-sync): Add hook for partially synced types
 
         await(db.setSingletonValue(NextUpdateTokenKey, allEntitiesResponse.nextUpdateToken))
 
