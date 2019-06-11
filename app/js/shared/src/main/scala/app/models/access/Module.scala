@@ -26,9 +26,7 @@ final class Module(implicit user: User,
                    getInitialDataResponse: GetInitialDataResponse) {
 
   implicit private val secondaryIndexFunction = Module.secondaryIndexFunction
-//  implicit private val entitySyncLogic = new MusikEntitySyncLogic()
-  implicit private val entitySyncLogic =
-    new EntitySyncLogic.FullySynced(EntityTypes.fullySyncedLocally)
+  implicit private val entitySyncLogic = new MusikEntitySyncLogic()
 
   implicit val hydroPushSocketClientFactory: HydroPushSocketClientFactory =
     new HydroPushSocketClientFactory()
