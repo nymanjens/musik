@@ -210,7 +210,7 @@ object HybridRemoteDatabaseProxy {
         // Reset database
         await(db.resetAndInitialize())
 
-        // Set singletons
+        // Set version
         await(db.setSingletonValue(VersionKey, localDatabaseAndEntityVersion))
 
         // Populate with entities
