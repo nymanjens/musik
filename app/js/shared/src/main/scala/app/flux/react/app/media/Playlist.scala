@@ -3,6 +3,7 @@ package app.flux.react.app.media
 import java.lang.Math.max
 
 import app.flux.react.uielements.media.PlaylistEntryDiv
+import app.flux.react.uielements.media.PlaylistEntryDiv.SongPlacement
 import app.flux.stores.media.PlaylistStore
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsPlaylistEntry
@@ -73,8 +74,14 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                       .zipWithIndex
                       .map {
                         case ((entry, colorClass), index) =>
-                          val isCurrentSong =
-                            state.playStatusStoreState.currentPlaylistEntry.map(_.id) == Some(entry.id)
+                          val songPlacement =
+                            state.playStatusStoreState.currentPlaylistEntry.map(_.id) match {
+                              case Some(entryId) if entryId == entry.id => SongPlacement.Current
+                              case Some(entryId) =>
+                                if (index < entries.map(_.id).indexOf(entryId)) SongPlacement.BeforeCurrent
+                                else SongPlacement.AfterCurrent
+                              case None => SongPlacement.Unknown
+                            }
 
                           ReactBeautifulDnd
                             .Draggable(key = entry.id, draggableId = entry.id.toString, index = index) {
@@ -88,8 +95,8 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
                                   rawTagMod("ref", provided.innerRef),
                                   playlistEntryDiv(
                                     entry,
-                                    isCurrentSong = isCurrentSong,
-                                    isNowPlaying = isCurrentSong && state.playStatusStoreState.hasStarted),
+                                    songPlacement = songPlacement,
+                                    isNowPlaying = songPlacement == SongPlacement.Current && state.playStatusStoreState.hasStarted),
                                 )
                             }
                       }

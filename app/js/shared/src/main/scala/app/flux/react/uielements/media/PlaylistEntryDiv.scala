@@ -1,6 +1,7 @@
 package app.flux.react.uielements.media
 
 import app.flux.action.AppActions
+import app.flux.react.uielements.media.PlaylistEntryDiv.SongPlacement
 import app.flux.router.AppPages
 import app.flux.stores.media.PlayStatusStore
 import app.models.media.JsPlaylistEntry
@@ -20,17 +21,18 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
     extends HydroReactComponent.Stateless {
 
   // **************** API ****************//
-  def apply(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean, isNowPlaying: Boolean)(
+  def apply(playlistEntry: JsPlaylistEntry, songPlacement: SongPlacement, isNowPlaying: Boolean)(
       implicit router: RouterContext): VdomElement = {
-    component.apply(Props(playlistEntry, isCurrentSong = isCurrentSong, isNowPlaying = isNowPlaying))
+    component.apply(Props(playlistEntry, songPlacement = songPlacement, isNowPlaying = isNowPlaying))
   }
 
   // **************** Implementation of HydroReactComponent methods ****************//
   override protected val statelessConfig = StatelessComponentConfig(backendConstructor = new Backend(_))
 
   // **************** Implementation of HydroReactComponent types ****************//
-  protected case class Props(playlistEntry: JsPlaylistEntry, isCurrentSong: Boolean, isNowPlaying: Boolean)(
-      implicit val router: RouterContext)
+  protected case class Props(playlistEntry: JsPlaylistEntry,
+                             songPlacement: SongPlacement,
+                             isNowPlaying: Boolean)(implicit val router: RouterContext)
 
   protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
 
@@ -57,10 +59,25 @@ final class PlaylistEntryDiv(implicit dispatcher: Dispatcher, playStatusStore: P
         router = router,
         song = props.playlistEntry.song,
         buttons = buttons,
-        isCurrentSong = props.isCurrentSong,
+        isCurrentSong = props.songPlacement == SongPlacement.Current,
         isNowPlaying = props.isNowPlaying)(
         ^.className := "playlist-entry-div",
+        ^^.ifThen(props.songPlacement == SongPlacement.BeforeCurrent)(
+          ^.className := "before-current-song",
+        )
       )
     }
+  }
+}
+
+object PlaylistEntryDiv {
+
+  // **************** Public inner types ****************//
+  sealed trait SongPlacement
+  object SongPlacement {
+    object BeforeCurrent extends SongPlacement
+    object Current extends SongPlacement
+    object AfterCurrent extends SongPlacement
+    object Unknown extends SongPlacement
   }
 }
