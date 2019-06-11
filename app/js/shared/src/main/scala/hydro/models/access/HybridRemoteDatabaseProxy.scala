@@ -27,38 +27,50 @@ class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
     extends RemoteDatabaseProxy {
 
   override def queryExecutor[E <: Entity: EntityType]() = {
-    // TODO(partial-sync): Add hook for partially synced types
+    new DbQueryExecutor.Async[E] {
+      override def data(dbQuery: DbQuery[E]) =
+        execute(dbQuery, apiClientCall = apiClient.executeDataQuery, localDatabaseCall = _ data _)
 
-    futureLocalDatabase.option() match {
-      case None =>
-        new DbQueryExecutor.Async[E] {
-          override def data(dbQuery: DbQuery[E]) =
-            hybridCall(
-              apiClientCall = apiClient.executeDataQuery(dbQuery),
-              localDatabaseCall = _.queryExecutor().data(dbQuery))
-          override def count(dbQuery: DbQuery[E]) =
-            hybridCall(
-              apiClientCall = apiClient.executeCountQuery(dbQuery),
-              localDatabaseCall = _.queryExecutor().count(dbQuery))
+      override def count(dbQuery: DbQuery[E]) =
+        execute(dbQuery, apiClientCall = apiClient.executeCountQuery, localDatabaseCall = _ count _)
 
-          private def hybridCall[R](apiClientCall: => Future[R],
-                                    localDatabaseCall: LocalDatabase => Future[R]): Future[R] = {
-            val resultPromise = Promise[R]()
+      private def execute[R](
+          dbQuery: DbQuery[E],
+          apiClientCall: DbQuery[E] => Future[R],
+          localDatabaseCall: (DbQueryExecutor.Async[E], DbQuery[E]) => Future[R]): Future[R] = {
+        futureLocalDatabase.option() match {
+          case None =>
+            hybridCall(dbQuery, apiClientCall, localDatabaseCall)
 
-            for (seq <- logFailure(apiClientCall)) {
-              resultPromise.trySuccess(seq)
+          case Some(localDatabase) =>
+            async {
+              if (await(entitySyncLogic.canBeExecutedLocally(dbQuery))) {
+                await(localDatabaseCall(localDatabase.queryExecutor(), dbQuery))
+              } else {
+                await(apiClientCall(dbQuery))
+              }
             }
-
-            for {
-              localDatabase <- futureLocalDatabase.future()
-              if !resultPromise.isCompleted
-              seq <- logFailure(localDatabaseCall(localDatabase))
-            } resultPromise.trySuccess(seq)
-
-            resultPromise.future
-          }
         }
-      case Some(localDatabase) => localDatabase.queryExecutor()
+      }
+
+      private def hybridCall[R](
+          dbQuery: DbQuery[E],
+          apiClientCall: DbQuery[E] => Future[R],
+          localDatabaseCall: (DbQueryExecutor.Async[E], DbQuery[E]) => Future[R]): Future[R] = {
+        val resultPromise = Promise[R]()
+
+        for (seq <- logFailure(apiClientCall(dbQuery))) {
+          resultPromise.trySuccess(seq)
+        }
+
+        for {
+          localDatabase <- futureLocalDatabase.future()
+          if !resultPromise.isCompleted
+          seq <- logFailure(localDatabaseCall(localDatabase.queryExecutor(), dbQuery))
+        } resultPromise.trySuccess(seq)
+
+        resultPromise.future
+      }
     }
   }
 

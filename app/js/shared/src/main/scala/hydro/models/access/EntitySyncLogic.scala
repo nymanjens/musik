@@ -50,7 +50,7 @@ object EntitySyncLogic {
 
     override def handleEntityModificationUpdate(entityModifications: Seq[EntityModification],
                                                 db: LocalDatabase): Future[Unit] = {
-      db.applyModifications(entityModifications)
+      db.applyModifications(entityModifications.filter(entityTypes contains _.entityType))
     }
   }
 }
