@@ -22,7 +22,8 @@ import hydro.models.access.LocalDatabase
 import scala.collection.immutable.Seq
 import scala.concurrent.Future
 
-final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiClient, user: User) extends EntitySyncLogic {
+private[access] final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiClient, user: User)
+    extends EntitySyncLogic {
 
   private val fullySyncedPart: EntitySyncLogic =
     new access.EntitySyncLogic.FullySynced(EntityTypes.fullySyncedLocally)
