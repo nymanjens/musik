@@ -65,7 +65,8 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
 
         for {
           localDatabase <- futureLocalDatabase.future()
-          if !resultPromise.isCompleted
+          canBeExecutedLocally <- entitySyncLogic.canBeExecutedLocally(dbQuery, localDatabase)
+          if canBeExecutedLocally && !resultPromise.isCompleted
           seq <- logFailure(localDatabaseCall(localDatabase.queryExecutor(), dbQuery))
         } resultPromise.trySuccess(seq)
 
