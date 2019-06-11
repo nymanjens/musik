@@ -25,6 +25,7 @@ object JsEntityAccessImplTest extends TestSuite {
   override def tests = TestSuite {
     implicit val fakeApiClient: FakeScalaJsApiClient = new FakeScalaJsApiClient()
     implicit val fakeClock: Clock = new TestModule().fakeClock
+    implicit val entitySyncLogic: EntitySyncLogic = new TestModule().entitySyncLogic
     implicit val getInitialDataResponse = testGetInitialDataResponse
     implicit val hydroPushSocketClientFactory: HydroPushSocketClientFactory =
       new HydroPushSocketClientFactory
