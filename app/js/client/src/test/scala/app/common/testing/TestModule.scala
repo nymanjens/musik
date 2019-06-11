@@ -23,5 +23,4 @@ class TestModule {
   // ******************* Non-fake implementations ******************* //
   implicit lazy val hydroPushSocketClientFactory: HydroPushSocketClientFactory =
     new HydroPushSocketClientFactory
-  implicit lazy val entitySyncLogic = new EntitySyncLogic.FullySynced(EntityTypes.all)
 }
