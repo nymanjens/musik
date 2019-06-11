@@ -44,7 +44,7 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
 
           case Some(localDatabase) =>
             async {
-              if (await(entitySyncLogic.canBeExecutedLocally(dbQuery))) {
+              if (await(entitySyncLogic.canBeExecutedLocally(dbQuery, localDatabase))) {
                 await(localDatabaseCall(localDatabase.queryExecutor(), dbQuery))
               } else {
                 await(apiClientCall(dbQuery))

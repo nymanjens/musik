@@ -21,8 +21,14 @@ trait EntitySyncLogic {
   /** Populate an empty local database with entities. */
   def populateLocalDatabaseAndGetUpdateToken(db: LocalDatabase): Future[UpdateToken]
 
-  def canBeExecutedLocally[E <: Entity: EntityType](dbQuery: DbQuery[E]): Future[Boolean]
+  /** Returns true if the given query can be executed on the given local database. */
+  def canBeExecutedLocally[E <: Entity: EntityType](dbQuery: DbQuery[E], db: LocalDatabase): Future[Boolean]
 
+  /**
+    * Perform entity updates to the given local database as a result of the given modification.
+    *
+    * Note that this method may be called multiple times with the same modification.
+    */
   def handleEntityModificationUpdate(entityModifications: Seq[EntityModification],
                                      db: LocalDatabase): Future[Unit]
 
@@ -45,7 +51,8 @@ object EntitySyncLogic {
       allEntitiesResponse.nextUpdateToken
     }
 
-    override def canBeExecutedLocally[E <: Entity: EntityType](dbQuery: DbQuery[E]): Future[Boolean] =
+    override def canBeExecutedLocally[E <: Entity: EntityType](dbQuery: DbQuery[E],
+                                                               db: LocalDatabase): Future[Boolean] =
       Future.successful(entityTypes contains implicitly[EntityType[E]])
 
     override def handleEntityModificationUpdate(entityModifications: Seq[EntityModification],
