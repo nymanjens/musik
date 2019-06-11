@@ -19,10 +19,11 @@ import scala.concurrent.Promise
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /** RemoteDatabaseProxy implementation that queries the remote back-end directly until LocalDatabase */
-final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
+class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
     implicit apiClient: ScalaJsApiClient,
     getInitialDataResponse: GetInitialDataResponse,
-    hydroPushSocketClientFactory: HydroPushSocketClientFactory)
+    hydroPushSocketClientFactory: HydroPushSocketClientFactory,
+    entitySyncLogic: EntitySyncLogic)
     extends RemoteDatabaseProxy {
 
   override def queryExecutor[E <: Entity: EntityType]() = {
@@ -75,7 +76,7 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
         // Apply changes to local database, but don't wait for it
         futureLocalDatabase.scheduleUpdateAtEnd(localDatabase =>
           async {
-            await(localDatabase.applyModifications(modifications))
+            await(entitySyncLogic.handleEntityModificationUpdate(modifications, localDatabase))
             await(localDatabase.addPendingModifications(modifications))
             await(localDatabase.save())
         })
@@ -92,7 +93,7 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
         }
 
         val queryReflectsModifications = async {
-          await(localDatabase.applyModifications(modifications))
+          await(entitySyncLogic.handleEntityModificationUpdate(modifications, localDatabase))
           await(localDatabase.addPendingModifications(modifications))
         }
         val completelyDone = async {
@@ -108,8 +109,6 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
 
   override def startCheckingForModifiedEntityUpdates(
       maybeNewEntityModificationsListener: Seq[EntityModification] => Future[Unit]): Unit = {
-    // TODO(partial-sync): Add hook to filter away irrelevant partially synced modifications
-
     val temporaryPushClient = hydroPushSocketClientFactory.createClient(
       name = "HydroPushSocket[temporary]",
       updateToken = getInitialDataResponse.nextUpdateToken,
@@ -135,7 +134,7 @@ final class HybridRemoteDatabaseProxy(futureLocalDatabase: FutureLocalDatabase)(
               val modifications = modificationsWithToken.modifications
               console.log(s"  [permanent push client] ${modifications.size} remote modifications received")
               if (modifications.nonEmpty) {
-                await(localDatabase.applyModifications(modifications))
+                await(entitySyncLogic.handleEntityModificationUpdate(modifications, localDatabase))
                 await(localDatabase.removePendingModifications(modifications))
                 await(
                   localDatabase.setSingletonValue(NextUpdateTokenKey, modificationsWithToken.nextUpdateToken))
@@ -172,7 +171,8 @@ object HybridRemoteDatabaseProxy {
   def create(localDatabase: Future[LocalDatabase])(
       implicit apiClient: ScalaJsApiClient,
       getInitialDataResponse: GetInitialDataResponse,
-      hydroPushSocketClientFactory: HydroPushSocketClientFactory): HybridRemoteDatabaseProxy = {
+      hydroPushSocketClientFactory: HydroPushSocketClientFactory,
+      entitySyncLogic: EntitySyncLogic): HybridRemoteDatabaseProxy = {
     new HybridRemoteDatabaseProxy(new FutureLocalDatabase(async {
       val db = await(localDatabase)
       val populateIsNecessary = {
@@ -198,21 +198,12 @@ object HybridRemoteDatabaseProxy {
         // Reset database
         await(db.resetAndInitialize())
 
-        // Set version
+        // Set singletons
         await(db.setSingletonValue(VersionKey, localDatabaseAndEntityVersion))
 
-        // Add all entities
-        val allEntitiesResponse = await(apiClient.getAllEntities(EntityTypes.fullySyncedLocally))
-        val _ = await(Future.sequence {
-          for (entityType <- allEntitiesResponse.entityTypes) yield {
-            def addAllToDb[E <: Entity](implicit entityType: EntityType[E]) =
-              db.addAll(allEntitiesResponse.entities(entityType))
-            addAllToDb(entityType)
-          }
-        })
-        // TODO(partial-sync): Add hook for partially synced types
-
-        await(db.setSingletonValue(NextUpdateTokenKey, allEntitiesResponse.nextUpdateToken))
+        // Populate with entities
+        val nextUpdateToken = await(entitySyncLogic.populateLocalDatabaseAndGetUpdateToken(db))
+        await(db.setSingletonValue(NextUpdateTokenKey, nextUpdateToken))
 
         // Await because we don't want to save unpersisted modifications that can be made as soon as
         // the database becomes valid.

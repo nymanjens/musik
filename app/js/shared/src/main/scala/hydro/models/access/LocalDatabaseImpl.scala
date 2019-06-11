@@ -216,7 +216,7 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
           Seq() ++
             (for (collectionName <- allCollectionNames)
               yield WriteOperation.RemoveCollection(collectionName)) ++
-            (for (entityType <- EntityTypes.locallyPersisted)
+            (for (entityType <- EntityTypes.all)
               yield
                 WriteOperation.AddCollection(
                   collectionNameOf(entityType),
@@ -235,7 +235,7 @@ private final class LocalDatabaseImpl(implicit webWorker: LocalDatabaseWebWorker
   private val singletonsCollectionName = "singletons"
   private val pendingModificationsCollectionName = "pendingModifications"
   private def allCollectionNames: Seq[String] =
-    EntityTypes.locallyPersisted.map(collectionNameOf) :+ singletonsCollectionName :+ pendingModificationsCollectionName
+    EntityTypes.all.map(collectionNameOf) :+ singletonsCollectionName :+ pendingModificationsCollectionName
 }
 
 object LocalDatabaseImpl {
