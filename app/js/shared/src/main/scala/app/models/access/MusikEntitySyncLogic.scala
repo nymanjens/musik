@@ -73,7 +73,7 @@ private[access] final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiC
       case _                                                => None
     }
     if (affectedPlaylistEntries.nonEmpty) {
-      await(fetchAndLocallyPersistMedia(affectedPlaylistEntries, db)) // TODO: Maybe not wait for result
+      fetchAndLocallyPersistMedia(affectedPlaylistEntries, db) // Note: Not waiting for future to complete!
     }
   }
 
