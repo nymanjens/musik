@@ -41,7 +41,7 @@ private[access] final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiC
         .filter(ModelFields.PlaylistEntry.userId === user.id)
         .data())
 
-    await(fetchAndLocallyPersisteMedia(playlistEntries, db))
+    await(fetchAndLocallyPersistMedia(playlistEntries, db))
 
     updateToken
   }
@@ -72,11 +72,14 @@ private[access] final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiC
       case EntityModification.Update(entity: PlaylistEntry) => Some(entity)
       case _                                                => None
     }
-    await(fetchAndLocallyPersisteMedia(affectedPlaylistEntries, db))
+    if (affectedPlaylistEntries.nonEmpty) {
+      await(fetchAndLocallyPersistMedia(affectedPlaylistEntries, db)) // TODO: Maybe not wait for result
+    }
   }
 
-  private def fetchAndLocallyPersisteMedia(playlistEntries: Seq[PlaylistEntry],
-                                           db: LocalDatabase): Future[Unit] = async {
+  private def fetchAndLocallyPersistMedia(playlistEntries: Seq[PlaylistEntry],
+                                          db: LocalDatabase): Future[Unit] = async {
+    // TODO: Check if IDs are already locally persisted
     val songIds = playlistEntries.map(_.songId)
     val songs = await(newApiQuery[Song]().filter(ModelFields.Song.id isAnyOf songIds).data())
     val songsFuture = db.addAll(songs)
