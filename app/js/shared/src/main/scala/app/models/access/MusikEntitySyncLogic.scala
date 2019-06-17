@@ -79,22 +79,36 @@ private[access] final class MusikEntitySyncLogic(implicit apiClient: ScalaJsApiC
 
   private def fetchAndLocallyPersistMedia(playlistEntries: Seq[PlaylistEntry],
                                           db: LocalDatabase): Future[Unit] = async {
-    // TODO: Check if IDs are already locally persisted
-    val songIds = playlistEntries.map(_.songId)
+    implicit val _ = db
+
+    val songIds = await(filterAlreadyPersistedIds[Song](playlistEntries.map(_.songId)))
     val songs = await(newApiQuery[Song]().filter(ModelFields.Song.id isAnyOf songIds).data())
     val songsFuture = db.addAll(songs)
 
-    val albumIds = songs.map(_.albumId)
+    val albumIds = await(filterAlreadyPersistedIds[Album](songs.map(_.albumId)))
     val albums = await(newApiQuery[Album]().filter(ModelFields.Album.id isAnyOf albumIds).data())
     val albumsFuture = db.addAll(albums)
 
-    val artistIds = (songs.flatMap(_.artistId) ++ albums.flatMap(_.artistId)).distinct
+    val artistIds =
+      await(
+        filterAlreadyPersistedIds[Artist]((songs.flatMap(_.artistId) ++ albums.flatMap(_.artistId)).distinct))
     val artists = await(newApiQuery[Artist]().filter(ModelFields.Artist.id isAnyOf artistIds).data())
     val artistsFuture = db.addAll(artists)
 
     await(songsFuture)
     await(albumsFuture)
     await(artistsFuture)
+  }
+
+  private def filterAlreadyPersistedIds[E <: Entity: EntityType](ids: Seq[Long])(
+      implicit db: LocalDatabase): Future[Seq[Long]] = async {
+    val counts = await(Future.sequence(ids.map { id =>
+      DbResultSet.fromExecutor(db.queryExecutor[E]()).filter(ModelFields.id[E] === id).count()
+    }))
+    for {
+      (id, count) <- ids zip counts
+      if count == 0
+    } yield id
   }
 
   private def newApiQuery[E <: Entity: EntityType](): DbResultSet.Async[E] =
