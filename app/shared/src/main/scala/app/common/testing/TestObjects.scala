@@ -155,4 +155,11 @@ object TestObjects {
       idOption = Some(EntityModification.generateRandomId()),
     )
   }
+
+  def createPlaylistEntry(songId: Long = 1827398,
+                          orderToken: OrderToken = OrderToken.middle,
+                          userId: Long = testUser.id,
+  ): PlaylistEntry = {
+    PlaylistEntry(songId, orderToken, userId, idOption = Some(EntityModification.generateRandomId()))
+  }
 }
