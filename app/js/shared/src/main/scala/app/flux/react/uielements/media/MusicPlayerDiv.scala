@@ -102,7 +102,14 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
                 ),
               ),
               if (isRemoteControl) {
-                <.div("TEST") // TODO: Finish
+                <.div(
+                  ^.className := "remote-control-buttons",
+                  Bootstrap.Button(Variant.default)(
+                    ^.onClick --> LogExceptionsCallback[Unit](playStatusStore.togglePlay()),
+                    if (state.storeState.hasStarted) Bootstrap.FontAwesomeIcon("pause")
+                    else Bootstrap.FontAwesomeIcon("play"),
+                  )
+                )
               } else {
                 uielements.media.RawMusicPlayer(
                   ref = musicPlayerRef,
