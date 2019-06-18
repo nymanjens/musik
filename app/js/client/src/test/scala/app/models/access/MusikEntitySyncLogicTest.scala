@@ -11,11 +11,13 @@ import app.models.media.PlaylistEntry
 import app.models.media.Song
 import app.models.media.Album
 import app.models.media.Artist
+import hydro.common.testing.Awaiter
 import hydro.common.testing.FakeLocalDatabase
 import hydro.common.testing.FakeLocalDatabase
 import hydro.models.access.DbResultSet
 import hydro.models.modification.EntityType
 import hydro.models.Entity
+import hydro.models.modification.EntityModification
 import utest._
 
 import scala.concurrent.Future
@@ -30,13 +32,13 @@ object MusikEntitySyncLogicTest extends TestSuite {
     val logic = new MusikEntitySyncLogic
     implicit val db = new FakeLocalDatabase()
 
-    "populateLocalDatabaseAndGetUpdateToken" - async {
-      val playlistArtist1 = createArtist()
-      val playlistArtist2 = createArtist()
-      val playlistAlbum = createAlbum(artistId = playlistArtist1.id)
-      val playlistSong = createSong(albumId = playlistAlbum.id, artistId = playlistArtist2.id)
-      val playlistEntry = createPlaylistEntry(songId = playlistSong.id, userId = testUser.id)
+    val playlistArtist1 = createArtist()
+    val playlistArtist2 = createArtist()
+    val playlistAlbum = createAlbum(artistId = playlistArtist1.id)
+    val playlistSong = createSong(albumId = playlistAlbum.id, artistId = playlistArtist2.id)
+    val playlistEntry = createPlaylistEntry(songId = playlistSong.id, userId = testUser.id)
 
+    "populateLocalDatabaseAndGetUpdateToken" - async {
       fakeApiClient.addEntities(playlistArtist1, playlistArtist2, createArtist())
       fakeApiClient.addEntities(playlistAlbum, createAlbum())
       fakeApiClient.addEntities(playlistSong, createSong())
@@ -60,11 +62,55 @@ object MusikEntitySyncLogicTest extends TestSuite {
     }
 
     "handleEntityModificationUpdate" - {
-      "media updates necessary" - {
-        1 ==> 1
+      fakeApiClient.addEntities(playlistArtist1, playlistArtist2, createArtist())
+      fakeApiClient.addEntities(playlistAlbum, createAlbum())
+      fakeApiClient.addEntities(playlistSong, createSong())
+      fakeApiClient.addEntities(playlistEntry)
+
+      "empty modifications" - async {
+        await(logic.handleEntityModificationUpdate(Seq(), db))
+
+        await(Awaiter.expectConsistently.isEmpty(db.allModifications))
       }
-      "no media updates necessary" - {
-        1 ==> 1
+      "update playlist entry" - {
+        "media updates necessary" - async {
+          await(logic.handleEntityModificationUpdate(Seq(EntityModification.Add(playlistEntry)), db))
+
+          await(
+            Awaiter.expectEventually.equal(
+              db.allModifications.toSet,
+              Set(
+                EntityModification.Add(playlistEntry),
+                EntityModification.Add(playlistArtist1),
+                EntityModification.Add(playlistArtist2),
+                EntityModification.Add(playlistAlbum),
+                EntityModification.Add(playlistSong)
+              )
+            ))
+        }
+        "media is already present" - async {
+          db.addAll(Seq(playlistArtist1, playlistArtist2, createArtist()))
+          db.addAll(Seq(playlistAlbum, createAlbum()))
+          db.addAll(Seq(playlistSong, createSong()))
+          val preExistingModifications = db.allModifications
+
+          await(logic.handleEntityModificationUpdate(Seq(EntityModification.Add(playlistEntry)), db))
+
+          await(
+            Awaiter.expectConsistently.equal(
+              db.allModifications.toSet,
+              preExistingModifications.toSet ++ Set(EntityModification.Add(playlistEntry))
+            ))
+        }
+      }
+      "update play status" - async {
+        await(logic.handleEntityModificationUpdate(Seq(EntityModification.Add(testPlayStatus)), db))
+
+        await(
+          Awaiter.expectConsistently.equal(
+            db.allModifications.toSet,
+            Set(EntityModification.Add(testPlayStatus))
+          ))
       }
     }
   }
