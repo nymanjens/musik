@@ -88,7 +88,7 @@ final class PlayStatusStore private (entityDerivedStore: PlayStatusStore.EntityD
   }
 
   def toggleRemoteControl(): Unit = {
-    fromLocalStorageStore.setIsRemoteControl(fromLocalStorageStore.state.isRemoteControl)
+    fromLocalStorageStore.setIsRemoteControl(!fromLocalStorageStore.state.isRemoteControl)
   }
 
   private def upsertPlayStatus(currentPlaylistEntryId: java.lang.Long = null,
