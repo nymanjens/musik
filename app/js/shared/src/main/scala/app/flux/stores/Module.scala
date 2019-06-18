@@ -34,7 +34,7 @@ final class Module(implicit i18n: I18n,
   implicit private val complexQueryFilterFactory = new ComplexQueryFilterFactory
 
   implicit val playlistStore = new PlaylistStore
-  implicit val playStatusStore = new PlayStatusStore
+  implicit val playStatusStore = PlayStatusStore()
   implicit val allArtistsStore = new AllArtistsStore
   implicit val albumDetailStoreFactory = new AlbumDetailStoreFactory
   implicit val artistDetailStoreFactory = new ArtistDetailStoreFactory

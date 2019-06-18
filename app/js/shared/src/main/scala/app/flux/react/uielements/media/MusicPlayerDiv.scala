@@ -40,6 +40,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
       implicit val router = props.router
 
       val stopAfterCurrentSong = state.storeState.stopAfterCurrentSong
+      val isRemoteControl = state.storeState.isRemoteControl
 
       state.storeState.currentPlaylistEntry match {
         case None => <.span()
@@ -89,14 +90,35 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
                     ^.style := js.Dictionary("width" -> "0.8em"),
                   )
                 ),
+                " ",
+                Bootstrap.Button(Variant.primary)(
+                  ^^.ifThen(isRemoteControl)(^.className := "active"),
+                  ^.onClick --> LogExceptionsCallback[Unit](playStatusStore.toggleRemoteControl()),
+                  Bootstrap.Glyphicon("headphones"),
+                  " ",
+                  Bootstrap.FontAwesomeIcon(if (isRemoteControl) "check-square-o" else "square-o")(
+                    ^.style := js.Dictionary("width" -> "0.8em"),
+                  )
+                ),
               ),
-              uielements.media.RawMusicPlayer(
-                ref = musicPlayerRef,
-                src = s"/media/song/${playlistEntry.song.id}/",
-                playing = state.storeState.hasStarted,
-                onEnded = () => playStatusStore.indicateSongEnded(),
-                onPlayingChanged = playing => playStatusStore.togglePlay(playing),
-              ),
+              if (isRemoteControl) {
+                <.div(
+                  ^.className := "remote-control-buttons",
+                  Bootstrap.Button(Variant.default)(
+                    ^.onClick --> LogExceptionsCallback[Unit](playStatusStore.togglePlay()),
+                    if (state.storeState.hasStarted) Bootstrap.FontAwesomeIcon("pause")
+                    else Bootstrap.FontAwesomeIcon("play"),
+                  )
+                )
+              } else {
+                uielements.media.RawMusicPlayer(
+                  ref = musicPlayerRef,
+                  src = s"/media/song/${playlistEntry.song.id}/",
+                  playing = state.storeState.hasStarted,
+                  onEnded = () => playStatusStore.indicateSongEnded(),
+                  onPlayingChanged = playing => playStatusStore.togglePlay(playing),
+                )
+              },
             ),
           )
       }
