@@ -32,7 +32,7 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
   protected case class Props()(implicit val router: RouterContext)
   protected case class State(storeState: PlayStatusStore.State = PlayStatusStore.State.nullInstance)
 
-  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) {
+  protected class Backend($ : BackendScope[Props, State]) extends BackendBase($) with DidMount {
 
     private val musicPlayerRef = uielements.media.RawMusicPlayer.ref()
 
@@ -122,6 +122,13 @@ final class MusicPlayerDiv(implicit playStatusStore: PlayStatusStore) extends Hy
             ),
           )
       }
+    }
+
+    override def didMount(props: Props, state: State): Callback = {
+      if (!state.storeState.isRemoteControl) {
+        playStatusStore.preloadNextSongs()
+      }
+      Callback.empty
     }
   }
 }
