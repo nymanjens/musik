@@ -36,6 +36,7 @@ final class PlayStatusStore private (entityDerivedStore: PlayStatusStore.EntityD
 
   // **************** Public mutating API **************** //
   def play(playlistEntryId: Long): Future[Unit] = {
+    playWasEverStartedInThisSession = true
     upsertPlayStatus(currentPlaylistEntryId = playlistEntryId, hasStarted = true)
   }
 
