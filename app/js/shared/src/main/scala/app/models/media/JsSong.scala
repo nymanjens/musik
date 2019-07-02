@@ -17,7 +17,9 @@ case class JsSong(filename: String,
                   trackNumber: Int,
                   duration: FiniteDuration,
                   disc: Int,
-                  id: Long)
+                  id: Long) {
+  def mediaSrc: String = s"/media/song/$id/"
+}
 
 object JsSong {
   def fromEntityId(songId: Long)(implicit entityAccess: EntityAccess): Future[JsSong] = async {

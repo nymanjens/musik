@@ -6,6 +6,7 @@ import app.models.media.PlaylistEntry
 import app.models.media.PlayStatus
 import app.models.user.User
 import hydro.common.time.Clock
+import hydro.common.CollectionUtils
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.flux.stores.CombiningStateStore
@@ -160,6 +161,7 @@ final class PlayStatusStore private (entityDerivedStore: PlayStatusStore.EntityD
 
     PlayStatusStore.State(
       currentPlaylistEntry = entityDerivedState.currentPlaylistEntry,
+      nextPlaylistEntry = entityDerivedState.nextPlaylistEntry,
       hasStarted = entityDerivedState.hasStarted && (playWasEverStartedInThisSession || isRemoteControl),
       stopAfterCurrentSong = entityDerivedState.stopAfterCurrentSong,
       isRemoteControl = isRemoteControl,
@@ -176,6 +178,7 @@ object PlayStatusStore {
   }
 
   case class State(currentPlaylistEntry: Option[JsPlaylistEntry],
+                   nextPlaylistEntry: Option[JsPlaylistEntry], // For preloading
                    hasStarted: Boolean,
                    stopAfterCurrentSong: Boolean,
                    isRemoteControl: Boolean,
@@ -184,6 +187,7 @@ object PlayStatusStore {
     def nullInstance: State =
       State(
         currentPlaylistEntry = None,
+        nextPlaylistEntry = None,
         hasStarted = false,
         stopAfterCurrentSong = false,
         isRemoteControl = false,
@@ -199,16 +203,21 @@ object PlayStatusStore {
     // **************** Implementation of base class methods **************** //
     override protected def calculateState(): Future[EntityDerived.State] = async {
       val maybePlayStatus = await(PlayStatus.get())
-      val currentPlaylistEntryId = maybePlayStatus.map(_.currentPlaylistEntryId) match {
-        case Some(id) => Some(id)
-        case None     => await(PlaylistEntry.getOrderedSeq()).headOption.map(_.id)
-      }
+      val playlistEntries = await(PlaylistEntry.getOrderedSeq())
+
+      val currentPlaylistEntryIndex = {
+        for (playStatus <- maybePlayStatus)
+          yield playlistEntries.map(_.id).indexOf(playStatus.currentPlaylistEntryId)
+      } getOrElse 0
+
       val currentPlaylistEntry =
-        if (currentPlaylistEntryId.isDefined)
-          Some(await(JsPlaylistEntry.fromEntityId(currentPlaylistEntryId.get)))
-        else None
+        await(maybeGetJsPlaylistEntry(CollectionUtils.maybeGet(playlistEntries, currentPlaylistEntryIndex)))
+      val nextPlaylistEntry =
+        await(
+          maybeGetJsPlaylistEntry(CollectionUtils.maybeGet(playlistEntries, currentPlaylistEntryIndex + 1)))
       EntityDerived.State(
         currentPlaylistEntry = currentPlaylistEntry,
+        nextPlaylistEntry = nextPlaylistEntry,
         hasStarted = maybePlayStatus.map(_.hasStarted) getOrElse false,
         stopAfterCurrentSong = maybePlayStatus.map(_.stopAfterCurrentSong) getOrElse false
       )
@@ -219,9 +228,18 @@ object PlayStatusStore {
       entityModification.entityType == PlayStatus.Type ||
         entityModification.entityType == PlaylistEntry.Type
 
+    private def maybeGetJsPlaylistEntry(
+        maybePlaylistEntry: Option[PlaylistEntry]): Future[Option[JsPlaylistEntry]] = async {
+      maybePlaylistEntry match {
+        case Some(entry) => Some(await(JsPlaylistEntry.fromEntity(entry)))
+        case None        => None
+      }
+    }
+
   }
   object EntityDerived {
     case class State(currentPlaylistEntry: Option[JsPlaylistEntry],
+                     nextPlaylistEntry: Option[JsPlaylistEntry],
                      hasStarted: Boolean,
                      stopAfterCurrentSong: Boolean,
     )
