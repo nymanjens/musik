@@ -77,13 +77,13 @@ final class AlbumDiv(implicit dispatcher: Dispatcher,
       implicit val router = props.router
 
       val buttons = <.div(
-        Bootstrap.Glyphicon("plus-sign")(
+        Bootstrap.Glyphicon("circle-arrow-right")(
           ^.onClick --> addSongsToPlaylistCallback(
             albumId = props.album.id,
             placement = Placement.AfterCurrentSong)
         ),
         " ",
-        Bootstrap.Glyphicon("circle-arrow-down")(
+        Bootstrap.Glyphicon("plus-sign")(
           ^.onClick --> addSongsToPlaylistCallback(albumId = props.album.id, placement = Placement.AtEnd)
         )
       )

@@ -53,11 +53,11 @@ final class EnqueueableSongDiv(implicit dispatcher: Dispatcher, playStatusStore:
       implicit val router = props.router
 
       val buttons = <.div(
-        Bootstrap.Glyphicon("plus-sign")(
+        Bootstrap.Glyphicon("circle-arrow-right")(
           ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AfterCurrentSong)
         ),
         " ",
-        Bootstrap.Glyphicon("circle-arrow-down")(
+        Bootstrap.Glyphicon("plus-sign")(
           ^.onClick --> addToPlaylistCallback(props.song, placement = Placement.AtEnd)
         )
       )

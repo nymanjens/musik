@@ -49,13 +49,13 @@ private[app] final class AlbumDetail(implicit pageHeader: PageHeader,
         pageHeader.withExtension(router.currentPage) {
           <.span(
             ^.className := "buttons",
-            Bootstrap.Glyphicon("plus-sign")(
+            Bootstrap.Glyphicon("circle-arrow-right")(
               ^.onClick --> addSongsToPlaylistCallback(
                 albumId = props.albumId,
                 placement = Placement.AfterCurrentSong)
             ),
             " ",
-            Bootstrap.Glyphicon("circle-arrow-down")(
+            Bootstrap.Glyphicon("plus-sign")(
               ^.onClick --> addSongsToPlaylistCallback(albumId = props.albumId, placement = Placement.AtEnd)
             ),
           )
