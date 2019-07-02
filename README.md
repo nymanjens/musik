@@ -7,8 +7,6 @@ This project aims to an excellent music player for mobile and desktop.
 
 ## Features
 
-*(Note: Some are not ready yet)*
-
 * Synchronizes current play queue over all devices
 * Remote control (e.g. pause mobile player via desktop)
 
