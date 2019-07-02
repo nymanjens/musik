@@ -1,8 +1,5 @@
 package app.flux.stores.media
 
-import scala.scalajs.js.DynamicImplicits._
-import scala.scalajs.js.Dynamic.global
-import scala.scalajs.js
 import app.models.access.ModelFields
 import app.models.media.JsPlaylistEntry
 import app.models.media.PlaylistEntry
@@ -17,7 +14,6 @@ import hydro.models.access.JsEntityAccess
 import hydro.models.access.ModelField
 import hydro.models.modification.EntityModification
 import org.scalajs.dom
-import org.scalajs.dom.html.Audio
 
 import scala.async.Async.async
 import scala.async.Async.await
@@ -74,30 +70,9 @@ final class PlayStatusStore private (entityDerivedStore: PlayStatusStore.EntityD
     val newSongIndex = currentSongIndex + step
     if (playlistEntries.indices contains newSongIndex) {
       await(upsertPlayStatus(currentPlaylistEntryId = playlistEntries(newSongIndex).id))
-      preloadNextSongs() // Don't wait for it to complete
       true
     } else {
       false
-    }
-  }
-
-  def preloadNextSongs(): Future[Unit] = async {
-    val playlistEntries = await(PlaylistEntry.getOrderedSeq())
-    val currentSongIndex = {
-      for (playStatus <- await(PlayStatus.get()))
-        yield playlistEntries.map(_.id).indexOf(playStatus.currentPlaylistEntryId)
-    } getOrElse 0
-
-    for (step <- Seq(1, 2, 3, 4)) {
-      val nextSongIndex = currentSongIndex + step
-      if (playlistEntries.indices contains nextSongIndex) {
-        val nextEntry = playlistEntries(nextSongIndex)
-        js.eval(
-          s"""
-             preloader = new Audio();
-             preloader.src = "/media/song/${nextEntry.songId}/";
-            """)
-      }
     }
   }
 
