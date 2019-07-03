@@ -3,6 +3,7 @@ package app.flux.stores.media
 import hydro.common.OrderToken
 import app.flux.action.AppActions.AddSongsToPlaylist.Placement
 import app.flux.action.AppActions.AddSongsToPlaylist
+import app.flux.action.AppActions.RemoveAllPlayedEntriesFromPlaylist
 import app.flux.action.AppActions.RemoveEntriesFromPlaylist
 import app.flux.stores.media.PlaylistStore.State
 import app.models.access.ModelFields
@@ -102,6 +103,18 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
         }
         val modifications = playlistEntryIdsToRemove.toVector.map(EntityModification.Remove[PlaylistEntry])
         await(entityAccess.persistModifications(modifications))
+      }
+
+    case RemoveAllPlayedEntriesFromPlaylist =>
+      async {
+        val playStatus = await(PlayStatus.get())
+        val entries = await(PlaylistEntry.getOrderedSeq())
+        if (playStatus.isDefined) {
+          val currentEntryId = playStatus.get.currentPlaylistEntryId
+          val entriesToRemove = entries.takeWhile(_.id != currentEntryId)
+          val modifications = entriesToRemove.toVector.map(EntityModification.createRemove[PlaylistEntry])
+          await(entityAccess.persistModifications(modifications))
+        }
       }
   }
 

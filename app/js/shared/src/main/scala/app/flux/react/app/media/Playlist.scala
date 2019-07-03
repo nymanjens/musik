@@ -2,6 +2,7 @@ package app.flux.react.app.media
 
 import java.lang.Math.max
 
+import app.flux.action.AppActions
 import app.flux.react.uielements.media.PlaylistEntryDiv
 import app.flux.react.uielements.media.PlaylistEntryDiv.SongPlacement
 import app.flux.stores.media.PlaylistStore
@@ -12,11 +13,14 @@ import hydro.common.OrderToken
 import hydro.flux.action.Dispatcher
 import hydro.flux.react.HydroReactComponent
 import hydro.flux.react.ReactVdomUtils.^^
+import hydro.flux.react.uielements.Bootstrap
+import hydro.flux.react.uielements.Bootstrap.Variant
 import hydro.flux.react.uielements.PageHeader
 import hydro.flux.router.RouterContext
 import hydro.jsfacades.ReactBeautifulDnd
 import hydro.jsfacades.ReactBeautifulDnd.OnDragEndHandler
 import japgolly.scalajs.react._
+import japgolly.scalajs.react.vdom.html_<^
 import japgolly.scalajs.react.vdom.html_<^._
 import japgolly.scalajs.react.vdom.html_<^.<
 
@@ -54,7 +58,7 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
       implicit val router = props.router
 
       <.span(
-        pageHeader(router.currentPage),
+        pageHeader.withExtension(router.currentPage)(clearPlayedButton()),
         state.maybeEntries.map(
           entries =>
             truncatePlayedSongs(
@@ -105,6 +109,15 @@ private[app] final class Playlist(implicit pageHeader: PageHeader,
               }
             )
         }
+      )
+    }
+
+    private def clearPlayedButton(): VdomNode = {
+      Bootstrap.Button(variant = Variant.default)(
+        ^.className := "clear-played-button",
+        ^.onClick --> Callback(dispatcher.dispatch(AppActions.RemoveAllPlayedEntriesFromPlaylist)),
+        Bootstrap.Glyphicon("trash"),
+        " Clear played",
       )
     }
 

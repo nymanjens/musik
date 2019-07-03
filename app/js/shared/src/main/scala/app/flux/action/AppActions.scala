@@ -16,5 +16,8 @@ object AppActions {
       object AtEnd extends Placement
     }
   }
+
   case class RemoveEntriesFromPlaylist(playlistEntryIds: Seq[Long]) extends Action
+
+  object RemoveAllPlayedEntriesFromPlaylist extends Action
 }
