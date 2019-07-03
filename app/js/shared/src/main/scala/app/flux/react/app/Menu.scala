@@ -39,10 +39,16 @@ private[app] final class Menu(implicit playStatusStore: PlayStatusStore, sbadmin
         runnable()
       })
     }
+    def bindGlobal(shortcut: String, runnable: () => Unit): Unit = {
+      Mousetrap.bindGlobal(shortcut, e => {
+        e.preventDefault()
+        runnable()
+      })
+    }
 
     bind("space", () => playStatusStore.togglePlay())
-    bind("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))
-    bind("ctrl+right", () => playStatusStore.advanceEntriesInPlaylist(step = +1))
-    bind("ctrl+shift+space", () => playStatusStore.toggleStopAfterCurrentSong())
+    bindGlobal("ctrl+left", () => playStatusStore.advanceEntriesInPlaylist(step = -1))
+    bindGlobal("ctrl+right", () => playStatusStore.advanceEntriesInPlaylist(step = +1))
+    bindGlobal("ctrl+shift+space", () => playStatusStore.toggleStopAfterCurrentSong())
   }
 }
