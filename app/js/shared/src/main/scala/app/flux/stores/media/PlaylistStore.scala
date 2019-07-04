@@ -13,6 +13,7 @@ import app.models.media.PlaylistEntry
 import hydro.models.modification.EntityModification
 import app.models.user.User
 import hydro.common.time.Clock
+import hydro.common.SerializingTaskQueue
 import hydro.flux.action.Dispatcher
 import hydro.flux.stores.AsyncEntityDerivedStateStore
 import hydro.models.access.JsEntityAccess
@@ -28,92 +29,106 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
                           dispatcher: Dispatcher,
                           clock: Clock)
     extends AsyncEntityDerivedStateStore[State] {
+
+  /**
+    * Queue that processes a single task at once to avoid order tokens to be calculated based
+    * on an old version of the playlist.
+    */
+  val updatePlaylistQueue: SerializingTaskQueue = new SerializingTaskQueue
+
   dispatcher.registerPartialAsync {
     case AddSongsToPlaylist(songIds, placement) =>
-      async {
-        val currentPlaylist = await(stateFuture).entries
-        val orderTokens = {
-          def valuesBetweenPlaylistEntries(lower: Option[JsPlaylistEntry], higher: Option[JsPlaylistEntry]) =
-            OrderToken.evenlyDistributedValuesBetween(
-              numValues = songIds.size,
-              lowerExclusive = lower.map(_.orderToken),
-              higherExclusive = higher.map(_.orderToken))
-          def maybeGetInPlaylist(index: Int): Option[JsPlaylistEntry] =
-            if (index < currentPlaylist.size) Some(currentPlaylist(index)) else None
-          placement match {
-            case Placement.AfterCurrentSong =>
-              val maybeCurrentPlaylistIndex =
-                for {
-                  playStatus <- await(PlayStatus.get())
-                  currentPlaylistEntry <- currentPlaylist.find(_.id == playStatus.currentPlaylistEntryId)
-                } yield currentPlaylist.indexOf(currentPlaylistEntry)
+      updatePlaylistQueue.schedule {
+        async {
+          val currentPlaylist = await(stateFuture).entries
+          val orderTokens = {
+            def valuesBetweenPlaylistEntries(lower: Option[JsPlaylistEntry],
+                                             higher: Option[JsPlaylistEntry]) =
+              OrderToken.evenlyDistributedValuesBetween(
+                numValues = songIds.size,
+                lowerExclusive = lower.map(_.orderToken),
+                higherExclusive = higher.map(_.orderToken))
+            def maybeGetInPlaylist(index: Int): Option[JsPlaylistEntry] =
+              if (index < currentPlaylist.size) Some(currentPlaylist(index)) else None
+            placement match {
+              case Placement.AfterCurrentSong =>
+                val maybeCurrentPlaylistIndex =
+                  for {
+                    playStatus <- await(PlayStatus.get())
+                    currentPlaylistEntry <- currentPlaylist.find(_.id == playStatus.currentPlaylistEntryId)
+                  } yield currentPlaylist.indexOf(currentPlaylistEntry)
 
-              maybeCurrentPlaylistIndex match {
-                case Some(currentPlaylistIndex) =>
-                  valuesBetweenPlaylistEntries(
-                    maybeGetInPlaylist(currentPlaylistIndex),
-                    maybeGetInPlaylist(currentPlaylistIndex + 1))
-                case None =>
-                  valuesBetweenPlaylistEntries(None, currentPlaylist.headOption)
-              }
-            case Placement.AtEnd =>
-              valuesBetweenPlaylistEntries(currentPlaylist.lastOption, None)
+                maybeCurrentPlaylistIndex match {
+                  case Some(currentPlaylistIndex) =>
+                    valuesBetweenPlaylistEntries(
+                      maybeGetInPlaylist(currentPlaylistIndex),
+                      maybeGetInPlaylist(currentPlaylistIndex + 1))
+                  case None =>
+                    valuesBetweenPlaylistEntries(None, currentPlaylist.headOption)
+                }
+              case Placement.AtEnd =>
+                valuesBetweenPlaylistEntries(currentPlaylist.lastOption, None)
+            }
           }
+          val modifications = for ((songId, orderToken) <- songIds.toVector zip orderTokens)
+            yield
+              EntityModification.createAddWithRandomId(
+                PlaylistEntry(songId = songId, orderToken = orderToken, userId = user.id))
+          await(entityAccess.persistModifications(modifications))
         }
-        val modifications = for ((songId, orderToken) <- songIds.toVector zip orderTokens)
-          yield
-            EntityModification.createAddWithRandomId(
-              PlaylistEntry(songId = songId, orderToken = orderToken, userId = user.id))
-        await(entityAccess.persistModifications(modifications))
       }
 
     case RemoveEntriesFromPlaylist(playlistEntryIdsToRemove) =>
-      async {
-        val playStatus = await(PlayStatus.get())
-        if (playStatus.isDefined) {
-          val currentEntryId = playStatus.get.currentPlaylistEntryId
-          if (playlistEntryIdsToRemove contains currentEntryId) {
-            val entries = await(PlaylistEntry.getOrderedSeq())
-            val currentIndex = entries.map(_.id).indexOf(currentEntryId)
-            def searchNonRemovedEntry(index: Int, direction: Int): Option[PlaylistEntry] = {
-              if (entries.indices contains index) {
-                if (playlistEntryIdsToRemove contains entries(index).id) {
-                  searchNonRemovedEntry(index + direction, direction)
+      updatePlaylistQueue.schedule {
+        async {
+          val playStatus = await(PlayStatus.get())
+          if (playStatus.isDefined) {
+            val currentEntryId = playStatus.get.currentPlaylistEntryId
+            if (playlistEntryIdsToRemove contains currentEntryId) {
+              val entries = await(PlaylistEntry.getOrderedSeq())
+              val currentIndex = entries.map(_.id).indexOf(currentEntryId)
+              def searchNonRemovedEntry(index: Int, direction: Int): Option[PlaylistEntry] = {
+                if (entries.indices contains index) {
+                  if (playlistEntryIdsToRemove contains entries(index).id) {
+                    searchNonRemovedEntry(index + direction, direction)
+                  } else {
+                    Some(entries(index))
+                  }
                 } else {
-                  Some(entries(index))
+                  None
                 }
-              } else {
-                None
               }
+              val maybeNextEntry =
+                searchNonRemovedEntry(currentIndex + 1, direction = +1) orElse
+                  searchNonRemovedEntry(currentIndex - 1, direction = -1)
+              await(entityAccess.persistModifications {
+                maybeNextEntry match {
+                  case Some(nextEntry) =>
+                    EntityModification.createUpdate(
+                      playStatus.get.copy(currentPlaylistEntryId = nextEntry.id),
+                      fieldMask = Seq(ModelFields.PlayStatus.currentPlaylistEntryId)
+                    )
+                  case None => EntityModification.createRemove(playStatus.get)
+                }
+              })
             }
-            val maybeNextEntry =
-              searchNonRemovedEntry(currentIndex + 1, direction = +1) orElse
-                searchNonRemovedEntry(currentIndex - 1, direction = -1)
-            await(entityAccess.persistModifications {
-              maybeNextEntry match {
-                case Some(nextEntry) =>
-                  EntityModification.createUpdate(
-                    playStatus.get.copy(currentPlaylistEntryId = nextEntry.id),
-                    fieldMask = Seq(ModelFields.PlayStatus.currentPlaylistEntryId)
-                  )
-                case None => EntityModification.createRemove(playStatus.get)
-              }
-            })
           }
+          val modifications = playlistEntryIdsToRemove.toVector.map(EntityModification.Remove[PlaylistEntry])
+          await(entityAccess.persistModifications(modifications))
         }
-        val modifications = playlistEntryIdsToRemove.toVector.map(EntityModification.Remove[PlaylistEntry])
-        await(entityAccess.persistModifications(modifications))
       }
 
     case RemoveAllPlayedEntriesFromPlaylist =>
-      async {
-        val playStatus = await(PlayStatus.get())
-        val entries = await(PlaylistEntry.getOrderedSeq())
-        if (playStatus.isDefined) {
-          val currentEntryId = playStatus.get.currentPlaylistEntryId
-          val entriesToRemove = entries.takeWhile(_.id != currentEntryId)
-          val modifications = entriesToRemove.toVector.map(EntityModification.createRemove[PlaylistEntry])
-          await(entityAccess.persistModifications(modifications))
+      updatePlaylistQueue.schedule {
+        async {
+          val playStatus = await(PlayStatus.get())
+          val entries = await(PlaylistEntry.getOrderedSeq())
+          if (playStatus.isDefined) {
+            val currentEntryId = playStatus.get.currentPlaylistEntryId
+            val entriesToRemove = entries.takeWhile(_.id != currentEntryId)
+            val modifications = entriesToRemove.toVector.map(EntityModification.createRemove[PlaylistEntry])
+            await(entityAccess.persistModifications(modifications))
+          }
         }
       }
   }
@@ -123,8 +138,10 @@ final class PlaylistStore(implicit entityAccess: JsEntityAccess,
                                      entry: JsPlaylistEntry,
                                      newOrderToken: OrderToken): State = {
     val newEntity = entry.entity.copy(orderToken = newOrderToken)
-    entityAccess.persistModifications(
-      EntityModification.createUpdate(newEntity, fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
+    updatePlaylistQueue.schedule {
+      entityAccess.persistModifications(
+        EntityModification.createUpdate(newEntity, fieldMask = Seq(ModelFields.PlaylistEntry.orderToken)))
+    }
 
     def updated(entries: Seq[JsPlaylistEntry]): Seq[JsPlaylistEntry] =
       entries.updated(entries.indexOf(entry), entry.copy(entity = newEntity)).sorted
